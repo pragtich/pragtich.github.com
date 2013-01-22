@@ -23,6 +23,7 @@ BUT, then I get the following error in the logfile, and the second server does n
 
 The key is they incorrectly detected device name `/dev/video0` for the second camera. This is simply the default hardcoded into mjpg-streamer. It is not properly picking up the device name. Then, trying to open `/dev/video0` a second time, will of course fail.
 
+
 # The solution
 
 I do not understand the root cause fully, but it is clear that the `/etc/init.d/mjpg-streamer` script contains some layout so that it is more legible. This layout does, however, introduce some whitespace into the command line that is causing our trouble. I will leave analysis of the true root cause to the experts, but describe the quick and dirty solution.
@@ -56,6 +57,7 @@ I simply removed the backslashed line continuations and put everything in one li
 
     #!bash
 	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
+
 
 
 # Correcting PIDfile issue

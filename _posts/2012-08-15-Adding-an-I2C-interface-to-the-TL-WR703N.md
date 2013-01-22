@@ -14,6 +14,7 @@ add hardware control (specifically, the I2C interface) to the
 TL-WR703N?"
 layout: post
 ---
+
 # The goal #
 
 To enable the creative use of the wireless router in the garden to do
@@ -351,3 +352,4 @@ The next step is to use the input function. That will be the next update.
 [openwrt-703n-gpio]:https://forum.openwrt.org/viewtopic.php?id=36471
 [openwrt-downloads]:http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages/
 [blink-bash]:http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/
+
