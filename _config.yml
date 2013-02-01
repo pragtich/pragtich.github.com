@@ -1,2 +1,2 @@
 lsi: true
-markdown: rdiscount
+markdown: kramdown
