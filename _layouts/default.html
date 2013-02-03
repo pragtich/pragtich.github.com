@@ -22,16 +22,20 @@
   </titleframe>
 {{content}}  
 <nav>
-	<h2>Categories</h2>
+    <h2>All articles</h2> 
+	<ul>
+	  <li>
+		<a href="{{ site.baseurl }}/blog/index.html">Index of all articles</a> </li>
+
+	</ul>
+	<H2>Categories</h2>
     <ul>
-	  <li>
-		<a href="../../../../../blog/index.html">All articles</a> </li>
-	  <li>
-		<a href="../../../../../all_Computer%20stuff.html">Computer stuff</a> </li>
-	  <li>
-		<a href="../../../../../all_Kippycam.html">Kippycam</a> </li>
-	  <li>
-		<a href="../../../../../all_Life.html">Life</a> </li>
+	  {% for cat in site.categories %}
+	    <li>
+		  <a href="{{ site.baseurl }}/categories/{{ cat[0] | replace: ' ','-' | cgi_escape}}">{{ cat[0] }}</a>
+		</li>
+	   {{  }}
+	  {% endfor %}
     </ul>
 	<h2>About</h2>
     <ul>

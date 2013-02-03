@@ -2,7 +2,7 @@
 layout: post
 title: Using multiple webcams in mjpg-streamer on OpenWRT
 kind: article
-category: Kippycam
+category: "Kippycam"
 created_at: 02 Jan 2013
 summary: "OpenWRT actually contains everything needed to run two or even more webcams with mjpg-streamer. But there is a bug in the init script that prevents it from working properly. This is an easy fix."
 indeximage: mjpg-streamer-twocams.jpg
