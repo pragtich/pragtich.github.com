@@ -69,8 +69,8 @@ USB connector)
 
 ...although the micro usb wires may be the other way around...
 
-![The finished product](I2C-soldered.jpg "After completing the soldering")
-![The finished product, some more detail](I2C-soldered-detail.jpg "Some more detail")
+![The finished product]({% postfile I2C-soldered.jpg %} "After completing the soldering")
+![The finished product, some more detail]({% postfile I2C-soldered-detail.jpg%} "Some more detail")
 
 Then I cut a hole into the top of the housing and glued a 2x3 boxed
 header onto the lid of the router. I chose the following pin-out in an
@@ -85,7 +85,7 @@ attempt to keep the signal wires apart:
 
 That's how it looks:
 
-![The finished product, outside](I2C-done.jpg "The end product, closed and tidy.")
+![The finished product, outside]({% postfile I2C-done.jpg %} "The end product, closed and tidy.")
 
 **No Pull-ups yet, so these need to be put on the client side, or
   built in later.**
