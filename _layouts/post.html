@@ -4,13 +4,13 @@ layout: default
 <article>
   <header>
 	<hgroup>
-	  {% if page.indeximage %}<img src="../../../../../indeximages/{{ page.indeximage }}">{% endif %}
+	  {% if page.indeximage %}<img src="{{ site.url }}/indeximages/{{ page.indeximage }}">{% endif %}
 	  <h1 class="itemtitle">{{ page.title }}</h1>
       <h2 class="itemdate">{{ page.date | date_to_string }}</h2>
 	</hgroup>
   </header>
   <summary>
-  OpenWRT actually contains everything needed to run two or even more webcams with mjpg-streamer. But there is a bug in the init script that prevents it from working properly. This is an easy fix….
+	{{ page.summary }}
 </summary>
 <bodytext>
   {{ content }}
