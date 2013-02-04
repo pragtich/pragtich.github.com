@@ -25,14 +25,14 @@
     <h2>All articles</h2> 
 	<ul>
 	  <li>
-		<a href="{{ site.baseurl }}/blog/index.html">Index of all articles</a> </li>
+		<a href="{{ site.url }}/blog/index.html">Index of all articles</a> </li>
 
 	</ul>
 	<H2>Categories</h2>
     <ul>
 	  {% for cat in site.categories %}
 	    <li>
-		  <a href="{{ site.baseurl }}/categories/{{ cat[0] | replace: ' ','-' | cgi_escape}}">{{ cat[0] }}</a>
+		  <a href="{{ site.url }}/categories/{{ cat[0] | replace: ' ','-' | cgi_escape}}">{{ cat[0] }}</a>
 		</li>
 	   {{  }}
 	  {% endfor %}
