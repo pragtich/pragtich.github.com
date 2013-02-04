@@ -9,7 +9,10 @@ title: Index of all articles
 	  <IMG SRC="{{ site.baseurl }}/indeximages/{{ post.indeximage }}"/>
   {% endif %}
   <a href="{{ post.url }}">{{ post.title }}</a>
-  <H2 class="itemdate">{{ post.date | date_to_string }}</H2>
+  <H2 class="itemdate">{{ post.date | date_to_string }}
+	<BR>
+	Filed under {{ post.categories | category_links }}
+  </H2>
 </indextitle>
 <summary>
   {{ post.summary }}
