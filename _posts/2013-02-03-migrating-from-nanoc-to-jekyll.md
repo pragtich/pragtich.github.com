@@ -218,6 +218,25 @@ This is the part of the [`Rakefile`](https://github.com/pragtich/pragtich-blog-j
 
 Also, I stole parts of the `Rakefile` from [Jekyll-bootstrap](https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile). Especially, the `post` and `preview` commands I really like. I did edit them to meet my tastes, please see [the file on GitHub](https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile). 
 
+# Migrating the posts
+
+As I had only a few posts, I decided to migrate them by hand. This involved:
+
+1. Moving the post file to the `_posts/` folder.
+2. Renaming the file with the `yyyy-mm-dd-title.ext` pattern (I was previously using a `created_at` tag in the `YAML` of the post.
+3. Adding layout:post to the YAML front matter.
+3. Copying the images to the `_postfiles/` folder (using my rake helper) and updating the references to the new Liquid tag.
+3. Copy any index images to the `indeximages/` folder.
+4. Testing.
+
+
+
+Even though it was only two handfuls of posts, this turned out to be a bit tedious. Especially going through all the files for the internal links and referencing them to the correct place was a drag.
+
+# Old links
+
+I have not found a way to keep my old links alive. Good thing I was giving DISQUS some unique IDs for the posts, at least that makes the comments still follow the posts to the new place. I could make dummy pages with redirects, but I am too lazy. This is not a high-traffic site, right?
+
 # Deploying to github-pages
 
 The [help for Github pages](https://help.github.com/categories/20/articles) is quite clear. The trick was to migrate from my original repo to the new one, them being completely separate before. I will probably go back to the strategy that I followed for `nanoc`.That is, to keep the source and output together in one repository with the `source` branch containing the source and the `master` branch containing the site itself. This does require some trickery in the `Rakefile`. A drawback is that this deployment can break if git is not happy switching branches, but has the benefit that all files are kept together in the repo so all history is kept together.

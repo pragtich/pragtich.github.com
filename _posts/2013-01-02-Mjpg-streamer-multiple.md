@@ -1,8 +1,7 @@
 --- 
-layout: post
 title: Using multiple webcams in mjpg-streamer on OpenWRT
 kind: article
-category: "Kippycam"
+category: Kippycam
 created_at: 02 Jan 2013
 summary: "OpenWRT actually contains everything needed to run two or even more webcams with mjpg-streamer. But there is a bug in the init script that prevents it from working properly. This is an easy fix."
 indeximage: mjpg-streamer-twocams.jpg
@@ -22,7 +21,6 @@ BUT, then I get the following error in the logfile, and the second server does n
 	Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 
 The key is they incorrectly detected device name `/dev/video0` for the second camera. This is simply the default hardcoded into mjpg-streamer. It is not properly picking up the device name. Then, trying to open `/dev/video0` a second time, will of course fail.
-
 
 # The solution
 
@@ -57,7 +55,6 @@ I simply removed the backslashed line continuations and put everything in one li
 
     #!bash
 	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
-
 
 
 # Correcting PIDfile issue

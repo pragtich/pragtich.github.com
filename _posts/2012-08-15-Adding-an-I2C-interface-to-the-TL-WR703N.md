@@ -2,7 +2,7 @@
 comment_id: wr703n-i2c
 title: Adding an I2C interface to the TL-WR703N
 kind: article
-category: Kippycam
+category: "Kippycam"
 created_at: 15 Aug 2012
 indeximage: index-i2c.jpg
 summary: "I had the wireless router to show the webcam images for the
