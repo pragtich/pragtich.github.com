@@ -135,4 +135,9 @@ task :preview do
   system "ejekyll --auto --server"
 end # task :preview
 
+desc "Deploy to github"
+task :deploy do
+  system "ejekyll "
+end # task :preview
+
 
