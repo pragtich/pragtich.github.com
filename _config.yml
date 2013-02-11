@@ -1,8 +1,0 @@
-permalink: pretty
-lsi: true
-markdown: kramdown
-pygments: true
-exclude: [Rakefile]
-include: [atom.xml]
-
-author: Joris Pragt
