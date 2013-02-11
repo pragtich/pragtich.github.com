@@ -3,12 +3,15 @@ require 'yaml'
 require 'time'
 require 'highline/import'
 
+Dir.glob('_rake/*.rake').each { |r| Rake.application.add_import (r) }
+
 SOURCE = "."
 CONFIG = {
   'layouts' => File.join(SOURCE, "_layouts"),
   'posts' => File.join(SOURCE, "_posts"),
   'postfiles' => File.join(SOURCE, "_postfiles"),
-  'post_ext' => "md"
+  'post_ext' => "md",
+  'site_url' => "Http://pragti.ch"
 }
 
 EDITOR= ENV['VISUAL'] || ENV['EDITOR'] 
@@ -135,9 +138,11 @@ task :preview do
   system "ejekyll --auto --server"
 end # task :preview
 
-desc "Deploy to github"
-task :deploy do
-  system "ejekyll "
+desc "Compile using ejekyll"
+task :compile do
+  system "ejekyll --url #{CONFIG[:site_url]}"
 end # task :preview
+
+
 
 
