@@ -241,3 +241,27 @@ I have not found a way to keep my old links alive. Good thing I was giving DISQU
 
 The [help for Github pages](https://help.github.com/categories/20/articles) is quite clear. The trick was to migrate from my original repo to the new one, them being completely separate before. I will probably go back to the strategy that I followed for `nanoc`.That is, to keep the source and output together in one repository with the `source` branch containing the source and the `master` branch containing the site itself. This does require some trickery in the `Rakefile`. A drawback is that this deployment can break if git is not happy switching branches, but has the benefit that all files are kept together in the repo so all history is kept together.
 
+First, I created the correct branch structure:
+
+    git checkout -b source
+	git checkout master
+	
+Then, I remodel the master branch to contain only the files from the _site folder. I edit the README file to make clear what's going on. And I add a `.nojekyll` file to tell Github not to try and process it itself. Finally, I make sure that the new source folder gets pushed to the origin (Github).
+
+	rm -rf xxxx yyyy zzzz         # all files except _site/ and README
+	mv _site/* .
+	rm -rf _site
+	
+	touch .nojekyll
+	
+	vi README
+	
+	git commit -A 
+	git push -u origin source
+
+Now, I need to come up with a Rakefile that does the correct processing, something like this:
+
+1. Check that I am on the source branch, or fail.
+2. Compile using `ejekyll` with the `--url` option set for the server url.
+3. Checkout master
+
