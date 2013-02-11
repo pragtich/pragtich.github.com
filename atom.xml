@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title type="text" xml:lang="en">Pragtich -- a blog</title>
+  <link rel="self" type="application/atom+xml" href="/atom.xml" />
+  <link rel="alternate" type="text/html" href="/blog"/>
+  <updated>2013-02-09T15:49:04+01:00</updated>
+  <author>
+    <name>Joris Pragt</name>
+
+  </author>
+  <id>tag:pragti.ch,2013-02-09:/blog</id>
+  <rights>Copyright (c) 2013, Joris Pragt; all rights reserved.</rights>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Editing jekyll postfiles plugin to work with spaces in category names</title>
+    <id>tag:pragti.ch,2013-02-09:/Blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names</id>
+    <link rel="alternate" type="text/html" href="/Blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/"/>
+    
+    <published>2013-02-07T00:00:00+01:00</published>
+    <updated>2013-02-07T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">I edited the postfiles plugin to work with category names containing special characters (especially spaces).</summary>
+    <category term="blogging" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Migrating from nanoc to jekyll</title>
+    <id>tag:pragti.ch,2013-02-09:/Blogging/2013/02/03/migrating-from-nanoc-to-jekyll</id>
+    <link rel="alternate" type="text/html" href="/Blogging/2013/02/03/migrating-from-nanoc-to-jekyll/"/>
+    
+    <published>2013-02-03T00:00:00+01:00</published>
+    <updated>2013-02-03T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">I started a blog (this blog) using Nanoc last year, as a method to learn Ruby. Although it is great, especially because it allows complete control, my Ruby skills are not up to nanoc. I kept on getting stuck doing programming myself, and fighting all kinds of bugs. This is the log of an attempt to reduce complexity by switching to Jekyll</summary>
+    <category term="blogging" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Using multiple webcams in mjpg-streamer on OpenWRT</title>
+    <id>tag:pragti.ch,2013-02-09:/Kippycam/2013/01/02/Mjpg-streamer-multiple</id>
+    <link rel="alternate" type="text/html" href="/Kippycam/2013/01/02/Mjpg-streamer-multiple/"/>
+    
+    <published>2013-01-02T00:00:00+01:00</published>
+    <updated>2013-01-02T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">OpenWRT actually contains everything needed to run two or even more webcams with mjpg-streamer. But there is a bug in the init script that prevents it from working properly. This is an easy fix.</summary>
+    <category term="kippycam" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Switching to GNU Emacs 24 on Mac OS X</title>
+    <id>tag:pragti.ch,2013-02-09:/Computer%20stuff/2012/12/15/GNU-Emacs-24</id>
+    <link rel="alternate" type="text/html" href="/Computer%20stuff/2012/12/15/GNU-Emacs-24/"/>
+    
+    <published>2012-12-15T00:00:00+01:00</published>
+    <updated>2012-12-15T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">The new GNU Emacs 24 has native Cocoa support, so I wanted to switch. Not completely trivial, but possible.</summary>
+    <category term="computer stuff" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Installing OpenWRT on a TL-WR703N router using a USB stick as storage</title>
+    <id>tag:pragti.ch,2013-02-09:/Computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N</id>
+    <link rel="alternate" type="text/html" href="/Computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/"/>
+    
+    <published>2012-09-22T00:00:00+02:00</published>
+    <updated>2012-09-22T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">Installing openwrt onto the TL-WR703N using a USB flash drive as the root is not hard. It did however take me a serious amount of research to figure everything out. Here's my try at documenting how to do it.</summary>
+    <category term="computer stuff" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Adding an I2C interface to the TL-WR703N</title>
+    <id>tag:pragti.ch,2013-02-09:/Kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N</id>
+    <link rel="alternate" type="text/html" href="/Kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/"/>
+    
+    <published>2012-08-15T00:00:00+02:00</published>
+    <updated>2012-08-15T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">I had the wireless router to show the webcam images for the 'kippycam'. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?</summary>
+    <category term="kippycam" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Keeping Openwrt online using DHCP</title>
+    <id>tag:pragti.ch,2013-02-09:/Kippycam/2012/07/13/Openwrt-connection-checking</id>
+    <link rel="alternate" type="text/html" href="/Kippycam/2012/07/13/Openwrt-connection-checking/"/>
+    
+    <published>2012-07-13T00:00:00+02:00</published>
+    <updated>2012-07-13T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">When Openwrt loses its connection, it does not very gracefully reconnect when using proto dhcp. This is how I solved this</summary>
+    <category term="kippycam" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Some notes on using Aquamacs</title>
+    <id>tag:pragti.ch,2013-02-09:/Computer%20stuff/2012/07/13/Aquamacs-Notes</id>
+    <link rel="alternate" type="text/html" href="/Computer%20stuff/2012/07/13/Aquamacs-Notes/"/>
+    
+    <published>2012-07-13T00:00:00+02:00</published>
+    <updated>2012-07-13T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">Because I keep forgetting all the little details, I am writing them down.</summary>
+    <category term="computer stuff" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Using Nanoc to fill Github Pages</title>
+    <id>tag:pragti.ch,2013-02-09:/Computer%20stuff/2012/07/04/Nanoc-Github-Pages</id>
+    <link rel="alternate" type="text/html" href="/Computer%20stuff/2012/07/04/Nanoc-Github-Pages/"/>
+    
+    <published>2012-07-04T00:00:00+02:00</published>
+    <updated>2012-07-04T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">Learning to use git to update GitHub Pages -- a free web server.</summary>
+    <category term="computer stuff" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Getting network access in the garden</title>
+    <id>tag:pragti.ch,2013-02-09:/Kippycam/2012/06/22/Network-layout</id>
+    <link rel="alternate" type="text/html" href="/Kippycam/2012/06/22/Network-layout/"/>
+    
+    <published>2012-06-22T00:00:00+02:00</published>
+    <updated>2012-06-22T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">It took quite some work to get a network connection in the garden. How did I manage?</summary>
+    <category term="kippycam" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Things to do on this blog</title>
+    <id>tag:pragti.ch,2013-02-09:/Blogging/2012/06/04/TODO_website</id>
+    <link rel="alternate" type="text/html" href="/Blogging/2012/06/04/TODO_website/"/>
+    
+    <published>2012-06-04T00:00:00+02:00</published>
+    <updated>2012-06-04T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">What I still intend to do</summary>
+    <category term="blogging" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">The Kippencam -- starting a new project</title>
+    <id>tag:pragti.ch,2013-02-09:/Kippycam/2012/06/04/Starting-project-Chicken-Webcam</id>
+    <link rel="alternate" type="text/html" href="/Kippycam/2012/06/04/Starting-project-Chicken-Webcam/"/>
+    
+    <published>2012-06-04T00:00:00+02:00</published>
+    <updated>2012-06-04T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">I am starting a new project: a solar-powered webcam in the chicken coop.</summary>
+    <category term="kippycam" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Listing life goals with 43things</title>
+    <id>tag:pragti.ch,2013-02-09:/Life/2011/11/22/43things</id>
+    <link rel="alternate" type="text/html" href="/Life/2011/11/22/43things/"/>
+    
+    <published>2011-11-22T00:00:00+01:00</published>
+    <updated>2011-11-22T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">I started a list of things I want to do some time on 43things.org.</summary>
+    <category term="life" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Easy new page creating using Emacs and Template.el</title>
+    <id>tag:pragti.ch,2013-02-09:/Computer%20stuff/2011/11/14/Installing-Emacs-Template-mode</id>
+    <link rel="alternate" type="text/html" href="/Computer%20stuff/2011/11/14/Installing-Emacs-Template-mode/"/>
+    
+    <published>2011-11-14T00:00:00+01:00</published>
+    <updated>2011-11-14T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">How I installed Template.el to help make blogging quick in Emacs</summary>
+    <category term="computer stuff" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Making a personal website using Nanoc</title>
+    <id>tag:pragti.ch,2013-02-09:/Computer%20stuff/2011/11/12/Nanoc</id>
+    <link rel="alternate" type="text/html" href="/Computer%20stuff/2011/11/12/Nanoc/"/>
+    
+    <published>2011-11-12T00:00:00+01:00</published>
+    <updated>2011-11-12T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">How I used Nanoc to create this personal webpage</summary>
+    <category term="computer stuff" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Installing sitecopy on OS X Snow Leopard and using it with Nanoc</title>
+    <id>tag:pragti.ch,2013-02-09:/Computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X</id>
+    <link rel="alternate" type="text/html" href="/Computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X/"/>
+    
+    <published>2011-11-12T00:00:00+01:00</published>
+    <updated>2011-11-12T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">I use Sitecopy to upload my Nanoc site to the server. This is how I managed to do it.</summary>
+    <category term="computer stuff" />
+    <content type="html" xml:lang="en" xml:base="/">Test</content>
+  </entry>
+
+</feed>
+
