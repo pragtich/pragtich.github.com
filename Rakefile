@@ -3,6 +3,7 @@ require 'yaml'
 require 'time'
 require 'highline/import'
 
+#Import all rakefiles from _rake folders
 Dir.glob('_rake/*.rake').each { |r| Rake.application.add_import (r) }
 
 SOURCE = "."
