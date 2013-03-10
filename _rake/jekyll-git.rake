@@ -6,7 +6,8 @@ namespace :deploy do
   task :git => :compile do
     config_name = ENV['config'] || :default
     
-    deployer = JekyllGit::Deploy.new
+
+    deployer = JekyllGit::Deploy::Git.new
 
     # Run the deployer. Config does not yet do anything (where did I find this mess?)
     deployer.run(:config_name => config_name)
