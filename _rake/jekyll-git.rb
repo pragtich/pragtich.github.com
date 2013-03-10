@@ -40,7 +40,8 @@ module JekyllGit
           end
         end
         
-        FileUtils.remove_entry_secure(path)
+        puts "Wanting to delete #{File.basename(path)}"
+        #FileUtils.remove_entry_secure(path)
       end
 
 
