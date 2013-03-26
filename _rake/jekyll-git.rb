@@ -1,6 +1,6 @@
 require 'find'
 require 'git'
-
+require 'jekyll'
 
 module JekyllGit
   module JekyllGit::Deploy
@@ -10,7 +10,7 @@ module JekyllGit
         error 'No site configuration found' unless File.file?('_config.yml')
 
         # Get configuration
-
+        @jekyll = Jekyll.configuration({})
         # config to be gotten from the config file later; 
         @src_branch = 'source'
         @dst_branch = 'master'
