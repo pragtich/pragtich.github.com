@@ -16,31 +16,7 @@ CONFIG = {
 }
 
 EDITOR= ENV['VISUAL'] || ENV['EDITOR'] 
-=begin
-# Path configuration helper
-module JB
-  class Path
-    SOURCE = "."
-    Paths = {
-      :layouts => "_layouts",
-      :posts => "_posts"
-    }
-    
-    def self.base
-      SOURCE
-    end
 
-    # build a path relative to configured path settings.
-    def self.build(path, opts = {})
-      opts[:root] ||= SOURCE
-      path = "#{opts[:root]}/#{Paths[path.to_sym]}/#{opts[:node]}".split("/")
-      path.compact!
-      File.__send__ :join, path
-    end
-  
-  end #Path
-end #JB
-=end
 
 # Usage: rake postfile [title="search string"]
 desc "Creates a  postfiles folder for a specific post (selected by title (filename) substring search and choose menu, or the latest one if no title given)"
