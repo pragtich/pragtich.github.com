@@ -166,7 +166,7 @@ This layout is used for all actual blog posts. It lays out each article, and add
 
 In order to automatically generate category pages, I installed the plugin [from this website](http://recursive-design.com/projects/jekyll-plugins/). It works. That's what is creating the navigation bar contents, seen above. It does replace spaces in category names by hyphens, so the above code does that, too.
 
-I did encounter an issue with special characters in the category names (most notably spaces). I have blogged about the fix [here]().
+I did encounter an issue with special characters in the category names (most notably spaces). I have blogged about the fix [here]({% post_url 2013-02-07-editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names %}).
 
 # Rakefile to make things more useable
 
@@ -218,15 +218,15 @@ This is the part of the [`Rakefile`](https://github.com/pragtich/pragtich-blog-j
  end # task :postfile
  {% endhighlight %}
 
-Also, I stole parts of the `Rakefile` from [Jekyll-bootstrap](https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile). Especially, the `post` and `preview` commands I really like. I did edit them to meet my tastes, please see [the file on GitHub](https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile). 
+Also, I stole parts of the `Rakefile` from [Jekyll-bootstrap](https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile). Especially, the `post` and `preview` commands I really like. I did edit them to meet my tastes, please see [the file on GitHub](https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile). 
 
 # Migrating the posts
 
 As I had only a few posts, I decided to migrate them by hand. This involved:
 
 1. Moving the post file to the `_posts/` folder.
-2. Renaming the file with the `yyyy-mm-dd-title.ext` pattern (I was previously using a `created_at` tag in the `YAML` of the post.
-3. Adding layout:post to the YAML front matter.
+2. Renaming the file with the `yyyy-mm-dd-title.ext` pattern (I was previously using a `created_at` tag in the `YAML` of the post).
+3. Adding `layout:post` to the YAML front matter.
 3. Copying the images to the `_postfiles/` folder (using my rake helper) and updating the references to the new Liquid tag.
 3. Copy any index images to the `indeximages/` folder.
 4. Testing.
@@ -267,3 +267,4 @@ Now, I need to come up with a Rakefile that does the correct processing, somethi
 2. Compile using `ejekyll` with the `--url` option set for the server url.
 3. Checkout master
 
+[Check out my latest Rakefile to check how I did it](https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile). Specifically, I made a deployment sub-rakefile in the `_rake/` subfolder. [Check it out if you want](https://github.com/pragtich/pragtich-blog-jekyll/tree/source/_rake).
