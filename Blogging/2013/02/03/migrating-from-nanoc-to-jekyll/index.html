@@ -186,6 +186,8 @@ layout: default
 
 <p>In order to automatically generate category pages, I installed the plugin <a href="http://recursive-design.com/projects/jekyll-plugins/">from this website</a>. It works. That’s what is creating the navigation bar contents, seen above. It does replace spaces in category names by hyphens, so the above code does that, too.</p>
 
+<p>I did encounter an issue with special characters in the category names (most notably spaces). I have blogged about the fix <a href="/Blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/">here</a>.</p>
+
 <h1 id="rakefile-to-make-things-more-useable">Rakefile to make things more useable</h1>
 
 <p>The <code>postfiles</code> plugin is great, but I do not like the ergonomics of creating the folders. The names are long, and I need to recognize all of it. So, I wrote a rake task to perform the duty of creating the postfiles folder for a specific post.</p>
@@ -236,7 +238,7 @@ layout: default
  
 </code></pre></div>
 
-<p>Also, I stole parts of the <code>Rakefile</code> from <a href="https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile">Jekyll-bootstrap</a>. Especially, the <code>post</code> and <code>preview</code> commands I really like. I did edit them to meet my tastes, please see <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile">the file on GitHub</a>. </p>
+<p>Also, I stole parts of the <code>Rakefile</code> from <a href="https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile">Jekyll-bootstrap</a>. Especially, the <code>post</code> and <code>preview</code> commands I really like. I did edit them to meet my tastes, please see <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile">the file on GitHub</a>. </p>
 
 <h1 id="migrating-the-posts">Migrating the posts</h1>
 
@@ -244,8 +246,8 @@ layout: default
 
 <ol>
   <li>Moving the post file to the <code>_posts/</code> folder.</li>
-  <li>Renaming the file with the <code>yyyy-mm-dd-title.ext</code> pattern (I was previously using a <code>created_at</code> tag in the <code>YAML</code> of the post.</li>
-  <li>Adding layout:post to the YAML front matter.</li>
+  <li>Renaming the file with the <code>yyyy-mm-dd-title.ext</code> pattern (I was previously using a <code>created_at</code> tag in the <code>YAML</code> of the post).</li>
+  <li>Adding <code>layout:post</code> to the YAML front matter.</li>
   <li>Copying the images to the <code>_postfiles/</code> folder (using my rake helper) and updating the references to the new Liquid tag.</li>
   <li>Copy any index images to the <code>indeximages/</code> folder.</li>
   <li>Testing.</li>
@@ -289,6 +291,7 @@ git push -u origin source
   <li>Checkout master</li>
 </ol>
 
+<p><a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile">Check out my latest Rakefile to check how I did it</a>. Specifically, I made a deployment sub-rakefile in the <code>_rake/</code> subfolder. <a href="https://github.com/pragtich/pragtich-blog-jekyll/tree/source/_rake">Check it out if you want</a>.</p>
 
 <footer>
   <p>

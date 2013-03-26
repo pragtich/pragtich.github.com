@@ -46,7 +46,7 @@
 
 <h1 id="the-solutions">The solutions</h1>
 
-<p>Easy. Add percent to the pathname regexp:</p>
+<p>Easy.  Add percent to the pathname regexp:</p>
 
 <div class="highlight"><pre><code class="ruby">	<span class="n">postfile_id</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/</span><span class="p">,</span> <span class="s1">&#39;\1-\2-\3-\4&#39;</span><span class="p">)</span>
 	
@@ -61,6 +61,11 @@
 	
 </code></pre></div>
 
+<p>The diff of my edits can be <a href="https://github.com/pragtich/jekyll-postfiles/commit/ec519615501cbbc6d603854eaa463f1f9e0fe777">found here on GitHub</a>.</p>
+
+<h1 id="making-it-permanent">Making it permanent</h1>
+
+<p>I have created a pull request against <a href="https://github.com/indirect/jekyll-postfiles">the jekyll-postfiles plugin</a>, <a href="https://github.com/indirect/jekyll-postfiles/pull/4">which can be found here</a>. It was subsequently accepted by the owner, so is now a permanent part of the repo. </p>
 
 <footer>
   <p>
