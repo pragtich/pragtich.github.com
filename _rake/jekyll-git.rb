@@ -14,12 +14,15 @@ module JekyllGit
         error 'Not able to read configuration from Jekyll' if @jekyll_conf.nil?
 
         # config to be gotten from the config file later; 
-        @src_branch = @jekyll_conf[:git][:source] 
+        @src_branch = @jekyll_conf['git']['source'] 
         @src_branch ||= 'source'
-        @dst_branch = 'master'
-        @dst_remote = 'origin'
+        @dst_branch = @jekyll_conf['git']['destination'] 
+        @dst_branch ||= 'master'
+        @dst_remote = @jekyll_conf['git']['remote'] 
+        @dst_remote ||= 'origin'
 
-        @site_folder = '_site/'
+        @site_folder = @jekyll_conf['source']
+        @site_folder ||= '_site/'
       end
 
       def run(params={})
