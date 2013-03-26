@@ -21,7 +21,7 @@ module JekyllGit
         @dst_remote = @jekyll_conf['git']['remote'] 
         @dst_remote ||= 'origin'
 
-        @site_folder = @jekyll_conf['source']
+        @site_folder = @jekyll_conf['destination']
         @site_folder ||= '_site/'
       end
 
