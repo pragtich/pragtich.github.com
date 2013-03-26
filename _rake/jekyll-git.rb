@@ -32,7 +32,7 @@ module JekyllGit
         # Check out the source branch
         # Ideally, I would not do this, but rather have a prerequesite to :compile that checks weither I am on source and am clean
         puts "Checking out #{@src_branch}."
-        git.checkout(src_branch)
+        git.checkout(@src_branch)
 
         # Check out the destination branch
         puts "Checking out destination branch."
