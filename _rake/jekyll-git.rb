@@ -64,11 +64,14 @@ module JekyllGit
         FileUtils.rm_rf(site_folder, :secure => true)
         
         # commit and push
+        puts "Committing files to repo."
         time = Time.now
         git.commit_all('Committed by Rake at #{time.inspect}.')
-        git.push
+        puts "Pushing to remote (#{dst_remote})."
+        git.push(git.remote(dst_remote))
 
         # Checkout source
+        puts "Checking out #{src_branch}."
         git.checkout(src_branch)
 
       end
