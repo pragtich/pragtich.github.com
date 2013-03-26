@@ -10,7 +10,8 @@ module JekyllGit
         error 'No site configuration found' unless File.file?('_config.yml')
 
         # Get configuration
-        @jekyll = Jekyll.configuration({})
+        @jekyll_conf = Jekyll.configuration({})
+        error 'Not able to read configuration from Jekyll' if @jekyll_conf.nil?
         # config to be gotten from the config file later; 
         @src_branch = 'source'
         @dst_branch = 'master'
