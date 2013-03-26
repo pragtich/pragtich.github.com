@@ -29,6 +29,7 @@ module JekyllGit
         puts "Checking out destination branch."
         git.checkout(dst_branch)
 
+=begin No need to manually clean up: could use git clean -e _site/ instead
         # Cleanup and Copy output files recursively into the current directory
         puts "Deleting files."
         Find.find('.') do |path|
@@ -45,11 +46,17 @@ module JekyllGit
           puts "Wanting to delete #{File.basename(path)}"
           #FileUtils.remove_entry_secure(path)
         end
-
-
+=end
+        # Copy files to proper place
         puts "Copying files."
         #FileUtils.cp_r(@site.config[:output_dir].chomp('/') + '/.', '.')
         
+        # Remove _site folder
+
+        # commit and push
+
+        # Checkout source
+
       end
       
     end
