@@ -12,8 +12,10 @@ module JekyllGit
         # Get configuration
         @jekyll_conf = Jekyll.configuration({})
         error 'Not able to read configuration from Jekyll' if @jekyll_conf.nil?
+
         # config to be gotten from the config file later; 
-        @src_branch = 'source'
+        @src_branch = @jekyll_conf[:git][:source] 
+        @src_branch ||= 'source'
         @dst_branch = 'master'
         @dst_remote = 'origin'
 
