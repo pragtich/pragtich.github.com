@@ -1,5 +1,6 @@
 require 'find'
 require 'git'
+require 'time'
 
 module JekyllGit
   module JekyllGit::Deploy
