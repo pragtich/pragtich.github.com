@@ -4,19 +4,26 @@ require 'git'
 module JekyllGit
   module JekyllGit::Deploy
     class Git
+      
       def initialize
         error 'No site configuration found' unless File.file?('_config.yml')
+
+        # Get configuration
       end
 
       def run(params={})
-        # config to be gotten somewhere else later
+        # config to be gotten somewhere else later; Move to initialize?
         src_branch = 'source'
         dst_branch = 'master'
         dst_remote = 'origin'
 
+        site_folder = '_site/'
+
         error 'No source branch found in deployment configuration' if src_branch.nil?
         error 'No destination branch found in deployment configuration' if dst_branch.nil?
         error 'No destination remote found in deployment configuration' if dst_remote.nil?
+
+        error 'No site folder location found in deployment configuration' if site_folder.nil?
         
         git = ::Git::Base.open('.')
         
@@ -49,10 +56,12 @@ module JekyllGit
 =end
         # Copy files to proper place
         puts "Copying files."
-        #FileUtils.cp_r(@site.config[:output_dir].chomp('/') + '/.', '.')
+        FileUtils.cp_r(site_folder.chomp('/') + '/.', '.')
         
         # Remove _site folder
-
+        puts "Nuking site folder (#{site_folder})"
+        FileUtils.rm_rf(site_folder, :secure => true)
+        
         # commit and push
 
         # Checkout source
