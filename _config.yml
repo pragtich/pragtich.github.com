@@ -6,3 +6,9 @@ exclude: [Rakefile]
 include: [atom.xml]
 
 author: Joris Pragt
+
+git:
+ source: sourcex
+ destination: master
+ remote: origin
+ 
