@@ -66,7 +66,7 @@ module JekyllGit
         # commit and push
         puts "Committing files to repo."
         time = Time.now
-        git.commit_all('Committed by Rake at #{time.inspect}.')
+        git.commit_all("Committed by Rake at #{time.inspect}.")
         puts "Pushing to remote (#{dst_remote})."
         git.push(git.remote(dst_remote))
 
