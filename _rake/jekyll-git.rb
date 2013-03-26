@@ -63,8 +63,12 @@ module JekyllGit
         FileUtils.rm_rf(site_folder, :secure => true)
         
         # commit and push
+        time Time.now
+        git.commit_all('Committed by Rake at #{time.inspect}.')
+        git.push
 
         # Checkout source
+        git.checkout(src_branch)
 
       end
       
