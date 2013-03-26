@@ -22,7 +22,7 @@ In [the jekyll-postfiles plugin](https://github.com/indirect/jekyll-postfiles), 
 
 # The solutions
 
-Easy. Add percent to the pathname regexp:
+Easy.  Add percent to the pathname regexp:
 
 	{% highlight ruby %}
 	postfile_id = post.id.gsub(/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/, '\1-\2-\3-\4')
@@ -37,3 +37,8 @@ and `CGI.decode` the directory portion of the filename before passing it back to
         end
 	{% endhighlight %}
 
+The diff of my edits can be [found here on GitHub](https://github.com/pragtich/jekyll-postfiles/commit/ec519615501cbbc6d603854eaa463f1f9e0fe777).
+
+# Making it permanent
+
+I have created a pull request against [the jekyll-postfiles plugin](https://github.com/indirect/jekyll-postfiles), [which can be found here](https://github.com/indirect/jekyll-postfiles/pull/4). It was subsequently accepted by the owner, so is now a permanent part of the repo. 
