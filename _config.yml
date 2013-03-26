@@ -8,7 +8,7 @@ include: [atom.xml]
 author: Joris Pragt
 
 git:
- source: sourcex
+ source: source
  destination: master
  remote: origin
  
