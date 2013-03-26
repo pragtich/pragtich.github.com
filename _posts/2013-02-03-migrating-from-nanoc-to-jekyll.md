@@ -8,7 +8,7 @@ indeximage:
 comment_id: nanoc_to_jekyll
 ---
 
-#Introduction
+# Introduction
 
 I had started with a website/blog last year [and even took the effort to host it](http://pragti.ch/) and enjoy the experience. Especially getting feedback in the comments, and learning that others are enjoying my notes, is great fun. I had started using `nanoc` [(here)](http://nanoc.ws/) as a generator for the site. It's great, because it allows you to generate a static site from a set of source files. I love this, because it meets many of my criteria for a blogging engine:
 
@@ -19,7 +19,7 @@ I had started with a website/blog last year [and even took the effort to host it
 
 Now, I am moving away from `nanoc`, and switching to `jekyll`. Why? Because `nanoc` is a little too complex for my taste. It can just do too much, and requires serious `ruby` skills. `Jekyll` is simpler, really made for much more simple blogging tasks that `nanoc` is. After plugins and extensions have been added, the flexibility is good and the simplicity is still great.
 
-#Setting up Jekyll
+# Setting up Jekyll
 
 Setting up `jekyll` is easy. Just follow [the instructions on the jekyll site](https://github.com/mojombo/jekyll/wiki/install), as easy as:
 
@@ -36,11 +36,11 @@ Configuring happens through `_config.yml`, and I have the following in there:
 	markdown: kramdown     # I like kramdown
 
 
-#Switching to Jekyll_ext
+# Switching to Jekyll_ext
 
 In order to be able to extend `jekyll` with stuff that will allow me to use Haml and Sass, I installed `jekyll_ext` [from github](https://github.com/indirect/jekyll-postfiles). Although I do call `ejekyll` instead of `jekyll` already, I am not at present using any of its functionality yet.
 
-#Adding jekyll-postfiles
+# Adding jekyll-postfiles
 
 One of the big troubles with `jekyll` is that it does not have any concept of files that belong together with a post as a logical unit. This could mainly be relevant for images, but also stuff like downloads. I had started with one central subfolder in the jekyll folder. That works, but means that each post needs to link to this one folder, and that all the images are going to run together into one folder. 
 
@@ -55,11 +55,11 @@ Also, it gives you a Liquid tag that allows you access to the files from your po
 [Check it out!](https://github.com/indirect/jekyll-postfiles)
 
 
-#Using Haml and Sass
+# Using Haml and Sass
 
 Using Haml and Sass needs plugins that can get closely involved in the generation process. This cannot be done with the standard `jekyll` plugins. There is another extension mechanism that can do it: [`jekyll_ext`](https://github.com/rfelix/jekyll_ext). I am not yet using the tools that are based upon this, but will do in the future. I love Haml and Sass.
 
-#Migrating the layouts
+# Migrating the layouts
 
 I have several layouts in the site, and they turned out to need only small changes. Mainly, adjusting for a slightly changed folder structure and adding liquid tags instead of ERB code. All layouts except `default` have a YAML Front Matter that points to the `default` layout, which adds the navigation portion of the page and the whole HTML base of the page. 
 
@@ -165,6 +165,8 @@ This layout is used for all actual blog posts. It lays out each article, and add
 # Category navigation
 
 In order to automatically generate category pages, I installed the plugin [from this website](http://recursive-design.com/projects/jekyll-plugins/). It works. That's what is creating the navigation bar contents, seen above. It does replace spaces in category names by hyphens, so the above code does that, too.
+
+I did encounter an issue with special characters in the category names (most notably spaces). I have blogged about the fix [here]().
 
 # Rakefile to make things more useable
 
