@@ -135,30 +135,30 @@ because I tend to forget each syntax before I get to use it again.</p>
 <p>For sake of documentation, I did the following:</p>
 
 <ul>
-  <li>Updated <code>config.yaml</code>:</li>
-</ul>
+  <li>
+    <p>Updated <code>config.yaml</code>:</p>
 
-<pre><code>	# Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
-	deploy:
-	  default:
-		dst_remote: pages
-		dst_branch: master
-		src_branch: source
+    <pre><code>  # Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
+  deploy:
+    default:
+      dst_remote: pages
+      dst_branch: master
+      src_branch: source
 </code></pre>
+  </li>
+  <li>
+    <p>Installed nanoc-git:</p>
 
-<ul>
-  <li>Installed nanoc-git:</li>
-</ul>
-
-<pre><code>     gem install nanoc-git
+    <pre><code>   gem install nanoc-git
 </code></pre>
+  </li>
+  <li>
+    <p>Edited <code>Rakefile</code></p>
 
-<ul>
-  <li>Edited <code>Rakefile</code></li>
-</ul>
-
-<pre><code>    require 'nanoc-git/tasks'
+    <pre><code>  require 'nanoc-git/tasks'
 </code></pre>
+  </li>
+</ul>
 
 <p>Then, to execute: `rake deploy:git’ should </p>
 

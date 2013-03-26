@@ -261,6 +261,34 @@ layout: default
 
 <p>The <a href="https://help.github.com/categories/20/articles">help for Github pages</a> is quite clear. The trick was to migrate from my original repo to the new one, them being completely separate before. I will probably go back to the strategy that I followed for <code>nanoc</code>.That is, to keep the source and output together in one repository with the <code>source</code> branch containing the source and the <code>master</code> branch containing the site itself. This does require some trickery in the <code>Rakefile</code>. A drawback is that this deployment can break if git is not happy switching branches, but has the benefit that all files are kept together in the repo so all history is kept together.</p>
 
+<p>First, I created the correct branch structure:</p>
+
+<pre><code>git checkout -b source
+git checkout master
+</code></pre>
+
+<p>Then, I remodel the master branch to contain only the files from the _site folder. I edit the README file to make clear what’s going on. And I add a <code>.nojekyll</code> file to tell Github not to try and process it itself. Finally, I make sure that the new source folder gets pushed to the origin (Github).</p>
+
+<pre><code>rm -rf xxxx yyyy zzzz         # all files except _site/ and README
+mv _site/* .
+rm -rf _site
+
+touch .nojekyll
+
+vi README
+
+git commit -A 
+git push -u origin source
+</code></pre>
+
+<p>Now, I need to come up with a Rakefile that does the correct processing, something like this:</p>
+
+<ol>
+  <li>Check that I am on the source branch, or fail.</li>
+  <li>Compile using <code>ejekyll</code> with the <code>--url</code> option set for the server url.</li>
+  <li>Checkout master</li>
+</ol>
+
 
 <footer>
   <p>
