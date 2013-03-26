@@ -3,17 +3,20 @@ require 'yaml'
 require 'time'
 require 'highline/import'
 
-#Import all rakefiles from _rake folders
-Dir.glob('_rake/*.rake').each { |r| Rake.application.add_import (r) }
 
 SOURCE = "."
 CONFIG = {
   'layouts' => File.join(SOURCE, "_layouts"),
   'posts' => File.join(SOURCE, "_posts"),
   'postfiles' => File.join(SOURCE, "_postfiles"),
+  'site' => File.join(SOURCE, "_site"),
   'post_ext' => "md",
   'site_url' => "Http://pragti.ch"
 }
+
+#Import all rakefiles from _rake folders
+Dir.glob('_rake/*.rake').each { |r| Rake.application.add_import (r) }
+
 
 EDITOR= ENV['VISUAL'] || ENV['EDITOR'] 
 
