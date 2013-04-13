@@ -21,12 +21,16 @@ module JekyllGit
         @dst_remote = @jekyll_conf['git']['remote'] 
         @dst_remote ||= 'origin'
 
-        @site_folder = @jekyll_conf['destination']
-        @site_folder ||= '_site/'
+<<<<<<< HEAD
+        @site_folder = config[:site]
       end
 
       def error(msg)
         raise RuntimeError.new(msg)
+=======
+        @site_folder = @jekyll_conf['destination']
+        @site_folder ||= '_site/'
+>>>>>>> source-rake-config
       end
 
       def run(params={})

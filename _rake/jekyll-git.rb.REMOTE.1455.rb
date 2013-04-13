@@ -6,7 +6,7 @@ module JekyllGit
   module JekyllGit::Deploy
     class Git
       
-      def initialize(config)
+      def initialize
         error 'No site configuration found' unless File.file?('_config.yml')
 
         # Get configuration
@@ -23,10 +23,6 @@ module JekyllGit
 
         @site_folder = @jekyll_conf['destination']
         @site_folder ||= '_site/'
-      end
-
-      def error(msg)
-        raise RuntimeError.new(msg)
       end
 
       def run(params={})

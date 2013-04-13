@@ -1,32 +1,22 @@
 require 'find'
 require 'git'
-require 'jekyll'
+
 
 module JekyllGit
   module JekyllGit::Deploy
     class Git
       
-      def initialize(config)
+      def initialize
         error 'No site configuration found' unless File.file?('_config.yml')
 
         # Get configuration
-        @jekyll_conf = Jekyll.configuration({})
-        error 'Not able to read configuration from Jekyll' if @jekyll_conf.nil?
 
         # config to be gotten from the config file later; 
-        @src_branch = @jekyll_conf['git']['source'] 
-        @src_branch ||= 'source'
-        @dst_branch = @jekyll_conf['git']['destination'] 
-        @dst_branch ||= 'master'
-        @dst_remote = @jekyll_conf['git']['remote'] 
-        @dst_remote ||= 'origin'
+        @src_branch = 'source'
+        @dst_branch = 'master'
+        @dst_remote = 'origin'
 
-        @site_folder = @jekyll_conf['destination']
-        @site_folder ||= '_site/'
-      end
-
-      def error(msg)
-        raise RuntimeError.new(msg)
+        @site_folder = '_site/'
       end
 
       def run(params={})
