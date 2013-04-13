@@ -45,7 +45,7 @@ module JekyllGit
         git.checkout(@src_branch)
 
         # Check out the destination branch
-        puts "Checking out destination branch."
+        puts "Checking out destination branch (#{@dst_branch})."
         git.checkout(@dst_branch)
 
 =begin No need to manually clean up: could use git clean -e _site/ instead
@@ -67,7 +67,7 @@ module JekyllGit
         end
 =end
         # Copy files to proper place
-        puts "Copying files."
+        puts "Copying files from #{@site_folder}."
         FileUtils.cp_r(@site_folder.chomp('/') + '/.', '.')
         
         # Remove _site folder
