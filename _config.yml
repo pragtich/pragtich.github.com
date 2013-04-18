@@ -9,6 +9,6 @@ author: Joris Pragt
 
 git:
  source: source
- destination: gh-pages
+ destination: master
  remote: origin
  
