@@ -80,7 +80,7 @@ Also, Jekyll gives you the opportunity to access all the categories and tags in 
     <ul>
 	  {% for cat in site.categories %}
 	    <li>
-		  <a href="{{ site.url }}/categories/{{ cat[0] | replace: ' ','-' | cgi_escape}}">{{ cat[0] }}</a>
+		  <a href="{{ site.url }}/categories/{{ cat[0] | downcase | replace: ' ','-' | cgi_escape}}">{{ cat[0] }}</a>
 		</li>
 	   {{  }}
 	  {% endfor %}
@@ -167,6 +167,8 @@ This layout is used for all actual blog posts. It lays out each article, and add
 In order to automatically generate category pages, I installed the plugin [from this website](http://recursive-design.com/projects/jekyll-plugins/). It works. That's what is creating the navigation bar contents, seen above. It does replace spaces in category names by hyphens, so the above code does that, too.
 
 I did encounter an issue with special characters in the category names (most notably spaces). I have blogged about the fix [here]({% post_url 2013-02-07-editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names %}).
+
+A second issue, is that this creates lowercase category folder names, but my links in the navigation bar are with uppercase characters, too. So links break on the `github` server, because it is case sensitive where my OS X is not. That's why I added a `downcase` to the `Liquid` code in the `default` layout.
 
 # Rakefile to make things more useable
 
