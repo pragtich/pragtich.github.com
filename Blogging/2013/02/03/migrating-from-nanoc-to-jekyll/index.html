@@ -103,7 +103,7 @@ markdown: kramdown     # I like kramdown
 &lt;ul&gt;
   {% for cat in site.categories %}
     &lt;li&gt;
-	  &lt;a href="{{ site.url }}/categories/{{ cat[0] | replace: ' ','-' | cgi_escape}}"&gt;{{ cat[0] }}&lt;/a&gt;
+	  &lt;a href="{{ site.url }}/categories/{{ cat[0] | downcase | replace: ' ','-' | cgi_escape}}"&gt;{{ cat[0] }}&lt;/a&gt;
 	&lt;/li&gt;
    {{  }}
   {% endfor %}
@@ -187,6 +187,8 @@ layout: default
 <p>In order to automatically generate category pages, I installed the plugin <a href="http://recursive-design.com/projects/jekyll-plugins/">from this website</a>. It works. That’s what is creating the navigation bar contents, seen above. It does replace spaces in category names by hyphens, so the above code does that, too.</p>
 
 <p>I did encounter an issue with special characters in the category names (most notably spaces). I have blogged about the fix <a href="/Blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/">here</a>.</p>
+
+<p>A second issue, is that this creates lowercase category folder names, but my links in the navigation bar are with uppercase characters, too. So links break on the <code>github</code> server, because it is case sensitive where my OS X is not. That’s why I added a <code>downcase</code> to the <code>Liquid</code> code in the <code>default</code> layout.</p>
 
 <h1 id="rakefile-to-make-things-more-useable">Rakefile to make things more useable</h1>
 
@@ -325,22 +327,22 @@ git push -u origin source
     <ul>
 	  
 	    <li>
-		  <a href="/categories/Computer-stuff">Computer stuff</a>
+		  <a href="/categories/computer-stuff">Computer stuff</a>
 		</li>
 	   
 	  
 	    <li>
-		  <a href="/categories/Life">Life</a>
+		  <a href="/categories/life">Life</a>
 		</li>
 	   
 	  
 	    <li>
-		  <a href="/categories/Kippycam">Kippycam</a>
+		  <a href="/categories/kippycam">Kippycam</a>
 		</li>
 	   
 	  
 	    <li>
-		  <a href="/categories/Blogging">Blogging</a>
+		  <a href="/categories/blogging">Blogging</a>
 		</li>
 	   
 	  
