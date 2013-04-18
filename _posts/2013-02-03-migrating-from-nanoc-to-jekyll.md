@@ -4,7 +4,7 @@ title: "Migrating from nanoc to jekyll"
 summary: "I started a blog (this blog) using Nanoc last year, as a method to learn Ruby. Although it is great, especially because it allows complete control, my Ruby skills are not up to nanoc. I kept on getting stuck doing programming myself, and fighting all kinds of bugs. This is the log of an attempt to reduce complexity by switching to Jekyll"
 category: Blogging
 tags: []
-indeximage: 
+indeximage: jekyll.jpg
 comment_id: nanoc_to_jekyll
 ---
 
