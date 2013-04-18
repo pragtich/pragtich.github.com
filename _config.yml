@@ -1,5 +1,5 @@
 permalink: pretty
-lsi: false
+lsi: true
 markdown: kramdown
 pygments: true
 exclude: [Rakefile]
