@@ -115,7 +115,7 @@ end # task :page
 
 desc "Launch preview environment"
 task :preview do
-  system "ejekyll --auto --server"
+  system "ejekyll --watch serve"
 end # task :preview
 
 desc "Compile using ejekyll"
