@@ -24,7 +24,7 @@ layout: nil
     <updated>{{ post.date | date_to_xmlschema }}</updated>
     <summary type="text" xml:lang="en">{{ post.summary | xml_escape}}</summary>{% if post.categories %}{% for category in post.categories %}
     <category term="{{ category | downcase |xml_escape }}" />{% endfor %}{% endif %}
-    <content type="html" xml:lang="en" xml:base="{{ site.url }}/">Test</content>
+	<content type="html">{{ post.content | xml_escape }}</content>
   </entry>
 {% endfor %}
 </feed>
