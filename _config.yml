@@ -4,6 +4,7 @@ markdown: kramdown
 pygments: true
 exclude: [Rakefile]
 include: [atom.xml]
+url: http://pragti.ch
 
 author: Joris Pragt
 

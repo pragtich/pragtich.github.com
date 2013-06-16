@@ -11,7 +11,7 @@ CONFIG = {
   'postfiles' => File.join(SOURCE, "_postfiles"),
   'site' => File.join(SOURCE, "_site"),
   'post_ext' => "md",
-  'site_url' => "Http://pragti.ch"
+  'site_url' => "http://pragti.ch"
 }
 
 #Import all rakefiles from _rake folders
@@ -120,7 +120,7 @@ end # task :preview
 
 desc "Compile using ejekyll"
 task :compile do
-  system "ejekyll --url #{CONFIG[:site_url]}"
+  system "ejekyll build --url #{CONFIG[:site_url]}"
 end # task :preview
 
 
