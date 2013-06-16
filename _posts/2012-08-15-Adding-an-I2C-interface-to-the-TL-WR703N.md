@@ -13,6 +13,7 @@ enthusiasm for electronics that I had nearly forgotten. So, how did I
 add hardware control (specifically, the I2C interface) to the
 TL-WR703N?"
 layout: post
+alias: /kippycam/Adding%20an%20I2C%20interface%20to%20the%20TL-WR703N.html
 ---
 
 # The goal #
