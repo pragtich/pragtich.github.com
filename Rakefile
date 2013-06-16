@@ -120,7 +120,7 @@ end # task :preview
 
 desc "Compile using ejekyll"
 task :compile do
-  system "ejekyll build --url #{CONFIG[:site_url]}"
+  system "ejekyll build"
 end # task :preview
 
 
