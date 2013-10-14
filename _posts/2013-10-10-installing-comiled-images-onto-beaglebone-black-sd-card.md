@@ -136,21 +136,21 @@ So the smaller `ps` delivered by `BusyBox` is now active, not the richer GNU ver
 	89 root     36536 S    /lib/systemd/systemd-journald
 	91 root      3428 S    /lib/systemd/systemd-udevd
 	94 root         0 SW   [kworker/0:2]
-   117 root         0 SW   [ext4lazyinit]
-   204 root         0 SW   [flush-179:0]
-   304 root      2976 S    /lib/systemd/systemd-logind
-   305 root      2152 S    /sbin/klogd -n
-   306 root      2216 S    /sbin/syslogd -n -C64
-   308 root      5392 S    /usr/sbin/connmand -n
-   309 avahi     3168 S    avahi-daemon: running [beaglebone.local]
-   311 root      1844 S    /sbin/agetty -s ttyO0 115200
-   312 root      1844 S    /sbin/agetty --noclear tty1 38400 linux
-   317 avahi     3052 S    avahi-daemon: chroot helper
-   323 root      4644 S    /usr/sbin/wpa_supplicant -u
-   327 root      2956 S    /usr/sbin/dropbear -i -r /etc/dropbear/dropbear_rsa_host_key -p 22
-   328 root      2332 S    -sh
-   331 root      2332 R    ps
- root@beaglebone:~# 
+	117 root         0 SW   [ext4lazyinit]
+	204 root         0 SW   [flush-179:0]
+	304 root      2976 S    /lib/systemd/systemd-logind
+	305 root      2152 S    /sbin/klogd -n
+	306 root      2216 S    /sbin/syslogd -n -C64
+	308 root      5392 S    /usr/sbin/connmand -n
+	309 avahi     3168 S    avahi-daemon: running [beaglebone.local]
+	311 root      1844 S    /sbin/agetty -s ttyO0 115200
+	312 root      1844 S    /sbin/agetty --noclear tty1 38400 linux
+	317 avahi     3052 S    avahi-daemon: chroot helper
+	323 root      4644 S    /usr/sbin/wpa_supplicant -u
+	327 root      2956 S    /usr/sbin/dropbear -i -r /etc/dropbear/dropbear_rsa_host_key -p 22
+	328 root      2332 S    -sh
+	331 root      2332 R    ps
+	root@beaglebone:~# ps
 
 
 Done!
