@@ -9,15 +9,15 @@ comment_id: bbb-install-comiledimage
 summary: "So you've managed to compile an Angstrom Linux image. How to get it onto the Beaglebone?"
 ---
 
-* What's the point? 
+# What's the point? 
 
-So I managed to compile an image for the Beaglebone Black. The documentation is not bad, but it took some time to wait for some bugs to get updated in the `git`. This was thanks to VirtualBox and Ubuntu, as compiling on OS X was too painful. Compiling pretty much followed the basis instructions [at the main website][http://www.angstrom-distribution.org/building-angstrom]. And I could see the image files available (hint: look in the subfolder `work` and find the `deploy` subfolder. 
+So I managed to compile an image for the Beaglebone Black. The documentation is not bad, but it took some time to wait for some bugs to get updated in the `git`. This was thanks to VirtualBox and Ubuntu, as compiling on OS X was too painful. Compiling pretty much followed the basis instructions [at the main website](http://www.angstrom-distribution.org/building-angstrom). And I could see the image files available (hint: look in the subfolder `work` and find the `deploy` subfolder. 
 
 But how to get this stuff onto the Beaglebone Black, and running?
 
-* Creating a bootable SD card for Beaglebone Black 
+# Creating a bootable SD card for Beaglebone Black 
 
-Actually, someone before me [has been considerate and shared his experience (locally) compiling and installing Angstrom for Beaglebone Black][http://beaglebone.cameon.net/home/building-the-demo-image-fileshttp://cwraig.id.au/?p=507]. This is pretty much a copy of what he does.
+Actually, someone before me [has been considerate and shared his experience (locally) compiling and installing Angstrom for Beaglebone Black](http://cwraig.id.au/?p=507). This is pretty much a copy of what he does.
 
 Because of trouble getting a USB cardreader to show up un VirtualBox, and the incompatibility of the `mkcard.txt` script with OS X, I decided to use the BBB itself to write the SD card. This is based on the standard firmware from the circuitco website. So that is the set of executables that I had available. I booted the BBB with a nonbooting card (so that it will boot from the eMMC). The SD card then is located at `/mnt/sda`. The beaglebone is also on the network via the LAN port.
 
@@ -55,9 +55,9 @@ This results in the following confirmation that we have stuff mounted right:
 Ready for installing the images!
 
 
-* Installing the images 
+# Installing the images 
 
-Simply followed the stuff [from here][http://cwraig.id.au/?p=507]:
+Simply followed the stuff [from here](http://cwraig.id.au/?p=507):
 
 
 	#!bash
@@ -74,7 +74,7 @@ Simply followed the stuff [from here][http://cwraig.id.au/?p=507]:
 	
 Then reboot and...
 
-* Test!
+# Test!
 
 	#!bash
 	root@beaglebone:~# uname -a
@@ -138,7 +138,6 @@ So the smaller `ps` delivered by `BusyBox` is now active, not the richer GNU ver
 	94 root         0 SW   [kworker/0:2]
    117 root         0 SW   [ext4lazyinit]
    204 root         0 SW   [flush-179:0]
-   303 messageb  2568 S    /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation
    304 root      2976 S    /lib/systemd/systemd-logind
    305 root      2152 S    /sbin/klogd -n
    306 root      2216 S    /sbin/syslogd -n -C64
