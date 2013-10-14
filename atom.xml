@@ -3,13 +3,172 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="http://pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="http://pragti.ch/blog"/>
-  <updated>2013-07-28T14:41:00+02:00</updated>
+  <updated>2013-10-14T14:32:34+02:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
   <rights>Copyright (c) 2013, Joris Pragt; all rights reserved.</rights>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Installing compiled images onto Beaglebone Black SD card</title>
+    <id>tag:pragti.ch,2013-02-09:/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card</id>
+    <link rel="alternate" type="text/html" href="http://pragti.ch/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card/"/>
+    
+    <published>2013-10-10T00:00:00+02:00</published>
+    <updated>2013-10-10T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">So you've managed to compile an Angstrom Linux image. How to get it onto the Beaglebone?</summary>
+    <category term="kippycam" />
+	<content type="html">&lt;h1 id=&quot;whats-the-point&quot;&gt;What’s the point?&lt;/h1&gt;
+
+&lt;p&gt;So I managed to compile an image for the Beaglebone Black. The documentation is not bad, but it took some time to wait for some bugs to get updated in the &lt;code&gt;git&lt;/code&gt;. This was thanks to VirtualBox and Ubuntu, as compiling on OS X was too painful. Compiling pretty much followed the basis instructions &lt;a href=&quot;http://www.angstrom-distribution.org/building-angstrom&quot;&gt;at the main website&lt;/a&gt;. And I could see the image files available (hint: look in the subfolder &lt;code&gt;work&lt;/code&gt; and find the &lt;code&gt;deploy&lt;/code&gt; subfolder. &lt;/p&gt;
+
+&lt;p&gt;But how to get this stuff onto the Beaglebone Black, and running?&lt;/p&gt;
+
+&lt;h1 id=&quot;creating-a-bootable-sd-card-for-beaglebone-black&quot;&gt;Creating a bootable SD card for Beaglebone Black&lt;/h1&gt;
+
+&lt;p&gt;Actually, someone before me &lt;a href=&quot;http://cwraig.id.au/?p=507&quot;&gt;has been considerate and shared his experience (locally) compiling and installing Angstrom for Beaglebone Black&lt;/a&gt;. This is pretty much a copy of what he does.&lt;/p&gt;
+
+&lt;p&gt;Because of trouble getting a USB cardreader to show up un VirtualBox, and the incompatibility of the &lt;code&gt;mkcard.txt&lt;/code&gt; script with OS X, I decided to use the BBB itself to write the SD card. This is based on the standard firmware from the circuitco website. So that is the set of executables that I had available. I booted the BBB with a nonbooting card (so that it will boot from the eMMC). The SD card then is located at &lt;code&gt;/mnt/sda&lt;/code&gt;. The beaglebone is also on the network via the LAN port.&lt;/p&gt;
+
+&lt;p&gt;Then:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+root@beaglebone:~# wget http://www.angstrom-distribution.org/demo/beaglebone/mkcard.txt
+mkcard.txt mkcard.sh  
+chmod +x mkcard.sh 
+./mkcard.sh /dev/sda
+
+cd /mnt
+mkdir Angstrom
+mkdir boot
+mount -t vfat /dev/disk/by-label/boot boot
+mount /dev/disk/by-label/Angstrom Angstrom/
+
+df -h
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This results in the following confirmation that we have stuff mounted right:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+Filesystem      Size  Used Avail Use% Mounted on
+rootfs          1.7G  1.1G  515M  69% /
+/dev/root       1.7G  1.1G  515M  69% /
+devtmpfs        250M     0  250M   0% /dev
+tmpfs           250M  4.0K  250M   1% /dev/shm
+tmpfs           250M  252K  250M   1% /run
+tmpfs           250M     0  250M   0% /sys/fs/cgroup
+tmpfs           250M  4.0K  250M   1% /tmp
+/dev/mmcblk0p1   70M   55M   16M  79% /media/BEAGLEBONE
+/dev/sda1        70M   512   70M   1% /mnt/boot
+/dev/sda2       1.8G   35M  1.7G   3% /mnt/Angstrom
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ready for installing the images!&lt;/p&gt;
+
+&lt;h1 id=&quot;installing-the-images&quot;&gt;Installing the images&lt;/h1&gt;
+
+&lt;p&gt;Simply followed the stuff &lt;a href=&quot;http://cwraig.id.au/?p=507&quot;&gt;from here&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+cd
+mkdir installs
+cd installs
+scp -r pragtich@10.0.0.102user@host:~/compiled-image-deploy-folder .
+cd compiled-image-deploy-folder
+cp u-boot-beaglebone-2013.04-r0.img /mnt/boot/uImage
+cp MLO-beaglebone-2013.04 /mnt/boot/MLO
+tar -xmv -C /mnt/Angstrom/ -f Angstrom-systemd-image-eglibc-ipk-v2012.12-beaglebone.rootfs.tar.gz 
+umount /mnt/boot 
+umount /mnt/Angstrom 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then reboot and…&lt;/p&gt;
+
+&lt;h1 id=&quot;test&quot;&gt;Test!&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+root@beaglebone:~# uname -a
+Linux beaglebone 3.8.13 #1 SMP Sun Oct 13 15:59:25 CEST 2013 armv7l GNU/Linux
+root@beaglebone:~# ps aux
+ps: invalid option -- 'a'
+BusyBox v1.20.2 (2013-09-14 09:40:16 CEST) multi-call binary.
+
+Usage: ps 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So the smaller &lt;code&gt;ps&lt;/code&gt; delivered by &lt;code&gt;BusyBox&lt;/code&gt; is now active, not the richer GNU version in the default install. Running &lt;code&gt;ps&lt;/code&gt; also shows much less processes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!bash
+root@beaglebone:~# ps    PID USER       VSZ STAT COMMAND
+ 1 root      4680 S    {systemd} /sbin/init
+ 2 root         0 SW   [kthreadd]
+ 3 root         0 SW   [ksoftirqd/0]
+ 4 root         0 SW   [kworker/0:0]
+ 5 root         0 SW&amp;lt;  [kworker/0:0H]
+ 6 root         0 SW   [kworker/u:0]
+ 7 root         0 SW&amp;lt;  [kworker/u:0H]
+ 8 root         0 SW   [migration/0]
+ 9 root         0 SW   [rcu_bh]
+10 root         0 SW   [rcu_sched]
+11 root         0 SW   [watchdog/0]
+12 root         0 SW&amp;lt;  [khelper]
+13 root         0 SW   [kdevtmpfs]
+14 root         0 SW&amp;lt;  [netns]
+15 root         0 SW   [kworker/0:1]
+16 root         0 SW   [bdi-default]
+17 root         0 SW&amp;lt;  [kintegrityd]
+18 root         0 SW&amp;lt;  [kblockd]
+19 root         0 SW   [khubd]
+20 root         0 SW   [irq/86-44e0b000]
+21 root         0 SW   [kworker/u:1]
+24 root         0 SW   [irq/23-tps65217]
+27 root         0 SW   [irq/46-4819c000]
+36 root         0 SW&amp;lt;  [rpciod]
+38 root         0 SW   [khungtaskd]
+39 root         0 SW   [kswapd0]
+40 root         0 SW   [fsnotify_mark]
+41 root         0 SW&amp;lt;  [nfsiod]
+42 root         0 SW&amp;lt;  [crypto]
+45 root         0 SW&amp;lt;  [pencrypt]
+46 root         0 SW&amp;lt;  [pdecrypt]
+53 root         0 SW&amp;lt;  [OMAP UART0]
+57 root         0 SW&amp;lt;  [kpsmoused]
+58 root         0 SW   [irq/150-mmc0]
+70 root         0 SW   [kworker/u:2]
+71 root         0 DW   [mmcqd/0]
+74 root         0 SW   [mmcqd/1]
+75 root         0 SW   [mmcqd/1boot0]
+76 root         0 SW   [mmcqd/1boot1]
+77 root         0 SW&amp;lt;  [deferwq]
+80 root         0 SW&amp;lt;  [kworker/0:1H]
+81 root         0 SW   [jbd2/mmcblk0p2-]
+82 root         0 SW&amp;lt;  [ext4-dio-unwrit]
+89 root     36536 S    /lib/systemd/systemd-journald
+91 root      3428 S    /lib/systemd/systemd-udevd
+94 root         0 SW   [kworker/0:2]
+117 root         0 SW   [ext4lazyinit]
+204 root         0 SW   [flush-179:0]
+304 root      2976 S    /lib/systemd/systemd-logind
+305 root      2152 S    /sbin/klogd -n
+306 root      2216 S    /sbin/syslogd -n -C64
+308 root      5392 S    /usr/sbin/connmand -n
+309 avahi     3168 S    avahi-daemon: running [beaglebone.local]
+311 root      1844 S    /sbin/agetty -s ttyO0 115200
+312 root      1844 S    /sbin/agetty --noclear tty1 38400 linux
+317 avahi     3052 S    avahi-daemon: chroot helper
+323 root      4644 S    /usr/sbin/wpa_supplicant -u
+327 root      2956 S    /usr/sbin/dropbear -i -r /etc/dropbear/dropbear_rsa_host_key -p 22
+328 root      2332 S    -sh
+331 root      2332 R    ps
+root@beaglebone:~# ps
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Done!&lt;/p&gt;
+</content>
+  </entry>
 
 
   <entry>
