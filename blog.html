@@ -6,7 +6,7 @@ title: Index of all articles
 {% for post in site.posts %}
 <indextitle>
   {% if post.indeximage %}
-	  <IMG SRC="{{site.url }}{{ site.baseurl }}indeximages/{{ post.indeximage }}"/>
+	  <IMG SRC="{{site.url }}{{ site.baseurl }}/indeximages/{{ post.indeximage }}"/>
   {% endif %}
   <a href="{{ post.url }}">{{ post.title }}</a>
   <H2 class="itemdate">{{ post.date | date_to_string }}
