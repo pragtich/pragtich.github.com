@@ -10,7 +10,7 @@ summary: "How to get Emacs' PATH setup properly so that python-mode will work"
 
 # Setting PATH for applications started from the Dock in OS X 10.10 Yosemite
 
-I recently switched from Fink to Homebrew, the most up-to-date packaging system for Mac OS X. With that, I also decided to install the Emacs 24.1 directly from Homebrew instead of from one of the OS X-specific compiled versions available. This works fine:
+I recently switched from Fink to Homebrew, the most up-to-date packaging system for Mac OS X 10.10 Yosemite. With that, I also decided to install the Emacs 24.1 directly from Homebrew instead of from one of the OS X-specific compiled versions available. This works fine:
 
     brew install emacs --cocoa
 
