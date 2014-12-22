@@ -3,13 +3,47 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="http://pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="http://pragti.ch/blog"/>
-  <updated>2014-12-22T15:18:38+01:00</updated>
+  <updated>2014-12-22T15:41:49+01:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
   <rights>Copyright (c) 2014, Joris Pragt; all rights reserved.</rights>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Setting PATH for Emacs when launched from Dock</title>
+    <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock</id>
+    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock/"/>
+    
+    <published>2014-12-22T00:00:00+01:00</published>
+    <updated>2014-12-22T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">How to get Emacs&#39; PATH setup properly so that python-mode will work</summary>
+    <category term="computer stuff" />
+	<content type="html">&lt;h1 id=&quot;setting-path-for-applications-started-from-the-dock-in-os-x-1010-yosemite&quot;&gt;Setting PATH for applications started from the Dock in OS X 10.10 Yosemite&lt;/h1&gt;
+
+&lt;p&gt;I recently switched from Fink to Homebrew, the most up-to-date packaging system for Mac OS X. With that, I also decided to install the Emacs 24.1 directly from Homebrew instead of from one of the OS X-specific compiled versions available. This works fine:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install emacs --cocoa
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, there is a problem: when an application is run from the Dock, it has only a very minimal environment, and it definitely does not get a PATH from any of the shell configuration files. Without this PATH, all kinds of things do not work. The first thing I noticed, was that python-mode was finding Mac OS’s builtin Python instead of my updated version.&lt;/p&gt;
+
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;We need a trick to start the program (Emacs in this case) from the shell, instead of straight from the Dock. This way, the shell will start with the limited environment, but will load its own profile files, thus delivering the standard PATH and other settings. The solution &lt;a href=&quot;https://korewanetadesu.com/emacs-on-os-x.html&quot;&gt;was given here&lt;/a&gt; &lt;a href=&quot;https://superuser.com/questions/828716/how-to-create-a-mac-app-launcher-for-emacs-via-homebrew&quot;&gt;and here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cocretely, I have attached an Automator script to the Dock, that starts Emacs for me. The drawback is, that even if you give it the same icon, the running instance of Emacs will get a separate icon on the dock. I have not yet found a solution for this, and am experiencing the same on Windows 7. Not a problem.&lt;/p&gt;
+
+&lt;p&gt;The Automator code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;echo &#39;/Applications/Emacs.app/Contents/MacOS/Emacs &quot;$@&quot;&#39; | bash --login -s &amp;amp;&amp;gt; /dev/null &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;&amp;amp;&amp;gt; /dev/null &amp;amp;&lt;/code&gt; part makes sure that the Automator task does not hang around waiting for the Emacs instance to exit or close its pipes. &lt;/p&gt;
+</content>
+  </entry>
 
 
   <entry>
