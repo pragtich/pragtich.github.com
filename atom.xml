@@ -3,13 +3,13 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="http://pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="http://pragti.ch/blog"/>
-  <updated>2013-10-14T14:38:50+02:00</updated>
+  <updated>2014-12-22T15:15:41+01:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
-  <rights>Copyright (c) 2013, Joris Pragt; all rights reserved.</rights>
+  <rights>Copyright (c) 2014, Joris Pragt; all rights reserved.</rights>
 
 
   <entry>
@@ -19,7 +19,7 @@
     
     <published>2013-10-10T00:00:00+02:00</published>
     <updated>2013-10-10T00:00:00+02:00</updated>
-    <summary type="text" xml:lang="en">So you've managed to compile an Angstrom Linux image. How to get it onto the Beaglebone?</summary>
+    <summary type="text" xml:lang="en">So you&#39;ve managed to compile an Angstrom Linux image. How to get it onto the Beaglebone?</summary>
     <category term="kippycam" />
 	<content type="html">&lt;h1 id=&quot;whats-the-point&quot;&gt;What’s the point?&lt;/h1&gt;
 
@@ -93,7 +93,7 @@ umount /mnt/Angstrom
 root@beaglebone:~# uname -a
 Linux beaglebone 3.8.13 #1 SMP Sun Oct 13 15:59:25 CEST 2013 armv7l GNU/Linux
 root@beaglebone:~# ps aux
-ps: invalid option -- 'a'
+ps: invalid option -- &#39;a&#39;
 BusyBox v1.20.2 (2013-09-14 09:40:16 CEST) multi-call binary.
 
 Usage: ps 
@@ -196,18 +196,14 @@ root@beaglebone:~# ps
 
 &lt;p&gt;Easy.  Add percent to the pathname regexp:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;	&lt;span class=&quot;n&quot;&gt;postfile_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;\1-\2-\3-\4&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;postfile_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;\1-\2-\3-\4&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;and &lt;code&gt;CGI.decode&lt;/code&gt; the directory portion of the filename before passing it back to Jekyll:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;      &lt;span class=&quot;c1&quot;&gt;# Add a static file entry for each postfile, if any&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# Add a static file entry for each postfile, if any&lt;/span&gt;
         &lt;span class=&quot;no&quot;&gt;Dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;postfile_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/*&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
           &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;static_files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;PostFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postfile_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CGI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unescape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-	
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The diff of my edits can be &lt;a href=&quot;https://github.com/pragtich/jekyll-postfiles/commit/ec519615501cbbc6d603854eaa463f1f9e0fe777&quot;&gt;found here on GitHub&lt;/a&gt;.&lt;/p&gt;
 
@@ -298,7 +294,7 @@ markdown: kramdown     # I like kramdown
 &amp;lt;ul&amp;gt;
   {% for cat in site.categories %}
     &amp;lt;li&amp;gt;
-	  &amp;lt;a href=&quot;{{ site.url }}/categories/{{ cat[0] | downcase | replace: ' ','-' | cgi_escape}}&quot;&amp;gt;{{ cat[0] }}&amp;lt;/a&amp;gt;
+	  &amp;lt;a href=&quot;{{ site.url }}/categories/{{ cat[0] | downcase | replace: &#39; &#39;,&#39;-&#39; | cgi_escape}}&quot;&amp;gt;{{ cat[0] }}&amp;lt;/a&amp;gt;
 	&amp;lt;/li&amp;gt;
    {{  }}
   {% endfor %}
@@ -393,7 +389,7 @@ layout: default
 
 &lt;p&gt;This is the part of the &lt;a href=&quot;https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile&quot;&gt;&lt;code&gt;Rakefile&lt;/code&gt;&lt;/a&gt; that does this:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rake&amp;#39;&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rake&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;yaml&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;time&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;highline/import&amp;#39;&lt;/span&gt;
@@ -431,9 +427,7 @@ layout: default
 
    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Making folder &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thefolder&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; for your postfiles.&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;no&quot;&gt;FileUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mkdir_p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thefolder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# task :postfile&lt;/span&gt;
- 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+ &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# task :postfile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Also, I stole parts of the &lt;code&gt;Rakefile&lt;/code&gt; from &lt;a href=&quot;https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile&quot;&gt;Jekyll-bootstrap&lt;/a&gt;. Especially, the &lt;code&gt;post&lt;/code&gt; and &lt;code&gt;preview&lt;/code&gt; commands I really like. I did edit them to meet my tastes, please see &lt;a href=&quot;https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile&quot;&gt;the file on GitHub&lt;/a&gt;. &lt;/p&gt;
 
@@ -529,14 +523,14 @@ start_instance() {
 
 	section_enabled &quot;$s&quot; || return 1
 
-	config_get device &quot;$s&quot; 'device'
-	config_get resolution &quot;$s&quot; 'resolution'
-	config_get fps &quot;$s&quot; 'fps'
-	config_get www &quot;$s&quot; 'www'
-	config_get port &quot;$s&quot; 'port'
+	config_get device &quot;$s&quot; &#39;device&#39;
+	config_get resolution &quot;$s&quot; &#39;resolution&#39;
+	config_get fps &quot;$s&quot; &#39;fps&#39;
+	config_get www &quot;$s&quot; &#39;www&#39;
+	config_get port &quot;$s&quot; &#39;port&#39;
 
 	[ -c &quot;$device&quot; ] || {
-		error &quot;device '$device' does not exist&quot;
+		error &quot;device &#39;$device&#39; does not exist&quot;
 		return 1
 	}
 
@@ -564,14 +558,14 @@ start_instance() {
 
 	SERVICE_PID_FILE=${PIDLOC}-${s}.pid
 
-	config_get device &quot;$s&quot; 'device'
-	config_get resolution &quot;$s&quot; 'resolution'
-	config_get fps &quot;$s&quot; 'fps'
-	config_get www &quot;$s&quot; 'www'
-	config_get port &quot;$s&quot; 'port'
+	config_get device &quot;$s&quot; &#39;device&#39;
+	config_get resolution &quot;$s&quot; &#39;resolution&#39;
+	config_get fps &quot;$s&quot; &#39;fps&#39;
+	config_get www &quot;$s&quot; &#39;www&#39;
+	config_get port &quot;$s&quot; &#39;port&#39;
 
 	[ -c &quot;$device&quot; ] || {
-		error &quot;device '$device' does not exist&quot;
+		error &quot;device &#39;$device&#39; does not exist&quot;
 		return 1
 	}
 
@@ -713,7 +707,7 @@ easy access to the editor through the alias &lt;code&gt;e&lt;/code&gt;. This sho
 automatically launch emacs when it is not yet running, or connect to
 it using &lt;code&gt;emacsclient&lt;/code&gt; if it is. I had some trouble when &lt;code&gt;ssh&lt;/code&gt;‘ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the &lt;code&gt;-s&lt;/code&gt; option. This works most of the time, although when autostarting the &lt;code&gt;Emacs&lt;/code&gt; binary from &lt;code&gt;emacsclient&lt;/code&gt;, all options are dropped by &lt;code&gt;emacsclient&lt;/code&gt;, so things like &lt;code&gt;-nw&lt;/code&gt; will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with &lt;code&gt;-nw&lt;/code&gt; when working in a text only environment.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;emacsclient: can't find socket; have you started the server?
+&lt;pre&gt;&lt;code&gt;emacsclient: can&#39;t find socket; have you started the server?
 To start the server in Emacs, type &quot;M-x server-start&quot;.
 emacsclient: No socket or alternate editor.  Please use:
 
@@ -789,8 +783,8 @@ alias e=$VISUAL
 
 &lt;p&gt;Added the following to &lt;code&gt;~/.emacs&lt;/code&gt; (and deleted some package stuff that was left from before).&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;(require 'package)
-(add-to-list 'package-archives '(&quot;marmalade&quot; . &quot;http://marmalade-repo.org/packages/&quot;))
+&lt;pre&gt;&lt;code&gt;(require &#39;package)
+(add-to-list &#39;package-archives &#39;(&quot;marmalade&quot; . &quot;http://marmalade-repo.org/packages/&quot;))
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Now I can list the packages available with &lt;code&gt;M-x list-packages&lt;/code&gt;. Need to start learning how that works.&lt;/p&gt;
@@ -809,7 +803,7 @@ y    ; for yes
 
 &lt;p&gt;In order to avoid typing &lt;code&gt;magit-status&lt;/code&gt; a lot, I bound it to a key in &lt;code&gt;~/.emacs&lt;/code&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;(global-set-key (kbd &quot;C-x g&quot;) 'magit-status)
+&lt;pre&gt;&lt;code&gt;(global-set-key (kbd &quot;C-x g&quot;) &#39;magit-status)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&quot;enabling-ido-mode&quot;&gt;Enabling Ido mode&lt;/h2&gt;
@@ -832,7 +826,7 @@ y    ; for yes
     
     <published>2012-09-22T00:00:00+02:00</published>
     <updated>2012-09-22T00:00:00+02:00</updated>
-    <summary type="text" xml:lang="en">Installing openwrt onto the TL-WR703N using a USB flash drive as the root is not hard. It did however take me a serious amount of research to figure everything out. Here's my try at documenting how to do it.</summary>
+    <summary type="text" xml:lang="en">Installing openwrt onto the TL-WR703N using a USB flash drive as the root is not hard. It did however take me a serious amount of research to figure everything out. Here&#39;s my try at documenting how to do it.</summary>
     <category term="computer stuff" />
 	<content type="html">&lt;h1 id=&quot;the-situation&quot;&gt;The situation&lt;/h1&gt;
 
@@ -1490,7 +1484,7 @@ website&lt;/a&gt; and copied the www folder into &lt;code&gt;/www/webcam0/&lt;/c
     
     <published>2012-08-15T00:00:00+02:00</published>
     <updated>2012-08-15T00:00:00+02:00</updated>
-    <summary type="text" xml:lang="en">I had the wireless router to show the webcam images for the 'kippycam'. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?</summary>
+    <summary type="text" xml:lang="en">I had the wireless router to show the webcam images for the &#39;kippycam&#39;. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?</summary>
     <category term="kippycam" />
 	<content type="html">&lt;h1 id=&quot;the-goal&quot;&gt;The goal&lt;/h1&gt;
 
@@ -1797,7 +1791,7 @@ OFF=1
 ON=0
 # Make sure we have root access
 if [ $EUID -ne 0 ]; then
-		echo &quot;You must be root to run this. Try 'sudo $0'&quot;
+		echo &quot;You must be root to run this. Try &#39;sudo $0&#39;&quot;
 		exit
 fi
 
@@ -1814,7 +1808,7 @@ cleanup()
 # Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
 echo $LEDPIN &amp;gt; /sys/class/gpio/export
 echo out &amp;gt; /sys/class/gpio/gpio$LEDPIN/direction
-trap 'cleanup $LEDPIN' 1 2 15
+trap &#39;cleanup $LEDPIN&#39; 1 2 15
 
 while true
 do
@@ -1875,7 +1869,7 @@ the router remain healthy. &lt;/p&gt;
 
 # I am getting the packages from my local copy of the trunk, just
 to have it all be consistent. That probably is only critical for
-the kernel modules packages, but let's do it for sake of
+the kernel modules packages, but let&#39;s do it for sake of
 simplicity
 
 opkg install monit
@@ -1942,7 +1936,7 @@ editor. Some research was needed.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!bash
 # editor setup
-export EDITOR='/Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient'
+export EDITOR=&#39;/Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient&#39;
 export ALTERNATE_EDITOR=vi
 alias e=$EDITOR
 &lt;/code&gt;&lt;/pre&gt;
@@ -2105,7 +2099,7 @@ because I tend to forget each syntax before I get to use it again.&lt;/p&gt;
   &lt;li&gt;
     &lt;p&gt;Edited &lt;code&gt;Rakefile&lt;/code&gt;&lt;/p&gt;
 
-    &lt;pre&gt;&lt;code&gt;  require 'nanoc-git/tasks'
+    &lt;pre&gt;&lt;code&gt;  require &#39;nanoc-git/tasks&#39;
 &lt;/code&gt;&lt;/pre&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
@@ -2313,7 +2307,7 @@ page.&lt;/li&gt;
 
 &lt;p&gt;The main idea for this project came from “&lt;a href=&quot;http://www.instructables.com/id/How-to-set-up-a-solar-powered-webcam-server-using-/&quot;&gt;How to set up a solar powered webcam server using NanosG20 running Debian&lt;/a&gt;” by Janisalnis on instructables. &lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;janisalnis.jpg&quot; alt=&quot;Picture of Janisalnis' setup&quot; title=&quot;This is how his project looked when he wrote about it&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;janisalnis.jpg&quot; alt=&quot;Picture of Janisalnis&#39; setup&quot; title=&quot;This is how his project looked when he wrote about it&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Building from this idea, janisalnis already makes the recommendation that modern routers are &lt;a href=&quot;http://www.instructables.com/id/How-to-set-up-home-data-server-using-OpenWRT-on-Li/&quot;&gt;a much smarter way to go&lt;/a&gt;. And on &lt;a href=&quot;http://barbara320.gotdns.com/&quot;&gt;his homepage&lt;/a&gt; there are many examples of the results of his great projects. There, he links &lt;a href=&quot;http://www.slideshare.net/JanisAlnis/home-automation-12979616&quot;&gt;a presentation that really drew my attention&lt;/a&gt;. He is a really creative guy!&lt;/p&gt;
 
@@ -2522,7 +2516,7 @@ summary: (&amp;gt;&amp;gt;&amp;gt;SUMMARY&amp;lt;&amp;lt;&amp;lt;)
 
 &lt;p&gt;So, I am trying to get the Blogging helper RSS stuff to work. The &lt;a href=&quot;http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method&quot;&gt;documentation&lt;/a&gt; shows that we need to set up some stuff. I did just that, although I must say I really dislike the &lt;code&gt;excerpt&lt;/code&gt; tag, because of its American English brutality. I will try to come up with a way to use &lt;code&gt;summary&lt;/code&gt; instead.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;base_url: 'http://http://members.home.nl/pragtich'
+&lt;pre&gt;&lt;code&gt;base_url: &#39;http://http://members.home.nl/pragtich&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Created a &lt;code&gt;content/atom.xml&lt;/code&gt; with the contents:&lt;/p&gt;
@@ -2532,7 +2526,7 @@ summary: (&amp;gt;&amp;gt;&amp;gt;SUMMARY&amp;lt;&amp;lt;&amp;lt;)
 
 &lt;p&gt;And created &lt;code&gt;content/atom.yaml&lt;/code&gt; with:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;title: Joris Pragt's blog feed
+&lt;pre&gt;&lt;code&gt;title: Joris Pragt&#39;s blog feed
 author_name: Joris Pragt
 author_uri: http://members.home.nl/pragtich
 is_hidden: true
@@ -2540,12 +2534,12 @@ is_hidden: true
 
 &lt;p&gt;Edited &lt;code&gt;Rules&lt;/code&gt; to add:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;compile '/atom/' do
+&lt;pre&gt;&lt;code&gt;compile &#39;/atom/&#39; do
   filter :erb
 end
 
-route '/atom/' do
-  '/atom.xml'
+route &#39;/atom/&#39; do
+  &#39;/atom.xml&#39;
 end
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -2606,7 +2600,7 @@ And crated a ‘compile and upload’ rake addition to the &lt;code&gt;Rakefile&
 
 &lt;pre&gt;&lt;code&gt;desc &quot;compile and upload.&quot;
 task :co do
-  system 'nanoc co &amp;amp;&amp;amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name'
+  system &#39;nanoc co &amp;amp;&amp;amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name&#39;
 end
 &lt;/code&gt;&lt;/pre&gt;
 
