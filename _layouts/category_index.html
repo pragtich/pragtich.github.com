@@ -4,10 +4,15 @@ layout: default
 <article>
 <h1 >{{ page.title }}</h1>
 <ul >
-{% for post in site.categories[page.category] %}
+  {% if page.category %}
+  {% assign mylist = site.categories[page.category] %}
+  {% else %}
+  {% assign mylist=site.posts %}
+  {% endif %}
+  {% for post in mylist %}
     <indextitle><a href="{{ post.url }}">{{ post.title }}</a>
 	  {% if post.indeximage %}
-	  <IMG SRC="{{ site.url }}{{ site.baseurl }}indeximages/{{ post.indeximage }}"/>
+	  <IMG SRC="{{ site.url }}{{ site.baseurl }}/indeximages/{{ post.indeximage }}"/>
 	  {% endif %}
 
       <h2 class="itemdate">{{ post.date | date_to_html_string }}
