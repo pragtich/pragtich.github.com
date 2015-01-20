@@ -1,7 +1,7 @@
 permalink: pretty
 lsi: true
 markdown: kramdown
-pygments: true
+highlighter: pygments
 exclude: [Rakefile]
 include: [atom.xml]
 url: http://pragti.ch
