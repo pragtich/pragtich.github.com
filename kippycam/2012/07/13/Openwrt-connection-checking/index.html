@@ -35,8 +35,8 @@
   <p>I noticed, when
 <a href="network-layout.html">installing the WiFi network bridge to the garden shed</a>,
 that the DHCP client does not reconnect when the connection has been
-lost. It just sits there (don’t know when it would reconnect, maybe
-when the lease expires?) unconnected. For my purpose, that’s not very
+lost. It just sits there (don&#39;t know when it would reconnect, maybe
+when the lease expires?) unconnected. For my purpose, that&#39;s not very
 satisfying, as I need the connection to be robust. </p>
 
 <p>Since I had worked with <code>monit</code> before, I figured this would be a
@@ -45,37 +45,31 @@ re-enable it when it has dropped out. At a later date, <code>monit</code> could
 also turn out to be helpful in making sure that all other services on
 the router remain healthy. </p>
 
-<h1 id="installing--configuring">Installing &amp; configuring</h1>
-
-<pre><code>opkg update
+<h1>Installing &amp; configuring</h1>
+<div class="highlight"><pre><code class="language-text" data-lang="text">opkg update
 
 # I am getting the packages from my local copy of the trunk, just
 to have it all be consistent. That probably is only critical for
-the kernel modules packages, but let's do it for sake of
+the kernel modules packages, but let&#39;s do it for sake of
 simplicity
 
 opkg install monit
 
 vi /etc/monitrc
-</code></pre>
-
+</code></pre></div>
 <p>I added some sensible settings from the template that is in
 <code>/etc/monitrc</code>, mainly to start as a daemon, put the work files in
 <code>/tmp</code> and set the frequency of the checks. And the check for a
 connection:</p>
-
-<pre><code>check host kiprouter with address 10.0.0.4                                     
+<div class="highlight"><pre><code class="language-text" data-lang="text">check host kiprouter with address 10.0.0.4                                     
     if failed icmp type echo count 3 with timeout 3 seconds then
-	exec "/etc/init.d/network restart"
-</code></pre>
-
+    exec &quot;/etc/init.d/network restart&quot;
+</code></pre></div>
 <p>Then to enable and start monit:</p>
-
-<pre><code>/etc/init.d/monit enable
+<div class="highlight"><pre><code class="language-text" data-lang="text">/etc/init.d/monit enable
 /etc/init.d/monit start
-</code></pre>
-
-<p>Testing results later…</p>
+</code></pre></div>
+<p>Testing results later...</p>
 
 <footer>
   <p>
@@ -125,6 +119,11 @@ connection:</p>
 	  
 	    <li>
 		  <a href="http://pragti.ch/categories/blogging">blogging</a>
+		</li>
+	   
+	  
+	    <li>
+		  <a href="http://pragti.ch/categories/project-euler">project euler</a>
 		</li>
 	   
 	  

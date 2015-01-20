@@ -35,10 +35,10 @@
   <p>installing Emacs Template mode in Aquamacs. Based on <a href="http://emacs-template.sourceforge.net/details.html">This web site</a>.</p>
 
 <p>Downloaded and put the template.el file into <code>~/.xemacs/lisp</code>. 
-Visit the file and `  M-x byte-compile-file RET template.el RET`. Loads of errors.</p>
+Visit the file and <code>M-x byte-compile-file RET template.el RET</code>. Loads of errors.</p>
 
 <p>Put into Emacs settings (Library in Aquamacs):
-    (require ‘template)
+    (require &#39;template)
     (template-initialize)
     M-C-x</p>
 
@@ -49,11 +49,10 @@ Visit the file and `  M-x byte-compile-file RET template.el RET`. Loads of error
 <p>Read the <a href="http://emacs-template.sourceforge.net/details.html">manual</a>.
 * <code>C-x t</code> Creates a file with template
 * <code>template-new-file</code> Should do the same
-* I want to try and disable it from <code>C-x C-f</code> – that would only be confusing</p>
+* I want to try and disable it from <code>C-x C-f</code> -- that would only be confusing</p>
 
 <p>Created the following empty markdown article with Nanoc header in <code>~/.templates</code>:</p>
-
-<pre><code>--- 
+<div class="highlight"><pre><code class="language-text" data-lang="text">--- 
 title: (&gt;&gt;&gt;TITLE&lt;&lt;&lt;)
 kind: article
 category: Computer stuff
@@ -64,14 +63,12 @@ summary: (&gt;&gt;&gt;SUMMARY&lt;&lt;&lt;)
 (&gt;&gt;&gt;POINT&lt;&lt;&lt;)
 
 &gt;&gt;&gt;TEMPLATE-DEFINITION-SECTION&lt;&lt;&lt;
-("SUMMARY" "Summary?" "" "" "-- no summary --")
-("TITLE" "Title?" "" "" "")
-</code></pre>
-
+(&quot;SUMMARY&quot; &quot;Summary?&quot; &quot;&quot; &quot;&quot; &quot;-- no summary --&quot;)
+(&quot;TITLE&quot; &quot;Title?&quot; &quot;&quot; &quot;&quot; &quot;&quot;)
+</code></pre></div>
 <p>Now, to submit a now article, I can do: <code>C-x t</code>, type the new folder and filename with the <code>.md</code> extension, and type <code>RET</code>. Further filling in the prompts for template (<code>RET</code>), summary and title is a breeze, and then I have the cursor placed at exactly the right point for starting to blog.</p>
 
 <p>Great stuff.</p>
-
 
 <footer>
   <p>
@@ -121,6 +118,11 @@ summary: (&gt;&gt;&gt;SUMMARY&lt;&lt;&lt;)
 	  
 	    <li>
 		  <a href="http://pragti.ch/categories/blogging">blogging</a>
+		</li>
+	   
+	  
+	    <li>
+		  <a href="http://pragti.ch/categories/project-euler">project euler</a>
 		</li>
 	   
 	  

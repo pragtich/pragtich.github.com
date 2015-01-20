@@ -32,24 +32,24 @@
 	I had the wireless router to show the webcam images for the 'kippycam'. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?
 </summary>
 <bodytext>
-  <h1 id="the-goal">The goal</h1>
+  <h1>The goal</h1>
 
 <p>To enable the creative use of the wireless router in the garden to do
 all kinds of fun stuff. My first insane ideas are things like:</p>
 
 <ul>
-  <li>Closing the chicken coop door (determined by remote control or
+<li>Closing the chicken coop door (determined by remote control or
 automatically)</li>
-  <li>Making a feed dispenser, so that the chickens may be tempted to be
+<li>Making a feed dispenser, so that the chickens may be tempted to be
 close to the camera</li>
-  <li>Counting and logging the egg laying productivity (and the chickens’
+<li>Counting and logging the egg laying productivity (and the chickens&#39;
 noise?)</li>
-  <li>Monitoring the solar panels and battery charge status.</li>
+<li>Monitoring the solar panels and battery charge status.</li>
 </ul>
 
-<p>That’s just the start…</p>
+<p>That&#39;s just the start...</p>
 
-<h1 id="approach">Approach</h1>
+<h1>Approach</h1>
 
 <p>Because of the <a href="https://forum.openwrt.org/viewtopic.php?id=36471">promising reports for at least 2 GPIO pins in the
 TL-WR703N</a>, I was looking for an interface that supports powerful
@@ -61,7 +61,7 @@ of devices. Serial communication could have worked, but this is not
 very robust against jitter (and we will be bit-banging) and demands a
 lot from each client. So: I2C it is!</p>
 
-<h1 id="adding-i2c-interface">Adding I2C interface</h1>
+<h1>Adding I2C interface</h1>
 
 <p>All the background information that I used came from the kind people
 that generated their knowledge
@@ -69,9 +69,9 @@ that generated their knowledge
 what they did before. A few points are critical:</p>
 
 <ol>
-  <li>The parts are really really small. Take a lot of care, use a very
+<li>The parts are really really small. Take a lot of care, use a very
 sharp soldering iron and use magnification.</li>
-  <li>The traces in the router are easily peeled off. Do not apply
+<li>The traces in the router are easily peeled off. Do not apply
 vertical forces and make sure to releive any forces on the wires. I
 epoxied all wires to the PCB after soldering to prevent them from
 pulling the PCB traces.</li>
@@ -80,48 +80,48 @@ pulling the PCB traces.</li>
 <p>These were the steps:</p>
 
 <ol>
-  <li>Remove R15 and R17.</li>
-  <li>Solder very thin wires to each pad (the side facing away from the
+<li>Remove R15 and R17.</li>
+<li>Solder very thin wires to each pad (the side facing away from the
 USB connector)</li>
-  <li>Solder a +3.3V wire to the square field marked <code>LED2 +</code></li>
-  <li>Solder a GND wire to the micro-USB connector (reset button side)</li>
-  <li>Solder a +5V wire to the other side of the micro-USB connector
+<li>Solder a +3.3V wire to the square field marked <code>LED2 +</code></li>
+<li>Solder a GND wire to the micro-USB connector (reset button side)</li>
+<li>Solder a +5V wire to the other side of the micro-USB connector
 (Ethernet side)</li>
-  <li>Glue the wires to the PCB using 2-component epoxy adhesive.</li>
+<li>Glue the wires to the PCB using 2-component epoxy adhesive.</li>
 </ol>
 
-<p>…although the micro usb wires may be the other way around…</p>
+<p>...although the micro usb wires may be the other way around...</p>
 
-<p><img src="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/I2C-soldered.jpg" alt="The finished product" title="After completing the soldering" />
-<img src="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/I2C-soldered-detail.jpg" alt="The finished product, some more detail" title="Some more detail" /></p>
+<p><img src="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/I2C-soldered.jpg" alt="The finished product" title="After completing the soldering">
+<img src="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/I2C-soldered-detail.jpg" alt="The finished product, some more detail" title="Some more detail"></p>
 
 <p>Then I cut a hole into the top of the housing and glued a 2x3 boxed
 header onto the lid of the router. I chose the following pin-out in an
 attempt to keep the signal wires apart:</p>
 
 <ol>
-  <li>5V</li>
-  <li>NC</li>
-  <li>SCL (GPIO7, 3.3V)</li>
-  <li>GND</li>
-  <li>SDA (GPIO 29, 3.3V)</li>
-  <li>3.3V</li>
+<li>5V</li>
+<li>NC</li>
+<li>SCL (GPIO7, 3.3V)</li>
+<li>GND</li>
+<li>SDA (GPIO 29, 3.3V)</li>
+<li>3.3V</li>
 </ol>
 
-<p>That’s how it looks:</p>
+<p>That&#39;s how it looks:</p>
 
-<p><img src="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/I2C-done.jpg" alt="The finished product, outside" title="The end product, closed and tidy." /></p>
+<p><img src="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/I2C-done.jpg" alt="The finished product, outside" title="The end product, closed and tidy."></p>
 
 <p><strong>No Pull-ups yet, so these need to be put on the client side, or
   built in later.</strong></p>
 
-<h1 id="installing-on-openwrt">Installing on Openwrt</h1>
+<h1>Installing on Openwrt</h1>
+
 <p>The OpenWRT wiki has loads of (some more outdated than other) stuff on
 I2C
-<a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c">at this link</a>. Let’s
+<a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c">at this link</a>. Let&#39;s
 start with the basics:</p>
-
-<pre><code>&gt; opkg update
+<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; opkg update
 &gt; opkg install i2c-tools
 &gt;opkg install kmod-i2c-gpio-custom
 
@@ -129,15 +129,14 @@ Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
 Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
 Collected errors:
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-i2c-gpio-custom:
- * 	kmod-i2c-algo-bit * 
+ *  kmod-i2c-algo-bit * 
  * opkg_install_cmd: Cannot install package kmod-i2c-gpio-custom.
-</code></pre>
-
+</code></pre></div>
 <p>So we are missing kmod-i2c-algo-bit. A quick check on the
 <a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages/">downloads page for trunk</a> shows it missing there,
 too. But I really need it. </p>
 
-<p>**So now what? **</p>
+<p>*<em>So now what? *</em></p>
 
 <p>Left over from
 <a href="../technology/Compiling%20gstreamer%20for%20C920%20webcam.html">my experiments with compiling OpenWRT on OS X</a> was a local compile directory that actually
@@ -145,14 +144,13 @@ successfully compiles. So I went in there and did a <code>make
 menuconfig</code>. When I installed all the I2C stuff, it automatically
 enables the <code>i2c-gpio-custom</code> module. And after <code>make</code>, it also
 compiles the matchin object file. But no <code>.ipk</code> to match. Where did it
-go…?</p>
+go...?</p>
 
 <p>After a bit of searching it was
 found. <code>trunk/build_dir/linux-ar71xx_generic/linux-3.3.8/modules.builtin</code>
 tells exactly where it went: into the kernel (built-in, not as a
-module). Here’s a list of all the stuff that was builtin:</p>
-
-<pre><code>kernel/fs/jffs2/jffs2.ko
+module). Here&#39;s a list of all the stuff that was builtin:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">kernel/fs/jffs2/jffs2.ko
 kernel/fs/overlayfs/overlayfs.ko
 kernel/fs/squashfs/squashfs.ko
 kernel/crypto/crypto.ko
@@ -215,22 +213,20 @@ kernel/lib/crc32.ko
 kernel/lib/lzma/lzma_compress.ko
 kernel/lib/lzma/lzma_decompress.ko
 kernel/lib/xz/xz_dec.ko
-</code></pre>
-
+</code></pre></div>
 <p>So, something is wonky with Openwrt. Either one of the two:</p>
 
 <ol>
-  <li>The kernel config automatically configures the module as a builtin
+<li>The kernel config automatically configures the module as a builtin
 and ignores my wish to have it as a module. </li>
-  <li>The package <code>kmod-i2c-gpio-custom</code> incorrectly forces the
+<li>The package <code>kmod-i2c-gpio-custom</code> incorrectly forces the
 dependency to <code>kmod-i2c-algo-bit</code>, while indeed it is builtin by
 default.</li>
 </ol>
 
-<p>I do not understand the kernel enough to know who’s wrong, but the
+<p>I do not understand the kernel enough to know who&#39;s wrong, but the
 solution is clear:</p>
-
-<pre><code>&gt; opkg install --force-depends kmod-i2c-gpio-custom
+<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; opkg install --force-depends kmod-i2c-gpio-custom
 Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
 Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
 Installing kmod-i2c-gpio (3.3.8-1) to root...
@@ -239,37 +235,33 @@ Configuring kmod-i2c-gpio.
 Configuring kmod-i2c-gpio-custom.
 Collected errors:
 * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-i2c-gpio-custom:
-* 	kmod-i2c-algo-bit * 
-</code></pre>
-
+*   kmod-i2c-algo-bit * 
+</code></pre></div>
 <p>But does it work?</p>
-
-<pre><code>&gt; insmod i2c-gpio-custom bus0=0,29,7
+<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; insmod i2c-gpio-custom bus0=0,29,7
 &gt; dmesg |tail
 
 [  711.120000] Custom GPIO-based I2C driver version 0.1.1
 [  711.120000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
 [  712.920000] br-lan: port 1(eth0) entered forwarding state
-</code></pre>
-
+</code></pre></div>
 <p>Success?</p>
 
-<h1 id="the-first-io-test">The first IO test</h1>
+<h1>The first IO test</h1>
 
 <p>I made a breadboard with the <code>PCF8574</code> IO expander from Texas
 Instruments (also available from NXP, but TI gives free samples). It
 takes the 3.3V power from the router, pulls up and has 8 LEDs from
-3.3V to the pins of the <code>PCF8574</code>. Maybe I’ll write an update about
-the breadboard later, but it’s mainly just the datasheet
+3.3V to the pins of the <code>PCF8574</code>. Maybe I&#39;ll write an update about
+the breadboard later, but it&#39;s mainly just the datasheet
 application. Later I switched to 5V and added level shifting MOSFETs,
-again, maybe some day I’ll write it up.</p>
-
-<pre><code># i2cdetect 0
+again, maybe some day I&#39;ll write it up.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># i2cdetect 0
 WARNING! This program can confuse your I2C bus, cause data loss and worse!
 I will probe file /dev/i2c-0.
 I will probe address range 0x03-0x77.
 Continue? [Y/n] 
-	  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
 00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 20: 20 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
@@ -278,36 +270,31 @@ Continue? [Y/n]
 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 70: -- -- -- -- -- -- -- -- 
-</code></pre>
-
+</code></pre></div>
 <p>It works!</p>
-
-<pre><code># echo pcf8574 0x20 &gt; /sys/bus/i2c/devices/i2c-0/new_device
+<div class="highlight"><pre><code class="language-text" data-lang="text"># echo pcf8574 0x20 &gt; /sys/bus/i2c/devices/i2c-0/new_device
 # dmesg | tail
 [  153.590000] Custom GPIO-based I2C driver version 0.1.1
 [  153.590000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
 [  651.600000] gpiochip_add: registered GPIOs 56 to 63 on device: pcf8574
 [  651.600000] pcf857x 0-0020: 
 [  651.610000] i2c i2c-0: new_device: Instantiated device pcf8574 at 0x20
-</code></pre>
-
+</code></pre></div>
 <p>Sounds good: we have a chip at the correct address, and 8 new GPIOs
 were created (numberd 56 through 63). Careful though: the <code>PCF8574</code>
 does not get detected in any way. So only the <code>i2cdetect</code> output
-really confirms that something is there on the bus and responding. So let’s test the GPIOs for
+really confirms that something is there on the bus and responding. So let&#39;s test the GPIOs for
 confirmation.</p>
 
-<h1 id="actually-blinking-leds">Actually blinking LEDs</h1>
+<h1>Actually blinking LEDs</h1>
 
-<p>Let’s try to set one of the pins manually:</p>
-
-<pre><code>#!bash
+<p>Let&#39;s try to set one of the pins manually:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
 # cd /sys/class/gpio
 # echo 57 &gt; export
 # echo out&gt;gpio57/direction
 # echo 0 &gt; gpio57/value 
-</code></pre>
-
+</code></pre></div>
 <p>Upon setting <code>output</code>, the LED lights up. Success!</p>
 
 <p>The output chip is open drain-ish (quasi bidirectional) and could
@@ -322,10 +309,9 @@ the outputs and inputs. Wicked.</p>
 
 <p>The next step: blinking. I was lazy and googled for a bash script that
 blinks. And found it <a href="http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/">on this blog</a>. Tweaked it a little
-bit, which was easy because it’s so well written. I added an argument
+bit, which was easy because it&#39;s so well written. I added an argument
 for the GPIO pin to use, to try all 8 pins. This is what I ended up with:</p>
-
-<pre><code>#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
 #!/bin/bash
 
 # blink_arg.bash -- must run as root!
@@ -337,52 +323,48 @@ OFF=1
 ON=0
 # Make sure we have root access
 if [ $EUID -ne 0 ]; then
-		echo "You must be root to run this. Try 'sudo $0'"
-		exit
+        echo &quot;You must be root to run this. Try &#39;sudo $0&#39;&quot;
+        exit
 fi
 
 # Clean up procedure--turn off the LED, unexport the GPIO, and exit
 cleanup()
 {
-		PIN=$1
-		echo $OFF &gt; /sys/class/gpio/gpio$PIN/value      # turn off
-		echo $PIN &gt; /sys/class/gpio/unexport
-		echo Interrupted.
-		exit
+        PIN=$1
+        echo $OFF &gt; /sys/class/gpio/gpio$PIN/value      # turn off
+        echo $PIN &gt; /sys/class/gpio/unexport
+        echo Interrupted.
+        exit
 }
 
 # Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
 echo $LEDPIN &gt; /sys/class/gpio/export
 echo out &gt; /sys/class/gpio/gpio$LEDPIN/direction
-trap 'cleanup $LEDPIN' 1 2 15
+trap &#39;cleanup $LEDPIN&#39; 1 2 15
 
 while true
 do
-		echo $ON &gt; /sys/class/gpio/gpio$LEDPIN/value    # turn on
-		sleep 1
-		echo $OFF &gt; /sys/class/gpio/gpio$LEDPIN/value   # turn off
-		sleep 1
+        echo $ON &gt; /sys/class/gpio/gpio$LEDPIN/value    # turn on
+        sleep 1
+        echo $OFF &gt; /sys/class/gpio/gpio$LEDPIN/value   # turn off
+        sleep 1
 done
-</code></pre>
-
+</code></pre></div>
 <p>And it works as expected. So now for some fun (we did not get all this
 linux power for nothing!). </p>
-
-<pre><code> # ./blink_arg.bash 56&amp;
+<div class="highlight"><pre><code class="language-text" data-lang="text"> # ./blink_arg.bash 56&amp;
  # ./blink_arg.bash 57&amp;
  # ./blink_arg.bash 58&amp;
  # # ... etcetera ...
-</code></pre>
-
+</code></pre></div>
 <p>So using all the cool multitasking goodness to do nothing special at
 all. How does that look?</p>
 
 <iframe width="640" height="480" src="http://www.youtube.com/embed/eJ91tw86p7I" frameborder="0"></iframe>
 
-<h1 id="input">Input</h1>
+<h1>Input</h1>
 
 <p>The next step is to use the input function. That will be the next update.</p>
-
 
 <footer>
   <p>
@@ -432,6 +414,11 @@ all. How does that look?</p>
 	  
 	    <li>
 		  <a href="http://pragti.ch/categories/blogging">blogging</a>
+		</li>
+	   
+	  
+	    <li>
+		  <a href="http://pragti.ch/categories/project-euler">project euler</a>
 		</li>
 	   
 	  

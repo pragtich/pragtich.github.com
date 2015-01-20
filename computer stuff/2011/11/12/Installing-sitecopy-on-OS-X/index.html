@@ -32,67 +32,60 @@
 	I use Sitecopy to upload my Nanoc site to the server. This is how I managed to do it.
 </summary>
 <bodytext>
-  <p>In order to sync my nanoc site to my provider’s server, I have installed sitecopy. Sitecopy requires one of the ports packages. I chose fink, but Darwinports should also work I guess.</p>
+  <p>In order to sync my nanoc site to my provider&#39;s server, I have installed sitecopy. Sitecopy requires one of the ports packages. I chose fink, but Darwinports should also work I guess.</p>
 
 <p>First, I downloaded the Xcode and iOS developer software from Apple (registration required as an Apple developer, but free). This installed without issue.</p>
 
 <p>Then, I followed the instructions on the <a href="http://www.finkproject.org/download/srcdist.php">Fink website</a>. The instructions are quite clear I think. I tried to fill in as many local servers as possible while running <code>./bootstrap</code>. It would be a shame to transfer everything over the Atlantic cables, right?</p>
 
-<p>What doe surprise me, is that many packages were installed, which I actually already have, many already built into OS X. One that jumped out to me, was python. I can only assume that this is done in order to have all libraries in control of Fink. I just really hope having some programs around twice, does not cause conflicts. fingers crossed…</p>
+<p>What doe surprise me, is that many packages were installed, which I actually already have, many already built into OS X. One that jumped out to me, was python. I can only assume that this is done in order to have all libraries in control of Fink. I just really hope having some programs around twice, does not cause conflicts. fingers crossed...</p>
 
-<h1 id="now-for-the-real-stuff">Now for the real stuff</h1>
+<h1>Now for the real stuff</h1>
 
 <p>Once sitecopy was running, it actually ran very quickly. I copied an example rakefile <a href="http://www.remerson.plus.com/articles/nanoc-rake">From here</a> and followed the directory structure suggested by it:</p>
-
-<pre><code>nanoc/
+<div class="highlight"><pre><code class="language-text" data-lang="text">nanoc/
   site/
     content/
     layouts/
     sitecopy/
       sitecopyrc
-</code></pre>
-
+</code></pre></div>
 <p>So, that is: no dotfiles, all files visible to the filesystem. Of course, this is not the default for sitecopy, so we specify the sitecopy rc file locations in the rakefile.</p>
 
 <p>Then, I created the sitecopyrc as follows:</p>
-
-<pre><code>site my.pretty.name
+<div class="highlight"><pre><code class="language-text" data-lang="text">site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/trunk/output/
 username myFTPusernae
 password thepassword
 protocol ftp
-</code></pre>
-
+</code></pre></div>
 <p>Where the folder after <code>local</code> is the nanoc <code>output</code> folder.</p>
 
 <p>I then used the initialization from the example rakefile:
     sitecopy -r sitecopy/sitecopyrc -p sitecopy -i my.pretty.name
-And crated a ‘compile and upload’ rake addition to the <code>Rakefile</code>:</p>
-
-<pre><code>desc "compile and upload."
+And crated a &#39;compile and upload&#39; rake addition to the <code>Rakefile</code>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">desc &quot;compile and upload.&quot;
 task :co do
-  system 'nanoc co &amp;&amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name'
+  system &#39;nanoc co &amp;&amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name&#39;
 end
-</code></pre>
-
-<p>So now, each time I edit something in my page, I only have to go…</p>
+</code></pre></div>
+<p>So now, each time I edit something in my page, I only have to go...</p>
 
 <p>rake co</p>
 
-<p>…and the entire thing is recompiled and synchronized to the server. </p>
+<p>...and the entire thing is recompiled and synchronized to the server. </p>
 
-<h1 id="mission-accomplished">Mission accomplished!</h1>
+<h1>Mission accomplished!</h1>
 
-<h1 id="update">Update</h1>
+<h1>Update</h1>
 
 <p>When I started using <code>git</code>, I needed to add a line to the
 <code>sitecopyrc</code>. I added several of the disturbing dotfiles (which my
 server was not allowing me to upload) to the <code>exclude</code> list. The
 <code>sitecopy/sitecopyrc</code> now looks something like:</p>
-
-<pre><code>site my.pretty.name
+<div class="highlight"><pre><code class="language-text" data-lang="text">site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/output/
@@ -101,10 +94,8 @@ password thepassword
 protocol ftp
 exclude .DS_Store
 exclude .git
-</code></pre>
-
+</code></pre></div>
 <p>This saves a lot of error messages, which eventually led to a failing sitecopy.</p>
-
 
 <footer>
   <p>
@@ -154,6 +145,11 @@ exclude .git
 	  
 	    <li>
 		  <a href="http://pragti.ch/categories/blogging">blogging</a>
+		</li>
+	   
+	  
+	    <li>
+		  <a href="http://pragti.ch/categories/project-euler">project euler</a>
 		</li>
 	   
 	  
