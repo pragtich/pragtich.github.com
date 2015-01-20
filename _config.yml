@@ -1,6 +1,6 @@
 permalink: pretty
 lsi: true
-markdown: kramdown
+markdown: redcarpet
 highlighter: pygments
 exclude: [Rakefile]
 include: [atom.xml]
@@ -12,4 +12,6 @@ git:
  source: source
  destination: master
  remote: origin
- 
+
+kramdown:
+  input: GFM
