@@ -4,7 +4,7 @@ markdown: redcarpet
 highlighter: pygments
 exclude: [Rakefile]
 include: [atom.xml]
-url: http://pragti.ch
+url: http://www.pragti.ch
 
 author: Joris Pragt
 
