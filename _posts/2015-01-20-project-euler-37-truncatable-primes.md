@@ -3,7 +3,7 @@ layout: post
 title: "Project Euler 37: Truncatable primes"
 category: "Project Euler"
 tags: [Euler primes]
-indeximage: 
+indeximage: Euler0037.tiff
 comment_id: Euler37
 summary: "A fun little problem about primes, which has a nice solution."
 ---
