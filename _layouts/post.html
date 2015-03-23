@@ -16,6 +16,16 @@ layout: default
   {{ content }}
 <footer>
   <p>
+<h1>Possibly related posts:</h1>
+  	  {% for rel in  site.related_posts limit:5 %}
+<reftitle><a href="{{ rel.url }}">{{ rel.title }} </a>
+	  {% if true and rel.indeximage %}
+<img src="{{ site.url }}{{ site.baseurl}}/indeximages/{{ rel.indeximage }}">
+{% endif %}
+      <h2 class="itemdate">{{ rel.date | date_to_string }}</h2>
+</reftitle>
+{% endfor %}
+
   </p>
   <div id="disqus_thread"></div>
   <script type="text/javascript">
