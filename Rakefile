@@ -115,12 +115,12 @@ end # task :page
 
 desc "Launch preview environment"
 task :preview do
-  system "ejekyll  serve --watch"
+  system "jekyll  serve --watch"
 end # task :preview
 
-desc "Compile using ejekyll"
+desc "Compile using jekyll"
 task :compile do
-  system "ejekyll build"
+  system "jekyll build"
 end # task :preview
 
 
