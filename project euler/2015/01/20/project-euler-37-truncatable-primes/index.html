@@ -23,7 +23,7 @@
 <article>
   <header>
 	<hgroup>
-	  
+	  <img src="http://www.pragti.ch/indeximages/Euler0037.jpg">
 	  <h1 class="itemtitle">Project Euler 37: Truncatable primes</h1>
       <h2 class="itemdate">20 Jan 2015</h2>
 	</hgroup>
@@ -114,10 +114,87 @@
 
 <p>Others have done a great job in coming up with all kinds of primality tests. Not being an expert, I <a href="https://www.google.nl/search?q=primality+test+python">used the force</a> and found <a href="http://rosettacode.org/wiki/Miller-Rabin_primality_test#Python:_Proved_correct_up_to_large_N">a perfectly suitable solution</a>. It may not have been proven up to the large numbers that end up being in the left-truncatable set, but it gives the correct result. In the end, the algorithm turns out to be correct, and would still be with a more rigorous primality test. This is the test that I pretty much <a href="http://rosettacode.org/wiki/Miller-Rabin_primality_test#Python:_Proved_correct_up_to_large_N">just copied</a>.</p>
 
-<script src="https://gist.github.com/pragtich/8649385210b5b641506f.js"> </script>
+<p><noscript><pre># Primality testing as taken from http://rosettacode.org/wiki/Miller-Rabin<em>primality</em>test#Python</p>
+
+<h1>Not proven for very large primes, but probably (?) right?</h1>
+
+<h1>TODO: try better set from http://miller-rabin.appspot.com/</h1>
+
+<p>def <em>try</em>composite(a, d, n, s):
+    if pow(a, d, n) == 1:
+        return False
+    for i in range(s):
+        if pow(a, 2**i * d, n) == n-1:
+            return False
+    return True # n  is definitely composite</p>
+
+<p>def is<em>prime(n, _precision</em>for<em>huge</em>n=16):
+    if n in <em>known</em>primes or n in (0, 1):
+        return True
+    if any((n % p) == 0 for p in <em>known</em>primes):
+        return False
+    d, s = n - 1, 0
+    while not d % 2:
+        d, s = d &gt;&gt; 1, s + 1
+    # Returns exact according to http://primes.utm.edu/prove/prove2<em>3.html
+    if n &lt; 1373653: 
+        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3))
+    if n &lt; 25326001: 
+        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5))
+    if n &lt; 118670087467: 
+        if n == 3215031751: 
+            return False
+        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7))
+    if n &lt; 2152302898747: 
+        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
+    if n &lt; 3474749660383: 
+        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
+    if n &lt; 341550071728321: 
+        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
+    # otherwise
+    return not any(</em>try<em>composite(a, d, n, s) 
+                   for a in _known</em>primes[:<em>precision</em>for<em>huge</em>n])</p>
+
+<p><em>known</em>primes = [2, 3]
+<em>known</em>primes += [x for x in range(5, 1000, 2) if is_prime(x)]
+</pre></noscript><script src="https://gist.github.com/pragtich/8649385210b5b641506f.js"> </script></p>
 
 <footer>
   <p>
+<h1>Possibly related posts:</h1>
+  	  
+<reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
+	  
+<img src="http://www.pragti.ch/indeximages/jekyll.jpg">
+
+      <h2 class="itemdate">03 Feb 2013</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
+	  
+<img src="http://www.pragti.ch/indeximages/emacs.jpg">
+
+      <h2 class="itemdate">15 Dec 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
+	  
+<img src="http://www.pragti.ch/indeximages/index-i2c.jpg">
+
+      <h2 class="itemdate">15 Aug 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/06/04/Starting-project-Chicken-Webcam/">The Kippencam -- starting a new project </a>
+	  
+      <h2 class="itemdate">04 Jun 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/">Installing OpenWRT on a TL-WR703N router using a USB stick as storage </a>
+	  
+      <h2 class="itemdate">22 Sep 2012</h2>
+</reftitle>
+
+
   </p>
   <div id="disqus_thread"></div>
   <script type="text/javascript">
@@ -141,36 +218,36 @@
     <h2>All articles</h2> 
 	<ul>
 	  <li>
-		<a href="http://pragti.ch/blog/index.html">Index of all articles</a> </li>
+		<a href="http://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
 
 	</ul>
 	<H2>Categories</h2>
     <ul>
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/computer-stuff">computer stuff</a>
+		  <a href="http://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/life">life</a>
+		  <a href="http://www.pragti.ch/categories/life">Life</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/kippycam">kippycam</a>
+		  <a href="http://www.pragti.ch/categories/kippycam">Kippycam</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/blogging">blogging</a>
+		  <a href="http://www.pragti.ch/categories/blogging">Blogging</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/project-euler">project euler</a>
+		  <a href="http://www.pragti.ch/categories/project-euler">Project Euler</a>
 		</li>
-	   
+
 	  
     </ul>
 	<h2>About</h2>

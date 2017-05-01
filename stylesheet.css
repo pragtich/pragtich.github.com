@@ -35,7 +35,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 45px;
 line-height: 75px;
 text-align: right;      
-background-image: url("../newbeer.gif");
+/* background-image: url("../newbeer.gif"); */
 background-repeat: no-repeat;
 background-attachment: fixed;
 background-position: 0 0;
@@ -107,6 +107,7 @@ a:hover {
   margin-left: 0;
   padding-bottom: 0;
 }
+
 
 
 
@@ -292,6 +293,35 @@ footer {
   border-top: 1px solid #808080;
   font-size: 10px;
   font-family: sans-serif;
+}
+
+reftitle {
+margin-left: 20px;
+text-decoration: none;
+font-size: 16px;
+display: block;
+font-family: "Verdana MS", "Verdana", sans-serif;
+min-height: 100px;
+}
+
+reftitle a {
+color: #808080;
+}
+
+reftitle img {
+	float: left; 
+	border-radius: 5px;
+	margin-left: 5px;
+	margin-right: 10px;
+}
+
+
+footer h2.itemdate {
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 0px;
+    margin-left: 15px;
+    color: #606060;
 }
 
 

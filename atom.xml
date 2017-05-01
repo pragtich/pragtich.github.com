@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
-  <link rel="self" type="application/atom+xml" href="http://pragti.ch/atom.xml" />
-  <link rel="alternate" type="text/html" href="http://pragti.ch/blog"/>
-  <updated>2015-01-20T20:30:51+01:00</updated>
+  <link rel="self" type="application/atom+xml" href="http://www.pragti.ch/atom.xml" />
+  <link rel="alternate" type="text/html" href="http://www.pragti.ch/blog"/>
+  <updated>2017-05-01T18:08:11+02:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
-  <rights>Copyright (c) 2015, Joris Pragt; all rights reserved.</rights>
+  <rights>Copyright (c) 2017, Joris Pragt; all rights reserved.</rights>
 
 
   <entry>
     <title type="text" xml:lang="en">Project Euler 37: Truncatable primes</title>
     <id>tag:pragti.ch,2013-02-09:/project%20euler/2015/01/20/project-euler-37-truncatable-primes</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/project%20euler/2015/01/20/project-euler-37-truncatable-primes/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/project%20euler/2015/01/20/project-euler-37-truncatable-primes/"/>
     
     <published>2015-01-20T00:00:00+01:00</published>
     <updated>2015-01-20T00:00:00+01:00</updated>
@@ -103,7 +103,50 @@
 
 &lt;p&gt;Others have done a great job in coming up with all kinds of primality tests. Not being an expert, I &lt;a href=&quot;https://www.google.nl/search?q=primality+test+python&quot;&gt;used the force&lt;/a&gt; and found &lt;a href=&quot;http://rosettacode.org/wiki/Miller-Rabin_primality_test#Python:_Proved_correct_up_to_large_N&quot;&gt;a perfectly suitable solution&lt;/a&gt;. It may not have been proven up to the large numbers that end up being in the left-truncatable set, but it gives the correct result. In the end, the algorithm turns out to be correct, and would still be with a more rigorous primality test. This is the test that I pretty much &lt;a href=&quot;http://rosettacode.org/wiki/Miller-Rabin_primality_test#Python:_Proved_correct_up_to_large_N&quot;&gt;just copied&lt;/a&gt;.&lt;/p&gt;
 
-&lt;script src=&quot;https://gist.github.com/pragtich/8649385210b5b641506f.js&quot;&gt; &lt;/script&gt;
+&lt;p&gt;&lt;noscript&gt;&lt;pre&gt;# Primality testing as taken from http://rosettacode.org/wiki/Miller-Rabin&lt;em&gt;primality&lt;/em&gt;test#Python&lt;/p&gt;
+
+&lt;h1&gt;Not proven for very large primes, but probably (?) right?&lt;/h1&gt;
+
+&lt;h1&gt;TODO: try better set from http://miller-rabin.appspot.com/&lt;/h1&gt;
+
+&lt;p&gt;def &lt;em&gt;try&lt;/em&gt;composite(a, d, n, s):
+    if pow(a, d, n) == 1:
+        return False
+    for i in range(s):
+        if pow(a, 2**i * d, n) == n-1:
+            return False
+    return True # n  is definitely composite&lt;/p&gt;
+
+&lt;p&gt;def is&lt;em&gt;prime(n, _precision&lt;/em&gt;for&lt;em&gt;huge&lt;/em&gt;n=16):
+    if n in &lt;em&gt;known&lt;/em&gt;primes or n in (0, 1):
+        return True
+    if any((n % p) == 0 for p in &lt;em&gt;known&lt;/em&gt;primes):
+        return False
+    d, s = n - 1, 0
+    while not d % 2:
+        d, s = d &amp;gt;&amp;gt; 1, s + 1
+    # Returns exact according to http://primes.utm.edu/prove/prove2&lt;em&gt;3.html
+    if n &amp;lt; 1373653: 
+        return not any(&lt;/em&gt;try&lt;em&gt;composite(a, d, n, s) for a in (2, 3))
+    if n &amp;lt; 25326001: 
+        return not any(&lt;/em&gt;try&lt;em&gt;composite(a, d, n, s) for a in (2, 3, 5))
+    if n &amp;lt; 118670087467: 
+        if n == 3215031751: 
+            return False
+        return not any(&lt;/em&gt;try&lt;em&gt;composite(a, d, n, s) for a in (2, 3, 5, 7))
+    if n &amp;lt; 2152302898747: 
+        return not any(&lt;/em&gt;try&lt;em&gt;composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
+    if n &amp;lt; 3474749660383: 
+        return not any(&lt;/em&gt;try&lt;em&gt;composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
+    if n &amp;lt; 341550071728321: 
+        return not any(&lt;/em&gt;try&lt;em&gt;composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
+    # otherwise
+    return not any(&lt;/em&gt;try&lt;em&gt;composite(a, d, n, s) 
+                   for a in _known&lt;/em&gt;primes[:&lt;em&gt;precision&lt;/em&gt;for&lt;em&gt;huge&lt;/em&gt;n])&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;known&lt;/em&gt;primes = [2, 3]
+&lt;em&gt;known&lt;/em&gt;primes += [x for x in range(5, 1000, 2) if is_prime(x)]
+&lt;/pre&gt;&lt;/noscript&gt;&lt;script src=&quot;https://gist.github.com/pragtich/8649385210b5b641506f.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 </content>
   </entry>
 
@@ -111,11 +154,11 @@
   <entry>
     <title type="text" xml:lang="en">Setting PATH for Emacs when launched from Dock</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock/"/>
     
     <published>2014-12-22T00:00:00+01:00</published>
     <updated>2014-12-22T00:00:00+01:00</updated>
-    <summary type="text" xml:lang="en">How to get Emacs&#39; PATH setup properly so that python-mode will work</summary>
+    <summary type="text" xml:lang="en">How to get Emacs' PATH setup properly so that python-mode will work</summary>
     <category term="computer stuff" />
 	<content type="html">&lt;h1&gt;Setting PATH for applications started from the Dock in OS X 10.10 Yosemite&lt;/h1&gt;
 
@@ -141,11 +184,11 @@
   <entry>
     <title type="text" xml:lang="en">Installing compiled images onto Beaglebone Black SD card</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card/"/>
     
     <published>2013-10-10T00:00:00+02:00</published>
     <updated>2013-10-10T00:00:00+02:00</updated>
-    <summary type="text" xml:lang="en">So you&#39;ve managed to compile an Angstrom Linux image. How to get it onto the Beaglebone?</summary>
+    <summary type="text" xml:lang="en">So you've managed to compile an Angstrom Linux image. How to get it onto the Beaglebone?</summary>
     <category term="kippycam" />
 	<content type="html">&lt;h1&gt;What&amp;#39;s the point?&lt;/h1&gt;
 
@@ -292,7 +335,7 @@ root@beaglebone:~# ps
   <entry>
     <title type="text" xml:lang="en">Editing jekyll postfiles plugin to work with spaces in category names</title>
     <id>tag:pragti.ch,2013-02-09:/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/"/>
     
     <published>2013-02-07T00:00:00+01:00</published>
     <updated>2013-02-07T00:00:00+01:00</updated>
@@ -314,14 +357,16 @@ root@beaglebone:~# ps
 
 &lt;p&gt;Easy.  Add percent to the pathname regexp:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;postfile_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;\1-\2-\3-\4&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;    &lt;span class=&quot;n&quot;&gt;postfile_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;\1-\2-\3-\4&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;and &lt;code&gt;CGI.decode&lt;/code&gt; the directory portion of the filename before passing it back to Jekyll:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# Add a static file entry for each postfile, if any&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;      &lt;span class=&quot;c1&quot;&gt;# Add a static file entry for each postfile, if any&lt;/span&gt;
         &lt;span class=&quot;no&quot;&gt;Dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;postfile_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/*&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
           &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;static_files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;PostFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postfile_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CGI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unescape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;The diff of my edits can be &lt;a href=&quot;https://github.com/pragtich/jekyll-postfiles/commit/ec519615501cbbc6d603854eaa463f1f9e0fe777&quot;&gt;found here on GitHub&lt;/a&gt;.&lt;/p&gt;
 
@@ -335,7 +380,7 @@ root@beaglebone:~# ps
   <entry>
     <title type="text" xml:lang="en">Migrating from nanoc to jekyll</title>
     <id>tag:pragti.ch,2013-02-09:/blogging/2013/02/03/migrating-from-nanoc-to-jekyll</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/"/>
     
     <published>2013-02-03T00:00:00+01:00</published>
     <updated>2013-02-03T00:00:00+01:00</updated>
@@ -491,7 +536,7 @@ layout: default
 
 &lt;p&gt;This is the part of the &lt;a href=&quot;https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile&quot;&gt;&lt;code&gt;Rakefile&lt;/code&gt;&lt;/a&gt; that does this:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rake&amp;#39;&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rake&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;yaml&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;time&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;highline/import&amp;#39;&lt;/span&gt;
@@ -529,7 +574,8 @@ layout: default
 
    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Making folder &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thefolder&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; for your postfiles.&amp;quot;&lt;/span&gt;
    &lt;span class=&quot;no&quot;&gt;FileUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mkdir_p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thefolder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# task :postfile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+ &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# task :postfile&lt;/span&gt;
+ &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Also, I stole parts of the &lt;code&gt;Rakefile&lt;/code&gt; from &lt;a href=&quot;https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile&quot;&gt;Jekyll-bootstrap&lt;/a&gt;. Especially, the &lt;code&gt;post&lt;/code&gt; and &lt;code&gt;preview&lt;/code&gt; commands I really like. I did edit them to meet my tastes, please see &lt;a href=&quot;https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile&quot;&gt;the file on GitHub&lt;/a&gt;. &lt;/p&gt;
 
@@ -588,7 +634,7 @@ git push -u origin source
   <entry>
     <title type="text" xml:lang="en">Using multiple webcams in mjpg-streamer on OpenWRT</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2013/01/02/Mjpg-streamer-multiple</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/kippycam/2013/01/02/Mjpg-streamer-multiple/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/kippycam/2013/01/02/Mjpg-streamer-multiple/"/>
     
     <published>2013-01-02T00:00:00+01:00</published>
     <updated>2013-01-02T00:00:00+01:00</updated>
@@ -709,7 +755,7 @@ config mjpg-streamer logi
   <entry>
     <title type="text" xml:lang="en">Switching to GNU Emacs 24 on Mac OS X</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/12/15/GNU-Emacs-24</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2012/12/15/GNU-Emacs-24/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2012/12/15/GNU-Emacs-24/"/>
     
     <published>2012-12-15T00:00:00+01:00</published>
     <updated>2012-12-15T00:00:00+01:00</updated>
@@ -881,11 +927,11 @@ y    ; for yes
   <entry>
     <title type="text" xml:lang="en">Installing OpenWRT on a TL-WR703N router using a USB stick as storage</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/"/>
     
     <published>2012-09-22T00:00:00+02:00</published>
     <updated>2012-09-22T00:00:00+02:00</updated>
-    <summary type="text" xml:lang="en">Installing openwrt onto the TL-WR703N using a USB flash drive as the root is not hard. It did however take me a serious amount of research to figure everything out. Here&#39;s my try at documenting how to do it.</summary>
+    <summary type="text" xml:lang="en">Installing openwrt onto the TL-WR703N using a USB flash drive as the root is not hard. It did however take me a serious amount of research to figure everything out. Here's my try at documenting how to do it.</summary>
     <category term="computer stuff" />
 	<content type="html">&lt;h1&gt;The situation&lt;/h1&gt;
 
@@ -1486,11 +1532,11 @@ website&lt;/a&gt; and copied the www folder into &lt;code&gt;/www/webcam0/&lt;/c
   <entry>
     <title type="text" xml:lang="en">Adding an I2C interface to the TL-WR703N</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/"/>
     
     <published>2012-08-15T00:00:00+02:00</published>
     <updated>2012-08-15T00:00:00+02:00</updated>
-    <summary type="text" xml:lang="en">I had the wireless router to show the webcam images for the &#39;kippycam&#39;. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?</summary>
+    <summary type="text" xml:lang="en">I had the wireless router to show the webcam images for the 'kippycam'. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?</summary>
     <category term="kippycam" />
 	<content type="html">&lt;h1&gt;The goal&lt;/h1&gt;
 
@@ -1832,7 +1878,7 @@ all. How does that look?&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Keeping Openwrt online using DHCP</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/07/13/Openwrt-connection-checking</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/kippycam/2012/07/13/Openwrt-connection-checking/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/kippycam/2012/07/13/Openwrt-connection-checking/"/>
     
     <published>2012-07-13T00:00:00+02:00</published>
     <updated>2012-07-13T00:00:00+02:00</updated>
@@ -1883,7 +1929,7 @@ connection:&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Some notes on using Aquamacs</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/07/13/Aquamacs-Notes</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2012/07/13/Aquamacs-Notes/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2012/07/13/Aquamacs-Notes/"/>
     
     <published>2012-07-13T00:00:00+02:00</published>
     <updated>2012-07-13T00:00:00+02:00</updated>
@@ -1948,7 +1994,7 @@ other applications like GNUS or VCS. Maybe I will too, some day.&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Using Nanoc to fill Github Pages</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/07/04/Nanoc-Github-Pages</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2012/07/04/Nanoc-Github-Pages/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2012/07/04/Nanoc-Github-Pages/"/>
     
     <published>2012-07-04T00:00:00+02:00</published>
     <updated>2012-07-04T00:00:00+02:00</updated>
@@ -2123,7 +2169,7 @@ update. Let&amp;#39;s wait and see.&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Getting network access in the garden</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/06/22/Network-layout</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/kippycam/2012/06/22/Network-layout/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/kippycam/2012/06/22/Network-layout/"/>
     
     <published>2012-06-22T00:00:00+02:00</published>
     <updated>2012-06-22T00:00:00+02:00</updated>
@@ -2197,7 +2243,7 @@ Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2
   <entry>
     <title type="text" xml:lang="en">Things to do on this blog</title>
     <id>tag:pragti.ch,2013-02-09:/blogging/2012/06/04/TODO_website</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/blogging/2012/06/04/TODO_website/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/blogging/2012/06/04/TODO_website/"/>
     
     <published>2012-06-04T00:00:00+02:00</published>
     <updated>2012-06-04T00:00:00+02:00</updated>
@@ -2234,7 +2280,7 @@ page.&lt;/li&gt;
   <entry>
     <title type="text" xml:lang="en">The Kippencam -- starting a new project</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/06/04/Starting-project-Chicken-Webcam</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/kippycam/2012/06/04/Starting-project-Chicken-Webcam/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/kippycam/2012/06/04/Starting-project-Chicken-Webcam/"/>
     
     <published>2012-06-04T00:00:00+02:00</published>
     <updated>2012-06-04T00:00:00+02:00</updated>
@@ -2325,7 +2371,7 @@ page.&lt;/li&gt;
   <entry>
     <title type="text" xml:lang="en">Listing life goals with 43things</title>
     <id>tag:pragti.ch,2013-02-09:/life/2011/11/22/43things</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/life/2011/11/22/43things/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/life/2011/11/22/43things/"/>
     
     <published>2011-11-22T00:00:00+01:00</published>
     <updated>2011-11-22T00:00:00+01:00</updated>
@@ -2389,7 +2435,7 @@ page.&lt;/li&gt;
   <entry>
     <title type="text" xml:lang="en">Easy new page creating using Emacs and Template.el</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2011/11/14/Installing-Emacs-Template-mode</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2011/11/14/Installing-Emacs-Template-mode/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2011/11/14/Installing-Emacs-Template-mode/"/>
     
     <published>2011-11-14T00:00:00+01:00</published>
     <updated>2011-11-14T00:00:00+01:00</updated>
@@ -2439,7 +2485,7 @@ summary: (&amp;gt;&amp;gt;&amp;gt;SUMMARY&amp;lt;&amp;lt;&amp;lt;)
   <entry>
     <title type="text" xml:lang="en">Making a personal website using Nanoc</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2011/11/12/Nanoc</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2011/11/12/Nanoc/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2011/11/12/Nanoc/"/>
     
     <published>2011-11-12T00:00:00+01:00</published>
     <updated>2011-11-12T00:00:00+01:00</updated>
@@ -2490,7 +2536,7 @@ end
   <entry>
     <title type="text" xml:lang="en">Installing sitecopy on OS X Snow Leopard and using it with Nanoc</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X</id>
-    <link rel="alternate" type="text/html" href="http://pragti.ch/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X/"/>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X/"/>
     
     <published>2011-11-12T00:00:00+01:00</published>
     <updated>2011-11-12T00:00:00+01:00</updated>

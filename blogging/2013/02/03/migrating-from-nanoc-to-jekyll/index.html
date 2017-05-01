@@ -23,7 +23,7 @@
 <article>
   <header>
 	<hgroup>
-	  <img src="http://pragti.ch/indeximages/jekyll.jpg">
+	  <img src="http://www.pragti.ch/indeximages/jekyll.jpg">
 	  <h1 class="itemtitle">Migrating from nanoc to jekyll</h1>
       <h2 class="itemdate">03 Feb 2013</h2>
 	</hgroup>
@@ -182,7 +182,7 @@ layout: default
 
 <p>This is the part of the <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile"><code>Rakefile</code></a> that does this:</p>
 
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">&#39;rake&#39;</span>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"> <span class="nb">require</span> <span class="s1">&#39;rake&#39;</span>
  <span class="nb">require</span> <span class="s1">&#39;yaml&#39;</span>
  <span class="nb">require</span> <span class="s1">&#39;time&#39;</span>
  <span class="nb">require</span> <span class="s1">&#39;highline/import&#39;</span>
@@ -220,7 +220,8 @@ layout: default
 
    <span class="nb">puts</span> <span class="s2">&quot;Making folder </span><span class="si">#{</span><span class="n">thefolder</span><span class="si">}</span><span class="s2"> for your postfiles.&quot;</span>
    <span class="no">FileUtils</span><span class="o">.</span><span class="n">mkdir_p</span><span class="p">(</span><span class="n">thefolder</span><span class="p">)</span>
- <span class="k">end</span> <span class="c1"># task :postfile</span></code></pre></div>
+ <span class="k">end</span> <span class="c1"># task :postfile</span>
+ </code></pre></figure>
 
 <p>Also, I stole parts of the <code>Rakefile</code> from <a href="https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile">Jekyll-bootstrap</a>. Especially, the <code>post</code> and <code>preview</code> commands I really like. I did edit them to meet my tastes, please see <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile">the file on GitHub</a>. </p>
 
@@ -275,6 +276,38 @@ git push -u origin source
 
 <footer>
   <p>
+<h1>Possibly related posts:</h1>
+  	  
+<reftitle><a href="/computer%20stuff/2012/07/04/Nanoc-Github-Pages/">Using Nanoc to fill Github Pages </a>
+	  
+      <h2 class="itemdate">04 Jul 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
+	  
+<img src="http://www.pragti.ch/indeximages/emacs.jpg">
+
+      <h2 class="itemdate">15 Dec 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/">Installing OpenWRT on a TL-WR703N router using a USB stick as storage </a>
+	  
+      <h2 class="itemdate">22 Sep 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
+	  
+<img src="http://www.pragti.ch/indeximages/index-i2c.jpg">
+
+      <h2 class="itemdate">15 Aug 2012</h2>
+</reftitle>
+
+<reftitle><a href="/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/">Editing jekyll postfiles plugin to work with spaces in category names </a>
+	  
+      <h2 class="itemdate">07 Feb 2013</h2>
+</reftitle>
+
+
   </p>
   <div id="disqus_thread"></div>
   <script type="text/javascript">
@@ -298,36 +331,36 @@ git push -u origin source
     <h2>All articles</h2> 
 	<ul>
 	  <li>
-		<a href="http://pragti.ch/blog/index.html">Index of all articles</a> </li>
+		<a href="http://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
 
 	</ul>
 	<H2>Categories</h2>
     <ul>
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/computer-stuff">computer stuff</a>
+		  <a href="http://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/life">life</a>
+		  <a href="http://www.pragti.ch/categories/life">Life</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/kippycam">kippycam</a>
+		  <a href="http://www.pragti.ch/categories/kippycam">Kippycam</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/blogging">blogging</a>
+		  <a href="http://www.pragti.ch/categories/blogging">Blogging</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/project-euler">project euler</a>
+		  <a href="http://www.pragti.ch/categories/project-euler">Project Euler</a>
 		</li>
-	   
+
 	  
     </ul>
 	<h2>About</h2>

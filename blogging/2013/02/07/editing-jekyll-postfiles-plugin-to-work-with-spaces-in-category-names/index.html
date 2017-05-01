@@ -48,14 +48,16 @@
 
 <p>Easy.  Add percent to the pathname regexp:</p>
 
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">postfile_id</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/</span><span class="p">,</span> <span class="s1">&#39;\1-\2-\3-\4&#39;</span><span class="p">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">    <span class="n">postfile_id</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/</span><span class="p">,</span> <span class="s1">&#39;\1-\2-\3-\4&#39;</span><span class="p">)</span>
+    </code></pre></figure>
 
 <p>and <code>CGI.decode</code> the directory portion of the filename before passing it back to Jekyll:</p>
 
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># Add a static file entry for each postfile, if any</span>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">      <span class="c1"># Add a static file entry for each postfile, if any</span>
         <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">postfile_dir</span><span class="p">,</span> <span class="s1">&#39;/*&#39;</span><span class="p">)</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">pf</span><span class="o">|</span> 
           <span class="n">site</span><span class="o">.</span><span class="n">static_files</span> <span class="o">&lt;&lt;</span> <span class="no">PostFile</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">postfile_dir</span><span class="p">,</span> <span class="no">CGI</span><span class="o">.</span><span class="n">unescape</span><span class="p">(</span><span class="n">post</span><span class="o">.</span><span class="n">url</span><span class="p">),</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">pf</span><span class="p">))</span>
-        <span class="k">end</span></code></pre></div>
+        <span class="k">end</span>
+    </code></pre></figure>
 
 <p>The diff of my edits can be <a href="https://github.com/pragtich/jekyll-postfiles/commit/ec519615501cbbc6d603854eaa463f1f9e0fe777">found here on GitHub</a>.</p>
 
@@ -65,6 +67,40 @@
 
 <footer>
   <p>
+<h1>Possibly related posts:</h1>
+  	  
+<reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
+	  
+<img src="http://www.pragti.ch/indeximages/jekyll.jpg">
+
+      <h2 class="itemdate">03 Feb 2013</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
+	  
+<img src="http://www.pragti.ch/indeximages/emacs.jpg">
+
+      <h2 class="itemdate">15 Dec 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/">Installing OpenWRT on a TL-WR703N router using a USB stick as storage </a>
+	  
+      <h2 class="itemdate">22 Sep 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
+	  
+<img src="http://www.pragti.ch/indeximages/index-i2c.jpg">
+
+      <h2 class="itemdate">15 Aug 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/07/04/Nanoc-Github-Pages/">Using Nanoc to fill Github Pages </a>
+	  
+      <h2 class="itemdate">04 Jul 2012</h2>
+</reftitle>
+
+
   </p>
   <div id="disqus_thread"></div>
   <script type="text/javascript">
@@ -88,36 +124,36 @@
     <h2>All articles</h2> 
 	<ul>
 	  <li>
-		<a href="http://pragti.ch/blog/index.html">Index of all articles</a> </li>
+		<a href="http://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
 
 	</ul>
 	<H2>Categories</h2>
     <ul>
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/computer-stuff">computer stuff</a>
+		  <a href="http://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/life">life</a>
+		  <a href="http://www.pragti.ch/categories/life">Life</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/kippycam">kippycam</a>
+		  <a href="http://www.pragti.ch/categories/kippycam">Kippycam</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/blogging">blogging</a>
+		  <a href="http://www.pragti.ch/categories/blogging">Blogging</a>
 		</li>
-	   
+
 	  
 	    <li>
-		  <a href="http://pragti.ch/categories/project-euler">project euler</a>
+		  <a href="http://www.pragti.ch/categories/project-euler">Project Euler</a>
 		</li>
-	   
+
 	  
     </ul>
 	<h2>About</h2>
