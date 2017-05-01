@@ -15,7 +15,7 @@ layout: default
 	  <IMG SRC="{{ site.url }}{{ site.baseurl }}/indeximages/{{ post.indeximage }}"/>
 	  {% endif %}
 
-      <h2 class="itemdate">{{ post.date | date_to_html_string }}
+      <h2 class="itemdate">{{ post.date | date: "%d/%m/%Y" }}
 	  <BR>
       Filed under {{ post.categories | category_links }}</h2>
 	</indextitle>

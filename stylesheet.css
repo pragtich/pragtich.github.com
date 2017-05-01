@@ -35,7 +35,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 45px;
 line-height: 75px;
 text-align: right;      
-background-image: url("../newbeer.gif");
+/* background-image: url("../newbeer.gif"); */
 background-repeat: no-repeat;
 background-attachment: fixed;
 background-position: 0 0;
