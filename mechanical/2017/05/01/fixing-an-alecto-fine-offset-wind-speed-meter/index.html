@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Fixing an Alecto (Fine Offset) wind speed meter</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" media="screen">
+<link rel="stylesheet" type="text/css" href="../../../../../default.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://pragti.ch/atom.xml">
+</head>
+<body>
+  <titleframe><titlebar><div id="largetitle"> <a href="../../../../../">Pragtich</a>
+	  </div>
+
+	  <div id="secnav">
+	  </div>
+	  <div id="artnav">
+	  </div> 
+	</titlebar>
+  </titleframe>
+<article>
+  <header>
+	<hgroup>
+	  <img src="http://www.pragti.ch/indeximages/AlectoAnemo.png">
+	  <h1 class="itemtitle">Fixing an Alecto (Fine Offset) wind speed meter</h1>
+      <h2 class="itemdate">01 May 2017</h2>
+	</hgroup>
+  </header>
+  <summary>
+	The Anemometer on my Alecto WS-3000 weather station died. It turned out to be an easy fix.
+</summary>
+<bodytext>
+  <h1>Fixing the anemometer on an Alecto WS-3000 weather station</h1>
+
+<p>The Alecto WS-3000 has been a very popular weather station, due to its good price and good performance. It includes a large LCD base station with temperature, humidity and pressure monitoring, and an outside unit with temperature, humidity, rainfall and wind speed. It seems that it was manufactured by a Chinese company, known under the name Fine Offset. </p>
+
+<p>After a few years on the roof, the wind speed sensor stopped working. Sometimes it would turn freely, but mostly it would just bounce back and forth around one point. Figuring that it must be a very simple construction, I started exploring.</p>
+
+<h1>Fun, but not what we&#39;re looking for</h1>
+
+<p>The three screws at the bottom looked like a good place to start. After removing them (very carefully), a look at the internals:</p>
+
+<p><img src="/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/bottom1.jpg" alt="What&#39;s that?" title="The internals"></p>
+
+<p>Beneath a pile of spider carcasses, we find a small PCB with a reed relay. It&#39;s mounted in the plane of rotation, and it seems to be switching twice per revolution. Besides for the spider&#39;s remains, there seems to be some slight corrosion on the PCB. It is likely that some condensation in the anemometer caused this. Since it&#39;s still working, let&#39;s leave it as is.</p>
+
+<h1>So it must be under the dome</h1>
+
+<p>The culprit must be under the dome, then. Tricky: the plastic is starting to degrade somewhat and might not be very strong any more. Two large screwdrivers and some patience were in order. Eventually it came off in one piece, revealing the rotor.</p>
+
+<p><img src="/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/rotor.jpg" alt="The rotor" title="The rotor"></p>
+
+<p>The rotor is really simple, it is a single injection molded piece with a small magnet pressed into it. The magnet rotates around the reed relay, causing it to switch.</p>
+
+<p>The rotor is pressed onto a bearing, which is heat staked onto the body of the anemometer. The bearing has clearly seized, it&#39;s movement is crunchy and sometimes blocks altogether. I forgot to take a picture of this, but I promise that the bearing was there!</p>
+
+<p>Opening up the heat stake with a soldering iron was not the most fun I&#39;ve ever had, but eventually:</p>
+
+<p><img src="/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/body.jpg" alt="The body" title="The body"></p>
+
+<p>Luckily, our Chinese friends chose a super-common bearing type that gets a lot of use in the RC world, so ordering replacements was a matter of minutes&#39; work. It&#39;s the MR105-2RS, a 5x10x4 mini bearing. Really easy to find. </p>
+
+<p>Putting things back together was simple enough, just a matter of pressing everything together carefully. It runs as it should again.</p>
+
+<footer>
+  <p>
+<h1>Possibly related posts:</h1>
+  	  
+<reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
+	  
+<img src="http://www.pragti.ch/indeximages/jekyll.jpg">
+
+      <h2 class="itemdate">03 Feb 2013</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
+	  
+<img src="http://www.pragti.ch/indeximages/index-i2c.jpg">
+
+      <h2 class="itemdate">15 Aug 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/06/04/Starting-project-Chicken-Webcam/">The Kippencam -- starting a new project </a>
+	  
+      <h2 class="itemdate">04 Jun 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
+	  
+<img src="http://www.pragti.ch/indeximages/emacs.jpg">
+
+      <h2 class="itemdate">15 Dec 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/">Installing OpenWRT on a TL-WR703N router using a USB stick as storage </a>
+	  
+      <h2 class="itemdate">22 Sep 2012</h2>
+</reftitle>
+
+
+  </p>
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = 'pragtich'; // required: replace example with your forum shortname
+  var disqus_identifier = 'AlectoAnemo';
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+  </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span>
+  </a>
+</footer>
+</article>
+  
+<nav>
+    <h2>All articles</h2> 
+	<ul>
+	  <li>
+		<a href="http://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
+
+	</ul>
+	<H2>Categories</h2>
+    <ul>
+	  
+	    <li>
+		  <a href="http://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="http://www.pragti.ch/categories/life">Life</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="http://www.pragti.ch/categories/kippycam">Kippycam</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="http://www.pragti.ch/categories/blogging">Blogging</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="http://www.pragti.ch/categories/project-euler">Project Euler</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="http://www.pragti.ch/categories/mechanical">Mechanical</a>
+		</li>
+
+	  
+    </ul>
+	<h2>About</h2>
+    <ul>
+	  <li><a href="../../../../../about/">About me</a></li>
+  </ul>
+  </nav>
+</body>
+</html>

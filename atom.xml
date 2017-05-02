@@ -3,13 +3,57 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="http://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="http://www.pragti.ch/blog"/>
-  <updated>2017-05-01T18:15:08+02:00</updated>
+  <updated>2017-05-02T18:06:01+02:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
   <rights>Copyright (c) 2017, Joris Pragt; all rights reserved.</rights>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Fixing an Alecto (Fine Offset) wind speed meter</title>
+    <id>tag:pragti.ch,2013-02-09:/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter</id>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/"/>
+    
+    <published>2017-05-01T00:00:00+02:00</published>
+    <updated>2017-05-01T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">The Anemometer on my Alecto WS-3000 weather station died. It turned out to be an easy fix.</summary>
+    <category term="mechanical" />
+	<content type="html">&lt;h1&gt;Fixing the anemometer on an Alecto WS-3000 weather station&lt;/h1&gt;
+
+&lt;p&gt;The Alecto WS-3000 has been a very popular weather station, due to its good price and good performance. It includes a large LCD base station with temperature, humidity and pressure monitoring, and an outside unit with temperature, humidity, rainfall and wind speed. It seems that it was manufactured by a Chinese company, known under the name Fine Offset. &lt;/p&gt;
+
+&lt;p&gt;After a few years on the roof, the wind speed sensor stopped working. Sometimes it would turn freely, but mostly it would just bounce back and forth around one point. Figuring that it must be a very simple construction, I started exploring.&lt;/p&gt;
+
+&lt;h1&gt;Fun, but not what we&amp;#39;re looking for&lt;/h1&gt;
+
+&lt;p&gt;The three screws at the bottom looked like a good place to start. After removing them (very carefully), a look at the internals:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/bottom1.jpg&quot; alt=&quot;What&amp;#39;s that?&quot; title=&quot;The internals&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Beneath a pile of spider carcasses, we find a small PCB with a reed relay. It&amp;#39;s mounted in the plane of rotation, and it seems to be switching twice per revolution. Besides for the spider&amp;#39;s remains, there seems to be some slight corrosion on the PCB. It is likely that some condensation in the anemometer caused this. Since it&amp;#39;s still working, let&amp;#39;s leave it as is.&lt;/p&gt;
+
+&lt;h1&gt;So it must be under the dome&lt;/h1&gt;
+
+&lt;p&gt;The culprit must be under the dome, then. Tricky: the plastic is starting to degrade somewhat and might not be very strong any more. Two large screwdrivers and some patience were in order. Eventually it came off in one piece, revealing the rotor.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/rotor.jpg&quot; alt=&quot;The rotor&quot; title=&quot;The rotor&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The rotor is really simple, it is a single injection molded piece with a small magnet pressed into it. The magnet rotates around the reed relay, causing it to switch.&lt;/p&gt;
+
+&lt;p&gt;The rotor is pressed onto a bearing, which is heat staked onto the body of the anemometer. The bearing has clearly seized, it&amp;#39;s movement is crunchy and sometimes blocks altogether. I forgot to take a picture of this, but I promise that the bearing was there!&lt;/p&gt;
+
+&lt;p&gt;Opening up the heat stake with a soldering iron was not the most fun I&amp;#39;ve ever had, but eventually:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/body.jpg&quot; alt=&quot;The body&quot; title=&quot;The body&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Luckily, our Chinese friends chose a super-common bearing type that gets a lot of use in the RC world, so ordering replacements was a matter of minutes&amp;#39; work. It&amp;#39;s the MR105-2RS, a 5x10x4 mini bearing. Really easy to find. &lt;/p&gt;
+
+&lt;p&gt;Putting things back together was simple enough, just a matter of pressing everything together carefully. It runs as it should again.&lt;/p&gt;
+</content>
+  </entry>
 
 
   <entry>
