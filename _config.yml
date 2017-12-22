@@ -16,5 +16,5 @@ git:
 kramdown:
   input: GFM
 
-gems:
+plugins:
   - jekyll-gist
