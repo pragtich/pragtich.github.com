@@ -3,7 +3,7 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="http://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="http://www.pragti.ch/blog"/>
-  <updated>2017-12-22T12:15:55+01:00</updated>
+  <updated>2017-12-22T12:31:50+01:00</updated>
   <author>
     <name>Joris Pragt</name>
 
@@ -84,11 +84,15 @@
 &lt;li&gt;Nederland 24&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1&gt;Back button goes back in menus&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.minixforum.com/threads/fix-a2-a2-lite-back-button-in-xbmc.3294/&quot;&gt;On the Odroid forum&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;Keymap changes&lt;/h1&gt;
 
 &lt;p&gt;The Minix A2 Lite air mouse is quite nice, but the default support in Kodi is a bit lacking. You can improve it a lot with a few modifications. The first, is to be able to use the &lt;code&gt;back&lt;/code&gt; button properly.&lt;/p&gt;
+
+&lt;p&gt;As a reference, &lt;a href=&quot;http://kodi.wiki/view/MINIX_A2&quot;&gt;the following site is really helpful, as it lists the key codes for the remote&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Back button goes back in menus&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.minixforum.com/threads/fix-a2-a2-lite-back-button-in-xbmc.3294/&quot;&gt;On the Odroid forum&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;I created a file called &lt;code&gt;A2lite.xml&lt;/code&gt; into the Samba share &lt;code&gt;/Userdata/keymaps&lt;/code&gt; on the box. Restart (the skin?) and the back button behaves properly. Look at the forum posts for a few options, including automatically stopping the media playing.&lt;/p&gt;
 
@@ -107,7 +111,7 @@
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/FullscreenVideo&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/keymap&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h1&gt;Subtitle shifting&lt;/h1&gt;
+&lt;h2&gt;Subtitle shifting&lt;/h2&gt;
 
 &lt;p&gt;I like to use the Fast Forward and Fast Reverse buttons to shift the sub delay. That way, it&amp;#39;s easy to fix small errors in timing. Also, I configure the key with the three horizontal lines, to switch subtitle options.&lt;/p&gt;
 
