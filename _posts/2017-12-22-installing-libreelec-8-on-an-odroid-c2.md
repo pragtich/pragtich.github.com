@@ -80,12 +80,17 @@ esac
 - Uitzendinggemist (NPO)
 - Nederland 24
 
-# Back button goes back in menus
-
-[On the Odroid forum](http://www.minixforum.com/threads/fix-a2-a2-lite-back-button-in-xbmc.3294/)
+# Keymap changes
 
 
 The Minix A2 Lite air mouse is quite nice, but the default support in Kodi is a bit lacking. You can improve it a lot with a few modifications. The first, is to be able to use the `back` button properly.
+
+As a reference, [the following site is really helpful, as it lists the key codes for the remote](http://kodi.wiki/view/MINIX_A2)
+
+## Back button goes back in menus
+
+[On the Odroid forum](http://www.minixforum.com/threads/fix-a2-a2-lite-back-button-in-xbmc.3294/)
+
 
 I created a file called `A2lite.xml` into the Samba share `/Userdata/keymaps` on the box. Restart (the skin?) and the back button behaves properly. Look at the forum posts for a few options, including automatically stopping the media playing.
 
@@ -107,7 +112,7 @@ The file:
 </keymap>
 ```
 
-# Subtitle shifting
+## Subtitle shifting
 
 I like to use the Fast Forward and Fast Reverse buttons to shift the sub delay. That way, it's easy to fix small errors in timing. Also, I configure the key with the three horizontal lines, to switch subtitle options.
 
