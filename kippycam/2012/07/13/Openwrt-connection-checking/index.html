@@ -46,7 +46,7 @@ also turn out to be helpful in making sure that all other services on
 the router remain healthy. </p>
 
 <h1>Installing &amp; configuring</h1>
-<div class="highlight"><pre><code class="language-text" data-lang="text">opkg update
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>opkg update
 
 # I am getting the packages from my local copy of the trunk, just
 to have it all be consistent. That probably is only critical for
@@ -61,12 +61,12 @@ vi /etc/monitrc
 <code>/etc/monitrc</code>, mainly to start as a daemon, put the work files in
 <code>/tmp</code> and set the frequency of the checks. And the check for a
 connection:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">check host kiprouter with address 10.0.0.4                                     
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>check host kiprouter with address 10.0.0.4                                     
     if failed icmp type echo count 3 with timeout 3 seconds then
     exec &quot;/etc/init.d/network restart&quot;
 </code></pre></div>
 <p>Then to enable and start monit:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">/etc/init.d/monit enable
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>/etc/init.d/monit enable
 /etc/init.d/monit start
 </code></pre></div>
 <p>Testing results later...</p>

@@ -48,12 +48,12 @@
 
 <p>Easy.  Add percent to the pathname regexp:</p>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">    <span class="n">postfile_id</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/</span><span class="p">,</span> <span class="s1">&#39;\1-\2-\3-\4&#39;</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>   <span class="n">postfile_id</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/</span><span class="p">,</span> <span class="s1">&#39;\1-\2-\3-\4&#39;</span><span class="p">)</span>
     </code></pre></figure>
 
 <p>and <code>CGI.decode</code> the directory portion of the filename before passing it back to Jekyll:</p>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">      <span class="c1"># Add a static file entry for each postfile, if any</span>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>      <span class="c1"># Add a static file entry for each postfile, if any</span>
         <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">postfile_dir</span><span class="p">,</span> <span class="s1">&#39;/*&#39;</span><span class="p">)</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">pf</span><span class="o">|</span> 
           <span class="n">site</span><span class="o">.</span><span class="n">static_files</span> <span class="o">&lt;&lt;</span> <span class="no">PostFile</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">postfile_dir</span><span class="p">,</span> <span class="no">CGI</span><span class="o">.</span><span class="n">unescape</span><span class="p">(</span><span class="n">post</span><span class="o">.</span><span class="n">url</span><span class="p">),</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">pf</span><span class="p">))</span>
         <span class="k">end</span>

@@ -44,12 +44,12 @@ although I made a few changes.</p>
 
 <p>First of all, I already had a checkin, so could skip the first code
 box. I did rename the <code>master</code> branch to <code>source</code> and add a second remote:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">git branch -m master source
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>git branch -m master source
 git remote add pages https://github.com/&lt;user&gt;/&lt;user&gt;.github.com.git
 git push -u pages source
 </code></pre></div>
 <p>The output sounds promising:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Counting objects: 102, done.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Counting objects: 102, done.
 Delta compression using up to 2 threads.
 Compressing objects: 100% (95/95), done.
 Writing objects: 100% (102/102), 237.00 KiB, done.
@@ -63,7 +63,7 @@ any output).</p>
 
 <p>Now I followed the cloning instructions quite rigidly (because I do
 not really understand them yet).</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># fetch a working copy of your repository
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># fetch a working copy of your repository
   $ git clone https://github.com/&lt;user&gt;/&lt;user&gt;.github.com.git output
   $ cd output
 # create the isolated branch
@@ -72,7 +72,7 @@ not really understand them yet).</p>
   $ git clean -fdx
 </code></pre></div>
 <p>Then recreate the output files:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd ..
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>cd ..
 nanoc compile
 git commit -a
 git push pages
@@ -88,7 +88,7 @@ the files are going into the <code>master</code> branch (which is the leading
 branch for the GitHub Pages).</p>
 
 <p>Finally, I did:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> touch .nojekyll
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> touch .nojekyll
  git add .nojekyll
  git commit
 
@@ -126,7 +126,7 @@ because I tend to forget each syntax before I get to use it again.</p>
 
 <ul>
 <li><p>Updated <code>config.yaml</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
 deploy:
   default:
     dst_remote: pages
@@ -134,10 +134,10 @@ deploy:
     src_branch: source
 </code></pre></div></li>
 <li><p>Installed nanoc-git:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> gem install nanoc-git
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> gem install nanoc-git
 </code></pre></div></li>
 <li><p>Edited <code>Rakefile</code></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">require &#39;nanoc-git/tasks&#39;
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>require &#39;nanoc-git/tasks&#39;
 </code></pre></div></li>
 </ul>
 
@@ -156,7 +156,7 @@ deploy:
 </ol>
 
 <p>A possible workflow could be:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># Edit the file 
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># Edit the file 
 git add &lt;file&gt;
 git commit 
 rake co  #this is my prototyping (sitecopy) rake
@@ -166,7 +166,7 @@ rake co  #this is my prototyping (sitecopy) rake
 rake deploy:git
 </code></pre></div>
 <p>or another option:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># Edit the file 
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># Edit the file 
 rake co  #this is my prototyping (sitecopy) rake
 
 # Check: ok?
@@ -182,7 +182,7 @@ rake deploy:git
 free DNS service to do the DNS hosting. Then, tried to set up the
 CNAME following
 <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-pages">the documentation at Github</a>.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">git checkout master
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>git checkout master
 vi CNAME
 # just one line: 
 # pragti.ch

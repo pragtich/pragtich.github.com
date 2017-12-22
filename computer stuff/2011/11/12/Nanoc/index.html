@@ -47,19 +47,19 @@
 <p>Of course, a blog should have a RSS feed. Even though you have no readers yet... One never knows when it will be useful.</p>
 
 <p>So, I am trying to get the Blogging helper RSS stuff to work. The <a href="http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method">documentation</a> shows that we need to set up some stuff. I did just that, although I must say I really dislike the <code>excerpt</code> tag, because of its American English brutality. I will try to come up with a way to use <code>summary</code> instead.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">base_url: &#39;http://http://members.home.nl/pragtich&#39;
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>base_url: &#39;http://http://members.home.nl/pragtich&#39;
 </code></pre></div>
 <p>Created a <code>content/atom.xml</code> with the contents:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> &lt;%%= atom_feed %&gt;
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> &lt;%%= atom_feed %&gt;
 </code></pre></div>
 <p>And created <code>content/atom.yaml</code> with:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">title: Joris Pragt&#39;s blog feed
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>title: Joris Pragt&#39;s blog feed
 author_name: Joris Pragt
 author_uri: http://members.home.nl/pragtich
 is_hidden: true
 </code></pre></div>
 <p>Edited <code>Rules</code> to add:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">compile &#39;/atom/&#39; do
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>compile &#39;/atom/&#39; do
   filter :erb
 end
 

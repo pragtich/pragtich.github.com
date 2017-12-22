@@ -49,7 +49,7 @@
 <p><strong>TODO</strong>: Research <a href="http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html">Railroad</a> for creating really nice plots.</p>
 
 <p>The ouline is as follows:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Main Router  ==&gt;    Repeater    ==&gt;     Webcam server
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Main Router  ==&gt;    Repeater    ==&gt;     Webcam server
 Airport         TL-WR703N           TL-WR703N
 DHCP server     relay wlan-wlan         relay wlan-lan
 </code></pre></div>
@@ -58,7 +58,7 @@ DHCP server     relay wlan-wlan         relay wlan-lan
 <h2>Repeater</h2>
 
 <p>I used the <code>luci</code> webinterface to configure relaying. Setting this up goes something like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">opkg update
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>opkg update
 opkg install luci luci-proto-relay
 # this auto-installs many dependencies, including relayd and uhttpd
 /etc/init.d/uhttpd enable

@@ -121,7 +121,7 @@ attempt to keep the signal wires apart:</p>
 I2C
 <a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c">at this link</a>. Let&#39;s
 start with the basics:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; opkg update
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&gt; opkg update
 &gt; opkg install i2c-tools
 &gt;opkg install kmod-i2c-gpio-custom
 
@@ -150,7 +150,7 @@ go...?</p>
 found. <code>trunk/build_dir/linux-ar71xx_generic/linux-3.3.8/modules.builtin</code>
 tells exactly where it went: into the kernel (built-in, not as a
 module). Here&#39;s a list of all the stuff that was builtin:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">kernel/fs/jffs2/jffs2.ko
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>kernel/fs/jffs2/jffs2.ko
 kernel/fs/overlayfs/overlayfs.ko
 kernel/fs/squashfs/squashfs.ko
 kernel/crypto/crypto.ko
@@ -226,7 +226,7 @@ default.</li>
 
 <p>I do not understand the kernel enough to know who&#39;s wrong, but the
 solution is clear:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; opkg install --force-depends kmod-i2c-gpio-custom
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&gt; opkg install --force-depends kmod-i2c-gpio-custom
 Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
 Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
 Installing kmod-i2c-gpio (3.3.8-1) to root...
@@ -238,7 +238,7 @@ Collected errors:
 *   kmod-i2c-algo-bit * 
 </code></pre></div>
 <p>But does it work?</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&gt; insmod i2c-gpio-custom bus0=0,29,7
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&gt; insmod i2c-gpio-custom bus0=0,29,7
 &gt; dmesg |tail
 
 [  711.120000] Custom GPIO-based I2C driver version 0.1.1
@@ -256,7 +256,7 @@ takes the 3.3V power from the router, pulls up and has 8 LEDs from
 the breadboard later, but it&#39;s mainly just the datasheet
 application. Later I switched to 5V and added level shifting MOSFETs,
 again, maybe some day I&#39;ll write it up.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># i2cdetect 0
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># i2cdetect 0
 WARNING! This program can confuse your I2C bus, cause data loss and worse!
 I will probe file /dev/i2c-0.
 I will probe address range 0x03-0x77.
@@ -272,7 +272,7 @@ Continue? [Y/n]
 70: -- -- -- -- -- -- -- -- 
 </code></pre></div>
 <p>It works!</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># echo pcf8574 0x20 &gt; /sys/bus/i2c/devices/i2c-0/new_device
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># echo pcf8574 0x20 &gt; /sys/bus/i2c/devices/i2c-0/new_device
 # dmesg | tail
 [  153.590000] Custom GPIO-based I2C driver version 0.1.1
 [  153.590000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
@@ -289,7 +289,7 @@ confirmation.</p>
 <h1>Actually blinking LEDs</h1>
 
 <p>Let&#39;s try to set one of the pins manually:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 # cd /sys/class/gpio
 # echo 57 &gt; export
 # echo out&gt;gpio57/direction
@@ -311,7 +311,7 @@ the outputs and inputs. Wicked.</p>
 blinks. And found it <a href="http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/">on this blog</a>. Tweaked it a little
 bit, which was easy because it&#39;s so well written. I added an argument
 for the GPIO pin to use, to try all 8 pins. This is what I ended up with:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 #!/bin/bash
 
 # blink_arg.bash -- must run as root!
@@ -352,7 +352,7 @@ done
 </code></pre></div>
 <p>And it works as expected. So now for some fun (we did not get all this
 linux power for nothing!). </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> # ./blink_arg.bash 56&amp;
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> # ./blink_arg.bash 56&amp;
  # ./blink_arg.bash 57&amp;
  # ./blink_arg.bash 58&amp;
  # # ... etcetera ...

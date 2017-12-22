@@ -3,13 +3,147 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="http://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="http://www.pragti.ch/blog"/>
-  <updated>2017-05-02T18:06:01+02:00</updated>
+  <updated>2017-12-22T12:15:55+01:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
   <rights>Copyright (c) 2017, Joris Pragt; all rights reserved.</rights>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Installing LibreElec 8 on an Odroid C2</title>
+    <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2017/12/22/installing-libreelec-8-on-an-odroid-c2</id>
+    <link rel="alternate" type="text/html" href="http://www.pragti.ch/computer%20stuff/2017/12/22/installing-libreelec-8-on-an-odroid-c2/"/>
+    
+    <published>2017-12-22T00:00:00+01:00</published>
+    <updated>2017-12-22T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">I had to do quite a few small changes to make LE 8 work as I want on my Odroid C2</summary>
+    <category term="computer stuff" />
+	<content type="html">&lt;h1&gt;Installing LE&lt;/h1&gt;
+
+&lt;p&gt;Burning an SD card with the Libreelec utility did not work, but Etcher did the trick. I also switched from a 2 GB to an 8 GB card, perhaps that was a factor, too. &lt;/p&gt;
+
+&lt;p&gt;Installed the image onto an SD card, so that I can switch back to the original installation if it doesn&amp;#39;t work out. I ended up using &lt;a href=&quot;http://releases.libreelec.tv/LibreELEC-Odroid_C2.aarch64-8.2.1.img.gz&quot;&gt;LibreELEC-Odroid_C2.aarch64-8.2.1.img.gz&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1&gt;Recovering the library&lt;/h1&gt;
+
+&lt;p&gt;This is where I was really happy to have the EMMC with the original Kodi image. It&amp;#39;s really easy to swap it in and out, so that you can get access to the original data and files.&lt;/p&gt;
+
+&lt;p&gt;Exported the original library to a single file.&lt;/p&gt;
+
+&lt;p&gt;Imported it again in the new install. Seemless. You do need to switch the skin to &lt;code&gt;Advanced&lt;/code&gt; mode in order to get access to the &lt;code&gt;Import&lt;/code&gt; and &lt;code&gt;Export&lt;/code&gt; functions.&lt;/p&gt;
+
+&lt;p&gt;Browsing the network in order to open the library was a challenge at first. It helps if you set the &lt;code&gt;Workgroup&lt;/code&gt; to the same workgroup that your server is in. I had to change it in 2 places: The LibreElec Add-on and the Kodi network settings. Then, it worked.&lt;/p&gt;
+
+&lt;h1&gt;Disable SSH password&lt;/h1&gt;
+
+&lt;p&gt;SSH on Libreelec only supports the default user/pass combination (&lt;code&gt;root/libreelec&lt;/code&gt;). In order to secure this, I used &lt;code&gt;ssh-copy-key root@libreelec&lt;/code&gt; to copy my ssh keys to the device. You might need to make a key first, Google it.&lt;/p&gt;
+
+&lt;p&gt;Then, disable the password login in the Libreelec settings addon in Kodi.&lt;/p&gt;
+
+&lt;h1&gt;Disable blinking blue led&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://jbtronics.wordpress.com/2016/05/12/odroid-c2-change-the-function-of-the-blue-led/&quot;&gt;Followed this link&lt;/a&gt; &lt;/p&gt;
+
+&lt;p&gt;The startup scripts in Libreelec are very simple, so actually you put the following into &lt;code&gt;/storage/.config/autostart.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; none &amp;gt; /sys/devices/gpio_leds.43/leds/blue:heartbeat/trigger
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and then (using ssh):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;&lt;/span&gt;chmod a+x autostart.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Another option for the trigger, is &lt;code&gt;default-on&lt;/code&gt;. I prefer this trigger in combination with a killing of the LED at shutdown, to confirm a safe shutdown state. This is in my &lt;code&gt;/Configfiles/shutdown.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;#!/bin/sh&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; in
+  halt&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# your commands here&lt;/span&gt;
+
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; none &amp;gt; /sys/class/leds/blue&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;heartbeat/trigger
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  poweroff&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# your commands here&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; none &amp;gt; /sys/class/leds/blue&lt;span class=&quot;se&quot;&gt;\:&lt;/span&gt;heartbeat/trigger
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  reboot&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# your commands here&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  *&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# your commands here&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h1&gt;Favourite plugins&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Youtube&lt;/li&gt;
+&lt;li&gt;BSPlayer&lt;/li&gt;
+&lt;li&gt;Arctic Zephyr&lt;/li&gt;
+&lt;li&gt;Uitzendinggemist (NPO)&lt;/li&gt;
+&lt;li&gt;Nederland 24&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Back button goes back in menus&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.minixforum.com/threads/fix-a2-a2-lite-back-button-in-xbmc.3294/&quot;&gt;On the Odroid forum&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The Minix A2 Lite air mouse is quite nice, but the default support in Kodi is a bit lacking. You can improve it a lot with a few modifications. The first, is to be able to use the &lt;code&gt;back&lt;/code&gt; button properly.&lt;/p&gt;
+
+&lt;p&gt;I created a file called &lt;code&gt;A2lite.xml&lt;/code&gt; into the Samba share &lt;code&gt;/Userdata/keymaps&lt;/code&gt; on the box. Restart (the skin?) and the back button behaves properly. Look at the forum posts for a few options, including automatically stopping the media playing.&lt;/p&gt;
+
+&lt;p&gt;The file:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;keymap&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;global&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;keyboard&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;backspace&amp;gt;&lt;/span&gt;Back&lt;span class=&quot;nt&quot;&gt;&amp;lt;/backspace&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;61467&amp;#39;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Back&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/keyboard&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/global&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;FullscreenVideo&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;keyboard&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;backspace&amp;gt;&lt;/span&gt;Back&lt;span class=&quot;nt&quot;&gt;&amp;lt;/backspace&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/keyboard&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/FullscreenVideo&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/keymap&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h1&gt;Subtitle shifting&lt;/h1&gt;
+
+&lt;p&gt;I like to use the Fast Forward and Fast Reverse buttons to shift the sub delay. That way, it&amp;#39;s easy to fix small errors in timing. Also, I configure the key with the three horizontal lines, to switch subtitle options.&lt;/p&gt;
+
+&lt;p&gt;A &lt;code&gt;Subs.xml&lt;/code&gt; could look like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;keymap&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;global&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;keyboard&amp;gt;&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;61654&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;contextmenu&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/keyboard&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;/global&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;fullscreenvideo&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;keyboard&amp;gt;&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;61654&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;nextsubtitle&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;61627&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;subtitledelayminus&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;lt;key&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;61626&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;subtitledelayplus&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/keyboard&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;/fullscreenvideo&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/keymap&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h1&gt;Getting LIRC to work&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;Careful: this is untested and probably not really correct&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;cp /etc/lirc/lircd.conf.amremote /storage/.config/lircd.conf
+reboot&lt;/p&gt;
+
+&lt;p&gt;systemctl stop eventlircd.service 
+systemctl stop lircd@lirc0:default:lircd.conf.amremote.service
+ps aux|grep lirc&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;597 root       0:00 {kodi.sh} /bin/sh /usr/lib/kodi/kodi.sh --standalone -fs --lircdev /run/lirc/lircd
+602 root       2:15 /usr/lib/kodi/kodi.bin --standalone -fs --lircdev /run/lirc/lircd
+773 root       0:00 grep lirc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;irrecord --device /dev/lirc0 /storage/.config/lircd.conf&lt;/p&gt;
+</content>
+  </entry>
 
 
   <entry>
@@ -95,7 +229,7 @@
 &lt;h1&gt;The algorithm itself&lt;/h1&gt;
 
 &lt;p&gt;The algorithm itself is really simple:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;rtrunc_primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rtrunc_primes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rtrunc_primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rtrunc_primes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;ltrunc_primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ltrunc_primes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;tprimes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sorted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rtrunc_primes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ltrunc_primes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; 
@@ -103,24 +237,24 @@
 &lt;p&gt;We simply get all right truncatable primes, all left truncatable primes and use the set intersection operator &lt;code&gt;&amp;amp;&lt;/code&gt; to get our answers. I make a sorted list in order to be able to drop the first 4 primes in the summation, as that is how &lt;a href=&quot;https://projecteuler.net/problem=37&quot;&gt;Project Euler problem 37&lt;/a&gt; is stated.&lt;/p&gt;
 
 &lt;p&gt;I get the answer and the list of primes using these simple statements:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Truncatable primes: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tprimes&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Sum minus 1-digit primes: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:])&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Number of truncatable primes: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Truncatable primes: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tprimes&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Sum minus 1-digit primes: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:])&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Number of truncatable primes: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h1&gt;Generating the right truncatable primes&lt;/h1&gt;
 
 &lt;p&gt;Generating the right truncatable primes is the easy part.&lt;/p&gt;
 
 &lt;p&gt;We have to consider that the 1-digit right truncatable primes are simply the 1-digit primes, that any additional digit needs to be a valid last digit for a prime and that the whole number must be prime. Since all primes above &lt;code&gt;9&lt;/code&gt; end on either a &lt;code&gt;1, 3, 7 or 9&lt;/code&gt;, this really reduces the number of tests required. Even without optimization this runs really quickly on modern systems. After some rewriting (still learning to use the list comprehensions in Python), this is my result:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;itertools&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;itertools&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rtrunc_primes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
   &lt;span class=&quot;sd&quot;&gt;&amp;quot;&amp;quot;&amp;quot;Generate a set of all right-truncatable primes&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;rprimes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Seed with 1-digit primes&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;rdigits&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Only possible digits after first digit&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;rprimes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Seed with 1-digit primes&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;rdigits&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Only possible digits after first digit&lt;/span&gt;
 
   &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Continue as long as we have found a prime in the previous n&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Continue as long as we have found a prime in the previous n&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;nprimes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rdigits&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is_prime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;rprimes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
@@ -129,15 +263,15 @@
 &lt;h1&gt;Generating left truncatable primes&lt;/h1&gt;
 
 &lt;p&gt;The left truncatable primes are slightly more difficult. But following the same logic, we start with the one-digit primes, then continue adding digits to the left until we no longer find a prime for a given digit length. So glad that Python does away with old-fashioned maximum limits on ineger sizes. In this case, there are more primes and the number of possible digits is larger, but still it runs in a blink of an eye on my systems.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ltrunc_primes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ltrunc_primes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
   &lt;span class=&quot;sd&quot;&gt;&amp;quot;&amp;quot;&amp;quot;Generate a set of all left-truncatable primes&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;lprimes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Seed with 1-digit primes&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;ldigits&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Only possible digits after first digit&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;lprimes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Seed with 1-digit primes&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ldigits&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Only possible digits after first digit&lt;/span&gt;
 
   &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Continue as long as we have found a prime in the previous n&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# We need to stick the digits to the front, so mult with factor&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Continue as long as we have found a prime in the previous n&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# We need to stick the digits to the front, so mult with factor&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;nprimes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ldigits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is_prime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;lprimes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nprimes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
@@ -207,7 +341,7 @@
 	<content type="html">&lt;h1&gt;Setting PATH for applications started from the Dock in OS X 10.10 Yosemite&lt;/h1&gt;
 
 &lt;p&gt;I recently switched from Fink to Homebrew, the most up-to-date packaging system for Mac OS X 10.10 Yosemite. With that, I also decided to install the Emacs 24.1 directly from Homebrew instead of from one of the OS X-specific compiled versions available. This works fine:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew install emacs --cocoa
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;brew install emacs --cocoa
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, there is a problem: when an application is run from the Dock, it has only a very minimal environment, and it definitely does not get a PATH from any of the shell configuration files. Without this PATH, all kinds of things do not work. The first thing I noticed, was that python-mode was finding Mac OS&amp;#39;s builtin Python instead of my updated version.&lt;/p&gt;
 
@@ -218,7 +352,7 @@
 &lt;p&gt;Cocretely, I have attached an Automator script to the Dock, that starts Emacs for me. The drawback is, that even if you give it the same icon, the running instance of Emacs will get a separate icon on the dock. I have not yet found a solution for this, and am experiencing the same on Windows 7. Not a problem.&lt;/p&gt;
 
 &lt;p&gt;The Automator code:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;echo &amp;#39;/Applications/Emacs.app/Contents/MacOS/Emacs &amp;quot;$@&amp;quot;&amp;#39; | bash --login -s &amp;amp;&amp;gt; /dev/null &amp;amp;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;echo &amp;#39;/Applications/Emacs.app/Contents/MacOS/Emacs &amp;quot;$@&amp;quot;&amp;#39; | bash --login -s &amp;amp;&amp;gt; /dev/null &amp;amp;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;&amp;amp;&amp;gt; /dev/null &amp;amp;&lt;/code&gt; part makes sure that the Automator task does not hang around waiting for the Emacs instance to exit or close its pipes. &lt;/p&gt;
 </content>
@@ -247,7 +381,7 @@
 &lt;p&gt;Because of trouble getting a USB cardreader to show up un VirtualBox, and the incompatibility of the &lt;code&gt;mkcard.txt&lt;/code&gt; script with OS X, I decided to use the BBB itself to write the SD card. This is based on the standard firmware from the circuitco website. So that is the set of executables that I had available. I booted the BBB with a nonbooting card (so that it will boot from the eMMC). The SD card then is located at &lt;code&gt;/mnt/sda&lt;/code&gt;. The beaglebone is also on the network via the LAN port.&lt;/p&gt;
 
 &lt;p&gt;Then:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 root@beaglebone:~# wget http://www.angstrom-distribution.org/demo/beaglebone/mkcard.txt
 mkcard.txt mkcard.sh  
 chmod +x mkcard.sh 
@@ -262,7 +396,7 @@ mount /dev/disk/by-label/Angstrom Angstrom/
 df -h
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This results in the following confirmation that we have stuff mounted right:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 Filesystem      Size  Used Avail Use% Mounted on
 rootfs          1.7G  1.1G  515M  69% /
 /dev/root       1.7G  1.1G  515M  69% /
@@ -280,7 +414,7 @@ tmpfs           250M  4.0K  250M   1% /tmp
 &lt;h1&gt;Installing the images&lt;/h1&gt;
 
 &lt;p&gt;Simply followed the stuff &lt;a href=&quot;http://cwraig.id.au/?p=507&quot;&gt;from here&lt;/a&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 cd
 mkdir installs
 cd installs
@@ -295,7 +429,7 @@ umount /mnt/Angstrom
 &lt;p&gt;Then reboot and...&lt;/p&gt;
 
 &lt;h1&gt;Test!&lt;/h1&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 root@beaglebone:~# uname -a
 Linux beaglebone 3.8.13 #1 SMP Sun Oct 13 15:59:25 CEST 2013 armv7l GNU/Linux
 root@beaglebone:~# ps aux
@@ -305,7 +439,7 @@ BusyBox v1.20.2 (2013-09-14 09:40:16 CEST) multi-call binary.
 Usage: ps 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;So the smaller &lt;code&gt;ps&lt;/code&gt; delivered by &lt;code&gt;BusyBox&lt;/code&gt; is now active, not the richer GNU version in the default install. Running &lt;code&gt;ps&lt;/code&gt; also shows much less processes:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 root@beaglebone:~# ps
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;PID USER       VSZ STAT COMMAND
@@ -401,12 +535,12 @@ root@beaglebone:~# ps
 
 &lt;p&gt;Easy.  Add percent to the pathname regexp:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;    &lt;span class=&quot;n&quot;&gt;postfile_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;\1-\2-\3-\4&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span&gt;&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;postfile_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;\1-\2-\3-\4&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;and &lt;code&gt;CGI.decode&lt;/code&gt; the directory portion of the filename before passing it back to Jekyll:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;      &lt;span class=&quot;c1&quot;&gt;# Add a static file entry for each postfile, if any&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span&gt;&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;# Add a static file entry for each postfile, if any&lt;/span&gt;
         &lt;span class=&quot;no&quot;&gt;Dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;postfile_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;/*&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
           &lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;static_files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;PostFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postfile_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CGI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unescape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
@@ -446,14 +580,14 @@ root@beaglebone:~# ps
 &lt;h1&gt;Setting up Jekyll&lt;/h1&gt;
 
 &lt;p&gt;Setting up &lt;code&gt;jekyll&lt;/code&gt; is easy. Just follow &lt;a href=&quot;https://github.com/mojombo/jekyll/wiki/install&quot;&gt;the instructions on the jekyll site&lt;/a&gt;, as easy as:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;gem install jekyll
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;gem install jekyll
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Note that I later switched to extended jekyll, see below.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://jekyllrb.com/&quot;&gt;The documentation for &lt;code&gt;jekyll&lt;/code&gt;&lt;/a&gt; is good, although structure is a bit lacking. If you read through this, it will be much clearer. Especially useful is studying the &lt;a href=&quot;http://wiki.github.com/shopify/liquid/liquid-for-designers&quot;&gt;Liquid documentation&lt;/a&gt; and the &lt;a href=&quot;https://github.com/mojombo/jekyll/wiki/Liquid-Extensions&quot;&gt;Jekyll Liquid extensions&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Configuring happens through &lt;code&gt;_config.yml&lt;/code&gt;, and I have the following in there:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;permalink: pretty      # Required for the postfiles plugin
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;permalink: pretty      # Required for the postfiles plugin
 lsi: true              # Will be useful for related pages later on
 markdown: kramdown     # I like kramdown
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -468,7 +602,7 @@ markdown: kramdown     # I like kramdown
 &lt;p&gt;This is solved by &lt;a href=&quot;https://github.com/indirect/jekyll-postfiles&quot;&gt;the &lt;code&gt;jekyll-postfiles&lt;/code&gt; plugin&lt;/a&gt; by Andre Arko. Check it out. What it does, is allow you to put the files belonging to a post in the &lt;code&gt;_postfiles/&lt;/code&gt; folder, in a subfolder named like the post itself. So, the post &lt;code&gt;_posts/2012-12-31-Test.md&lt;/code&gt; would have a matching folder &lt;code&gt;_postfiles/2012-12-31-Test/&lt;/code&gt; where the matching files can be put.&lt;/p&gt;
 
 &lt;p&gt;Also, it gives you a Liquid tag that allows you access to the files from your post without needing to know where exactly the files are. It works like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;{% postfile file.zip %}
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;{% postfile file.zip %}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/indirect/jekyll-postfiles&quot;&gt;Check it out!&lt;/a&gt;&lt;/p&gt;
 
@@ -485,10 +619,10 @@ markdown: kramdown     # I like kramdown
 &lt;p&gt;Adds the HTML boilerplate, CSS links and navigation to the site. Each page should end up passing through &lt;code&gt;default&lt;/code&gt; last. Because it is last, it does not have a YAML Front Matter.&lt;/p&gt;
 
 &lt;p&gt;For navigation links, I changed the hardcoded URLS in the original to the following Liquid structure. That should allow switching from the test environment to the production environment URLs easily (not verified yet).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;lt;a href=&amp;quot;{{ site.url }}/blog/index.html&amp;quot;&amp;gt;Index of all articles&amp;lt;/a&amp;gt; &amp;lt;/li&amp;gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;a href=&amp;quot;{{ site.url }}/blog/index.html&amp;quot;&amp;gt;Index of all articles&amp;lt;/a&amp;gt; &amp;lt;/li&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Also, Jekyll gives you the opportunity to access all the categories and tags in the site, so the navigation bar content changed to something like this (makes use of the category pages generated by the plugin mentioned below):&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;lt;H2&amp;gt;Categories&amp;lt;/h2&amp;gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;H2&amp;gt;Categories&amp;lt;/h2&amp;gt;
 &amp;lt;ul&amp;gt;
   {% for cat in site.categories %}
     &amp;lt;li&amp;gt;
@@ -501,7 +635,7 @@ markdown: kramdown     # I like kramdown
 &lt;h2&gt;Layout: Index&lt;/h2&gt;
 
 &lt;p&gt;The index layout is really simple. It is meant for the main blog index page only. All it does is wrap the page content in &lt;code&gt;&amp;lt;article&amp;gt;&lt;/code&gt; tags and pass it on to &lt;code&gt;default&lt;/code&gt;. Easy.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;---
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;---
 layout: default
 ---
 &amp;lt;article&amp;gt;
@@ -513,7 +647,7 @@ layout: default
 &lt;p&gt;This layout is meant for the autogenerated category indes pages (see below). It again wraps the content in an &lt;code&gt;&amp;lt;article&amp;gt;&lt;/code&gt; tag, and then it loops through all articles in this category to list them one by one. I want to reduce the redundancy between this one and the content of my main index page (which is very similar), but that will be future work.&lt;/p&gt;
 
 &lt;p&gt;This is the entire thing:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;---
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;---
 layout: default
 ---
 &amp;lt;article&amp;gt;
@@ -539,7 +673,7 @@ layout: default
 &lt;h2&gt;Layout: post&lt;/h2&gt;
 
 &lt;p&gt;This layout is used for all actual blog posts. It lays out each article, and adds some comment stuff below that. This is how it looks:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;---
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;---
 layout: default
 ---
 &amp;lt;article&amp;gt;
@@ -580,7 +714,7 @@ layout: default
 
 &lt;p&gt;This is the part of the &lt;a href=&quot;https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile&quot;&gt;&lt;code&gt;Rakefile&lt;/code&gt;&lt;/a&gt; that does this:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rake&amp;#39;&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span&gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rake&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;yaml&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;time&amp;#39;&lt;/span&gt;
  &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;highline/import&amp;#39;&lt;/span&gt;
@@ -647,11 +781,11 @@ layout: default
 &lt;p&gt;The &lt;a href=&quot;https://help.github.com/categories/20/articles&quot;&gt;help for Github pages&lt;/a&gt; is quite clear. The trick was to migrate from my original repo to the new one, them being completely separate before. I will probably go back to the strategy that I followed for &lt;code&gt;nanoc&lt;/code&gt;.That is, to keep the source and output together in one repository with the &lt;code&gt;source&lt;/code&gt; branch containing the source and the &lt;code&gt;master&lt;/code&gt; branch containing the site itself. This does require some trickery in the &lt;code&gt;Rakefile&lt;/code&gt;. A drawback is that this deployment can break if git is not happy switching branches, but has the benefit that all files are kept together in the repo so all history is kept together.&lt;/p&gt;
 
 &lt;p&gt;First, I created the correct branch structure:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git checkout -b source
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;git checkout -b source
 git checkout master
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then, I remodel the master branch to contain only the files from the _site folder. I edit the README file to make clear what&amp;#39;s going on. And I add a &lt;code&gt;.nojekyll&lt;/code&gt; file to tell Github not to try and process it itself. Finally, I make sure that the new source folder gets pushed to the origin (Github).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;rm -rf xxxx yyyy zzzz         # all files except _site/ and README
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;rm -rf xxxx yyyy zzzz         # all files except _site/ and README
 mv _site/* .
 rm -rf _site
 
@@ -689,7 +823,7 @@ git push -u origin source
 &lt;p&gt;For my Kippycam project, I am trying to run the mjpg-streamer with various instances, so that I can stream from multiple cameras from my TL-WR3020 or TL-WR703N routers. There is a nice init and config system that comes with the mjpg-streamer package in OpenWRT, that does most of the work. It puts configuration for the server in the UCI file &lt;code&gt;/etc/config/mjpg-streamer&lt;/code&gt;, and the &lt;code&gt;/etc/init.d/mjpg-streamer&lt;/code&gt; script actually loops over any possible configurations already. So, to instantiate multiple servers, I only need to add a second server definition in the config file. &lt;/p&gt;
 
 &lt;p&gt;BUT, then I get the following error in the logfile, and the second server does not start:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Using V4L2 device.: /dev/video0
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Using V4L2 device.: /dev/video0
 Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Desired Resolution: 640 x 481
 Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Frames Per Second.: 2
 Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Format............: MJPEG
@@ -702,7 +836,7 @@ Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 &lt;p&gt;I do not understand the root cause fully, but it is clear that the &lt;code&gt;/etc/init.d/mjpg-streamer&lt;/code&gt; script contains some layout so that it is more legible. This layout does, however, introduce some whitespace into the command line that is causing our trouble. I will leave analysis of the true root cause to the experts, but describe the quick and dirty solution.&lt;/p&gt;
 
 &lt;p&gt;This is a part of the original file, below. The problem is with the line continuation with slashes.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 start_instance() {
     local s=&amp;quot;$1&amp;quot;
 
@@ -725,13 +859,13 @@ start_instance() {
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I simply removed the backslashed line continuations and put everything in one line, and that solves the issue for me:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 service_start /usr/bin/mjpg_streamer --input &amp;quot;input_uvc.so --device $device --fps $fps --resolution $resolution&amp;quot;  --output &amp;quot;output_http.so --www $www --port $port&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h1&gt;Correcting PIDfile issue&lt;/h1&gt;
 
 &lt;p&gt;There is a second issue, because the default &lt;code&gt;service_start&lt;/code&gt; behaviour is to prevent starting of multiple instances of the same daemon. So, we need to explicitly make sure that it does make multiple instances for us (because we are asking nicely). There are several ways to this, but I chose to explicitly help by supplying a pid file name for each camera. By using the unique configuration name from the config file, these will be unique. It is an easy edit in two places of &lt;code&gt;/etc/init.d/mjpg-streamer&lt;/code&gt;. First, the function &lt;code&gt;start_instance&lt;/code&gt; again:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 start_instance() {
     local s=&amp;quot;$1&amp;quot;
 
@@ -755,7 +889,7 @@ start_instance() {
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;So in short, I generate a &lt;code&gt;$SERVICE_PID_FILE&lt;/code&gt; that uniquely identifies the service. Of course, for killing the service we need to go back to the same pidfile:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 stop_instance() {
     local s=&amp;quot;$1&amp;quot;
 
@@ -771,7 +905,7 @@ stop_instance() {
 &lt;p&gt;Now, it is really easy to edit &lt;code&gt;/etc/config/mjpg-streamer&lt;/code&gt; for multiple devices. Do be careful not to exceed the memory of your device, and also the USB and memory bandwidths, or you may make the device very unstable. Adding a name for each &lt;code&gt;config&lt;/code&gt; heading is not strictly necessary, but very helpful as it gives some identification. I am assuming that each device has a fixed &lt;code&gt;/dev/video&lt;/code&gt; devicename, which is the case on my device as long as I do not replug any camera.&lt;/p&gt;
 
 &lt;p&gt;This is my config file:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;config mjpg-streamer c920
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;config mjpg-streamer c920
     option device       &amp;quot;/dev/video0&amp;quot;
     option enabled      &amp;quot;1&amp;quot;
     option resolution   &amp;quot;960x720&amp;quot;   
@@ -816,7 +950,7 @@ would expect them. And sadly, when you simply &lt;code&gt;ln -s&lt;/code&gt; the
 to &lt;code&gt;/usr/local/bin&lt;/code&gt; or &lt;code&gt;/usr/bin&lt;/code&gt;, it breaks with a very unfriendly
 error message that actually refers to folders that do not exist on
 this system, but did on the build system!&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!console
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!console
 $ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
 $ ./emacs
 Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
@@ -846,7 +980,7 @@ use to get a text console instead of a graphical frame).&lt;/p&gt;
 
 &lt;p&gt;In the end, the solution is quite easy. Just gave up and added the
 Emacs.app folder to early in my &lt;code&gt;PATH&lt;/code&gt;. So, added to &lt;code&gt;~/.bashrc&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 export PATH
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -858,14 +992,14 @@ default, so it works to type &lt;code&gt;emacs&lt;/code&gt; anyway.&lt;/p&gt;
 
 &lt;p&gt;The standard emacs that comes with OS X is very old and you really do
 not want the confusion between the two versions. So, I did:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 sudo mv /usr/bin/emacs /usr/bin/emacs.orig
 sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And then it is a good idea to put the new &lt;code&gt;emacsclient&lt;/code&gt; in a standard
 location (but not &lt;code&gt;/usr/bin&lt;/code&gt;, because this is a system place that
 could get overwritten whenever Apple wants to):&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Setting up some aliases&lt;/h2&gt;
@@ -874,7 +1008,7 @@ ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emac
 easy access to the editor through the alias &lt;code&gt;e&lt;/code&gt;. This should
 automatically launch emacs when it is not yet running, or connect to
 it using &lt;code&gt;emacsclient&lt;/code&gt; if it is. I had some trouble when &lt;code&gt;ssh&lt;/code&gt;&amp;#39;ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the &lt;code&gt;-s&lt;/code&gt; option. This works most of the time, although when autostarting the &lt;code&gt;Emacs&lt;/code&gt; binary from &lt;code&gt;emacsclient&lt;/code&gt;, all options are dropped by &lt;code&gt;emacsclient&lt;/code&gt;, so things like &lt;code&gt;-nw&lt;/code&gt; will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with &lt;code&gt;-nw&lt;/code&gt; when working in a text only environment.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;emacsclient: can&amp;#39;t find socket; have you started the server?
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;emacsclient: can&amp;#39;t find socket; have you started the server?
 To start the server in Emacs, type &amp;quot;M-x server-start&amp;quot;.
 emacsclient: No socket or alternate editor.  Please use:
 
@@ -885,7 +1019,7 @@ emacsclient: No socket or alternate editor.  Please use:
 &lt;p&gt;I also fill some editor variables that tell other programs that they
 should launch emacs when they want to edit a file. This is my
 &lt;code&gt;~/.bash_profile&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 # Get the aliases and functions
 if [ -f ~/.bashrc ]; then
         . ~/.bashrc
@@ -908,7 +1042,7 @@ alias e=$VISUAL
 &lt;h2&gt;Setting up server mode&lt;/h2&gt;
 
 &lt;p&gt;To start the emacs server when emacs starts, you need to add the following to &lt;code&gt;~/.emacs&lt;/code&gt;. I needed to provide a stable place for the sockets, otherwise they break when &lt;code&gt;ssh&lt;/code&gt;&amp;#39;in in. Don&amp;#39;t understand why.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(setq server-socket-dir (format &amp;quot;/tmp/emacs%d&amp;quot; (user-uid))) 
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;(setq server-socket-dir (format &amp;quot;/tmp/emacs%d&amp;quot; (user-uid))) 
 (server-start)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h1&gt;Migrating my settings&lt;/h1&gt;
@@ -924,12 +1058,12 @@ alias e=$VISUAL
 &lt;h2&gt;Some differences&lt;/h2&gt;
 
 &lt;p&gt;It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let&amp;#39;s get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let&amp;#39;s also drop the ugly toolbar.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(setq inhibit-startup-echo-area-message t)
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;(setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
 (tool-bar-mode -1)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. &lt;a href=&quot;http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient&quot;&gt;The fix was quite easy, thankfully&lt;/a&gt;. &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(select-frame-set-input-focus (nth 0 (frame-list)))
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;(select-frame-set-input-focus (nth 0 (frame-list)))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h1&gt;Getting the most out of it&lt;/h1&gt;
 
@@ -940,7 +1074,7 @@ alias e=$VISUAL
 &lt;h2&gt;Enabling package management&lt;/h2&gt;
 
 &lt;p&gt;Added the following to &lt;code&gt;~/.emacs&lt;/code&gt; (and deleted some package stuff that was left from before).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(require &amp;#39;package)
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;(require &amp;#39;package)
 (add-to-list &amp;#39;package-archives &amp;#39;(&amp;quot;marmalade&amp;quot; . &amp;quot;http://marmalade-repo.org/packages/&amp;quot;))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now I can list the packages available with &lt;code&gt;M-x list-packages&lt;/code&gt;. Need to start learning how that works.&lt;/p&gt;
@@ -948,7 +1082,7 @@ alias e=$VISUAL
 &lt;h2&gt;Using Magit&lt;/h2&gt;
 
 &lt;p&gt;i used the package manager to install Magit. A great frontend to &lt;code&gt;git&lt;/code&gt;!&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;M-x list-packages
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;M-x list-packages
 
 ; find magit
 i    ; for install
@@ -956,12 +1090,12 @@ x    ; for execute
 y    ; for yes
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In order to avoid typing &lt;code&gt;magit-status&lt;/code&gt; a lot, I bound it to a key in &lt;code&gt;~/.emacs&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(global-set-key (kbd &amp;quot;C-x g&amp;quot;) &amp;#39;magit-status)
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;(global-set-key (kbd &amp;quot;C-x g&amp;quot;) &amp;#39;magit-status)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Enabling Ido mode&lt;/h2&gt;
 
 &lt;p&gt;Although it has been around, I had not yet heard of Ido mode. &lt;a href=&quot;http://www.masteringemacs.org/articles/2010/10/10/introduction-to-ido-mode/&quot;&gt;It sounds very useful&lt;/a&gt;. So let&amp;#39;s enable it:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;(setq ido-enable-flex-matching t)
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;(setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
@@ -1003,7 +1137,7 @@ changed nearly every day and I do not have 100% faith in my ability to
 manage all the possible version conflicts (did I ever say I hate Linux
 for all the version conflicts?). This is not very polite, so don&amp;#39;t do
 it often.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; wget -mk -w 20 http://downloads.openwrt.org/snapshots/trunk/ar71xx/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt; wget -mk -w 20 http://downloads.openwrt.org/snapshots/trunk/ar71xx/
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I am on OS X, and perform above &lt;code&gt;wget&lt;/code&gt; in the
 /Library/WebServer/Documents folder. This allows the OS X web server
@@ -1015,14 +1149,14 @@ it often.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;: I did end up running into issues on this install. You may
   want to scroll down to &amp;#39;fixing space issues&amp;#39; to get my updates from
   there first.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;md5sums
     wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
     md5sum -c md5sums&lt;/p&gt;
 
 &lt;p&gt;This should report that (n-1) out of n files failed (so 1 passed) :-)&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sysupgrade -v
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;sysupgrade -v
 /tmp/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And hold your breath...&lt;/p&gt;
@@ -1030,7 +1164,7 @@ it often.&lt;/p&gt;
 &lt;p&gt;According to
 &lt;a href=&quot;http://wiki.openwrt.org/doc/howto/generic.sysupgrade&quot;&gt;the wiki&lt;/a&gt;, the
 files in the libraries folder will still be loaded. Scary...&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:/tmp# ls /lib/modules/3.3.8/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:/tmp# ls /lib/modules/3.3.8/
 aes_generic.ko          iptable_nat.ko          ppp_generic.ko
 arc4.ko                 iptable_raw.ko          pppoe.ko
 ath.ko                  jbd2.ko                 pppox.ko
@@ -1058,7 +1192,7 @@ need to figure out how to update all the programs and kernel modules.&lt;/p&gt;
 
 &lt;p&gt;It actually seems that my user space packages are gone (for example,
 e2fsck). How about kernel modules?&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# ls /lib/modules/3.3.8/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# ls /lib/modules/3.3.8/
 aes_generic.ko          iptable_nat.ko          ppp_generic.ko
 arc4.ko                 iptable_raw.ko          pppoe.ko
 ath.ko                  leds-gpio.ko            pppox.ko
@@ -1080,7 +1214,7 @@ iptable_filter.ko       ohci-hcd.ko
 iptable_mangle.ko       ppp_async.ko
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Also &lt;code&gt;/usr/lib/&lt;/code&gt; seems to be ok:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# ls /usr/lib/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# ls /usr/lib/
 iptables             libip4tc.so.0.0.0    libnl-tiny.so        libxtables.so.5.0.0
 libip4tc.so          libjson.so.0         libxtables.so        opkg
 libip4tc.so.0        libjson.so.0.0.1     libxtables.so.5      pppd
@@ -1089,7 +1223,7 @@ root@OpenWrt:~#
 &lt;h1&gt;Installing required stuff for USB &amp;amp; cleaning up&lt;/h1&gt;
 
 &lt;p&gt;Edit opkg.conf to send it to the mirrored packages:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#src/gz kippy http://10.0.0.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#src/gz kippy http://10.0.0.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 src/gz kippy http://192.168.1.102/downloads.openwrt.org-r32130/snapshots/trunk/ar71xx/pack
 #src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 dest root /
@@ -1103,7 +1237,7 @@ WiFi). &lt;strong&gt;Wrong address for the link&lt;/strong&gt;: This should have
 the revision number. &lt;/p&gt;
 
 &lt;p&gt;Then:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;opkg update
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;opkg update
 opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scsi-generic
 
 root@OpenWrt:~# opkg install kernel kmod-usb-storage block-mount swap-utils kmod-fs-ext4 k
@@ -1132,7 +1266,7 @@ root@OpenWrt:~#
 &lt;p&gt;Apparently the kernel has updated during my mirroring? Rats... 
 Nope, I had the incorrect folder set in my opkg.conf, so it was
 fetching old package data. &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pac
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pac
 kages/kernel_3.3.8-1-5566392ba3947228e76b8c9283f833d0_ar71xx.ipk
 Connecting to 192.168.1.102 (192.168.1.102:80)
 kernel_3.3.8-1-55663 100% |*****************************************|   714   0:00:00 ETA
@@ -1159,7 +1293,7 @@ root@OpenWrt:~#
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;What&amp;#39;s wrong with opkg? It can download, and it can install. But not
 together??&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;oot@OpenWrt:~# opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scs
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;oot@OpenWrt:~# opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scs
 i-generic
 Installing kmod-usb-storage (3.3.8-1) to root...
 Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-usb-storage_3.3.8-1_ar71xx.ipk.
@@ -1205,7 +1339,7 @@ Configuring kmod-fs-ext4.
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally...&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# opkg list-upgradable
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# opkg list-upgradable
 libblkid - 2.21.1-1 - 2.21.2-1
 libuuid - 2.21.1-1 - 2.21.2-1
 blkid - 2.21.1-1 - 2.21.2-1
@@ -1222,12 +1356,12 @@ Configuring blkid.
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Some updates&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;reboot
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;reboot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Plugin flash drive. Is recognized as /dev/sdb1. Will this change?
 Reboot again with disk plugged in (but first check fstab and disable
 partitions).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# mount
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# mount
 rootfs on / type rootfs (rw)
 /dev/root on /rom type squashfs (ro,relatime)
 proc on /proc type proc (rw,noatime)
@@ -1271,14 +1405,14 @@ config swap
         option enabled  0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;and then&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# mount /dev/sda1 /mnt/flash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# mount /dev/sda1 /mnt/flash
 root@OpenWrt:~# mkdir /mnt/flash
 
 rm -Rf /mnt/flash/*
 root@OpenWrt:~# tar -C /overlay -cvf - . | tar -C /mnt/flash -xf -
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And then edit /etc/config/fstab&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;config global automount
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;config global automount
         option from_fstab 1
         option anon_mount 1
 
@@ -1314,7 +1448,7 @@ Because of reset, telnet 192.168.1.1, passwd
 I needed to delete the root@192.168.1.1 entry from ~/.ssh/known_hosts&lt;/p&gt;
 
 &lt;p&gt;/etc/opkg.conf:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 src/gz kippy http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 dest root /  
 dest ram /tmp                
@@ -1322,7 +1456,7 @@ lists_dir ext /var/opkg-lists
 option overlay_root /overlay
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;root@OpenWrt:~# free&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;total         used         free       shared      buffers
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;total         used         free       shared      buffers
 Mem:         29156        18208        10948            0         1348
 -/+ buffers:              16860        12296
 Swap:            0            0            0
@@ -1339,7 +1473,7 @@ overlayfs:/overlay        1344       208      1136  15% /
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;opkg now works properly also and nothing is upgradeable&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;opkg install e2fsprogs
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;opkg install e2fsprogs
 
 root@OpenWrt:~# free &amp;amp;&amp;amp; df
              total         used         free       shared      buffers
@@ -1378,7 +1512,7 @@ root@OpenWrt:~#
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;So the flash drive was automounted on /mnt/sdb1 (will be /sda1 when
 plugged in at boot).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# ls /mnt/sdb2/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# ls /mnt/sdb2/
 root@OpenWrt:~# ls /mnt/sdb1/
 etc   lib   mnt   root  sbin  usr
 root@OpenWrt:~# rm -Rf /mnt/sdb1/*
@@ -1388,7 +1522,7 @@ root@OpenWrt:~#
 tar -C /overlay -cvf - . | tar -C /mnt/sdb1 -xf -
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Bach to /etc/config/fstab:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;config global automount
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;config global automount
         option from_fstab 1
         option anon_mount 1
 
@@ -1409,7 +1543,7 @@ config swap
         option enabled  1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;reboot&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# df &amp;amp;&amp;amp; free
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# df &amp;amp;&amp;amp; free
 Filesystem           1K-blocks      Used Available Use% Mounted on
 rootfs                  465960     24944    417624   6% /
 /dev/root                 1536      1536         0 100% /rom
@@ -1444,7 +1578,7 @@ Swap:        32764            0        32764
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And again back to /etc/config/fstab:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;config global automount
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;config global automount
         option from_fstab 1
         option anon_mount 1
 
@@ -1465,7 +1599,7 @@ config swap
         option enabled  1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;reboot to test&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;root@OpenWrt:~# mount &amp;amp;&amp;amp; free &amp;amp;&amp;amp; df
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;root@OpenWrt:~# mount &amp;amp;&amp;amp; free &amp;amp;&amp;amp; df
 rootfs on / type rootfs (rw)
 /dev/root on /rom type squashfs (ro,relatime)
 proc on /proc type proc (rw,noatime)
@@ -1491,7 +1625,7 @@ overlayfs:/overlay      465960     24944    417624   6% /
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And now to install &lt;code&gt;luci&lt;/code&gt; and &lt;code&gt;mjpeg-streamer&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;opkg update
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;opkg update
 opkg install luci
 /etc/init.d/uhttpd enable
 /etc/init.d/uhttpd start
@@ -1501,7 +1635,7 @@ opkg install htop bash
 opkg install mjpg-streamer
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;and edit /etc/config/mjpg-streamer&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;config mjpg-streamer core
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;config mjpg-streamer core
         option enabled          &amp;quot;1&amp;quot;
         option device           &amp;quot;/dev/video0&amp;quot;
         option resolution       &amp;quot;640x480&amp;quot;
@@ -1512,10 +1646,10 @@ opkg install mjpg-streamer
 root@OpenWrt:~# /etc/init.d/mjpg-streamer start
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;oops, forgot the kermel modules... &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;opkg install kmod-video-uvc
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;opkg install kmod-video-uvc
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now let&amp;#39;s check if it has been recognized:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[  719.130000] usbcore: registered new interface driver uvcvideo
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;[  719.130000] usbcore: registered new interface driver uvcvideo
 [  719.130000] USB Video Class driver (1.1.1)
 [  726.590000] usb 1-1.3: USB disconnect, device number 5
 [  729.390000] usb 1-1.3: new high-speed USB device number 6 using ehci-platform
@@ -1671,7 +1805,7 @@ attempt to keep the signal wires apart:&lt;/p&gt;
 I2C
 &lt;a href=&quot;http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c&quot;&gt;at this link&lt;/a&gt;. Let&amp;#39;s
 start with the basics:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;gt; opkg update
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; opkg update
 &amp;gt; opkg install i2c-tools
 &amp;gt;opkg install kmod-i2c-gpio-custom
 
@@ -1700,7 +1834,7 @@ go...?&lt;/p&gt;
 found. &lt;code&gt;trunk/build_dir/linux-ar71xx_generic/linux-3.3.8/modules.builtin&lt;/code&gt;
 tells exactly where it went: into the kernel (built-in, not as a
 module). Here&amp;#39;s a list of all the stuff that was builtin:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;kernel/fs/jffs2/jffs2.ko
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;kernel/fs/jffs2/jffs2.ko
 kernel/fs/overlayfs/overlayfs.ko
 kernel/fs/squashfs/squashfs.ko
 kernel/crypto/crypto.ko
@@ -1776,7 +1910,7 @@ default.&lt;/li&gt;
 
 &lt;p&gt;I do not understand the kernel enough to know who&amp;#39;s wrong, but the
 solution is clear:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;gt; opkg install --force-depends kmod-i2c-gpio-custom
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; opkg install --force-depends kmod-i2c-gpio-custom
 Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
 Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
 Installing kmod-i2c-gpio (3.3.8-1) to root...
@@ -1788,7 +1922,7 @@ Collected errors:
 *   kmod-i2c-algo-bit * 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;But does it work?&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;gt; insmod i2c-gpio-custom bus0=0,29,7
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; insmod i2c-gpio-custom bus0=0,29,7
 &amp;gt; dmesg |tail
 
 [  711.120000] Custom GPIO-based I2C driver version 0.1.1
@@ -1806,7 +1940,7 @@ takes the 3.3V power from the router, pulls up and has 8 LEDs from
 the breadboard later, but it&amp;#39;s mainly just the datasheet
 application. Later I switched to 5V and added level shifting MOSFETs,
 again, maybe some day I&amp;#39;ll write it up.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# i2cdetect 0
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;# i2cdetect 0
 WARNING! This program can confuse your I2C bus, cause data loss and worse!
 I will probe file /dev/i2c-0.
 I will probe address range 0x03-0x77.
@@ -1822,7 +1956,7 @@ Continue? [Y/n]
 70: -- -- -- -- -- -- -- -- 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;It works!&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# echo pcf8574 0x20 &amp;gt; /sys/bus/i2c/devices/i2c-0/new_device
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;# echo pcf8574 0x20 &amp;gt; /sys/bus/i2c/devices/i2c-0/new_device
 # dmesg | tail
 [  153.590000] Custom GPIO-based I2C driver version 0.1.1
 [  153.590000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
@@ -1839,7 +1973,7 @@ confirmation.&lt;/p&gt;
 &lt;h1&gt;Actually blinking LEDs&lt;/h1&gt;
 
 &lt;p&gt;Let&amp;#39;s try to set one of the pins manually:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 # cd /sys/class/gpio
 # echo 57 &amp;gt; export
 # echo out&amp;gt;gpio57/direction
@@ -1861,7 +1995,7 @@ the outputs and inputs. Wicked.&lt;/p&gt;
 blinks. And found it &lt;a href=&quot;http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/&quot;&gt;on this blog&lt;/a&gt;. Tweaked it a little
 bit, which was easy because it&amp;#39;s so well written. I added an argument
 for the GPIO pin to use, to try all 8 pins. This is what I ended up with:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 #!/bin/bash
 
 # blink_arg.bash -- must run as root!
@@ -1902,7 +2036,7 @@ done
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And it works as expected. So now for some fun (we did not get all this
 linux power for nothing!). &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; # ./blink_arg.bash 56&amp;amp;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt; # ./blink_arg.bash 56&amp;amp;
  # ./blink_arg.bash 57&amp;amp;
  # ./blink_arg.bash 58&amp;amp;
  # # ... etcetera ...
@@ -1942,7 +2076,7 @@ also turn out to be helpful in making sure that all other services on
 the router remain healthy. &lt;/p&gt;
 
 &lt;h1&gt;Installing &amp;amp; configuring&lt;/h1&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;opkg update
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;opkg update
 
 # I am getting the packages from my local copy of the trunk, just
 to have it all be consistent. That probably is only critical for
@@ -1957,12 +2091,12 @@ vi /etc/monitrc
 &lt;code&gt;/etc/monitrc&lt;/code&gt;, mainly to start as a daemon, put the work files in
 &lt;code&gt;/tmp&lt;/code&gt; and set the frequency of the checks. And the check for a
 connection:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;check host kiprouter with address 10.0.0.4                                     
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;check host kiprouter with address 10.0.0.4                                     
     if failed icmp type echo count 3 with timeout 3 seconds then
     exec &amp;quot;/etc/init.d/network restart&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then to enable and start monit:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;/etc/init.d/monit enable
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;/etc/init.d/monit enable
 /etc/init.d/monit start
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Testing results later...&lt;/p&gt;
@@ -2005,7 +2139,7 @@ editor. Some research was needed.&lt;/p&gt;
 &lt;h2&gt;Setup&lt;/h2&gt;
 
 &lt;p&gt;I edited &lt;code&gt;.bash_profile&lt;/code&gt; and added the following`;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!bash
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;#!bash
 # editor setup
 export EDITOR=&amp;#39;/Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient&amp;#39;
 export ALTERNATE_EDITOR=vi
@@ -2027,7 +2161,7 @@ Aquamacs starts up, it will be listening.&lt;/p&gt;
 &lt;h2&gt;Using&lt;/h2&gt;
 
 &lt;p&gt;Ending an editing session that was started this way, goes as follows:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;C-x #
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;C-x #
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Many people rebind this key to something like &lt;code&gt;C-c c&lt;/code&gt; to better match
 other applications like GNUS or VCS. Maybe I will too, some day.&lt;/p&gt;
@@ -2056,12 +2190,12 @@ although I made a few changes.&lt;/p&gt;
 
 &lt;p&gt;First of all, I already had a checkin, so could skip the first code
 box. I did rename the &lt;code&gt;master&lt;/code&gt; branch to &lt;code&gt;source&lt;/code&gt; and add a second remote:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git branch -m master source
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;git branch -m master source
 git remote add pages https://github.com/&amp;lt;user&amp;gt;/&amp;lt;user&amp;gt;.github.com.git
 git push -u pages source
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The output sounds promising:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Counting objects: 102, done.
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;Counting objects: 102, done.
 Delta compression using up to 2 threads.
 Compressing objects: 100% (95/95), done.
 Writing objects: 100% (102/102), 237.00 KiB, done.
@@ -2075,7 +2209,7 @@ any output).&lt;/p&gt;
 
 &lt;p&gt;Now I followed the cloning instructions quite rigidly (because I do
 not really understand them yet).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# fetch a working copy of your repository
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;# fetch a working copy of your repository
   $ git clone https://github.com/&amp;lt;user&amp;gt;/&amp;lt;user&amp;gt;.github.com.git output
   $ cd output
 # create the isolated branch
@@ -2084,7 +2218,7 @@ not really understand them yet).&lt;/p&gt;
   $ git clean -fdx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then recreate the output files:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;cd ..
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;cd ..
 nanoc compile
 git commit -a
 git push pages
@@ -2100,7 +2234,7 @@ the files are going into the &lt;code&gt;master&lt;/code&gt; branch (which is th
 branch for the GitHub Pages).&lt;/p&gt;
 
 &lt;p&gt;Finally, I did:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; touch .nojekyll
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt; touch .nojekyll
  git add .nojekyll
  git commit
 
@@ -2138,7 +2272,7 @@ because I tend to forget each syntax before I get to use it again.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Updated &lt;code&gt;config.yaml&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;# Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
 deploy:
   default:
     dst_remote: pages
@@ -2146,10 +2280,10 @@ deploy:
     src_branch: source
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Installed nanoc-git:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; gem install nanoc-git
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt; gem install nanoc-git
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Edited &lt;code&gt;Rakefile&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;require &amp;#39;nanoc-git/tasks&amp;#39;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;require &amp;#39;nanoc-git/tasks&amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2168,7 +2302,7 @@ deploy:
 &lt;/ol&gt;
 
 &lt;p&gt;A possible workflow could be:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# Edit the file 
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;# Edit the file 
 git add &amp;lt;file&amp;gt;
 git commit 
 rake co  #this is my prototyping (sitecopy) rake
@@ -2178,7 +2312,7 @@ rake co  #this is my prototyping (sitecopy) rake
 rake deploy:git
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;or another option:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# Edit the file 
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;# Edit the file 
 rake co  #this is my prototyping (sitecopy) rake
 
 # Check: ok?
@@ -2194,7 +2328,7 @@ rake deploy:git
 free DNS service to do the DNS hosting. Then, tried to set up the
 CNAME following
 &lt;a href=&quot;https://help.github.com/articles/setting-up-a-custom-domain-with-pages&quot;&gt;the documentation at Github&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git checkout master
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;git checkout master
 vi CNAME
 # just one line: 
 # pragti.ch
@@ -2236,7 +2370,7 @@ update. Let&amp;#39;s wait and see.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;TODO&lt;/strong&gt;: Research &lt;a href=&quot;http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html&quot;&gt;Railroad&lt;/a&gt; for creating really nice plots.&lt;/p&gt;
 
 &lt;p&gt;The ouline is as follows:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Main Router  ==&amp;gt;    Repeater    ==&amp;gt;     Webcam server
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;Main Router  ==&amp;gt;    Repeater    ==&amp;gt;     Webcam server
 Airport         TL-WR703N           TL-WR703N
 DHCP server     relay wlan-wlan         relay wlan-lan
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -2245,7 +2379,7 @@ DHCP server     relay wlan-wlan         relay wlan-lan
 &lt;h2&gt;Repeater&lt;/h2&gt;
 
 &lt;p&gt;I used the &lt;code&gt;luci&lt;/code&gt; webinterface to configure relaying. Setting this up goes something like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;opkg update
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;opkg update
 opkg install luci luci-proto-relay
 # this auto-installs many dependencies, including relayd and uhttpd
 /etc/init.d/uhttpd enable
@@ -2387,13 +2521,13 @@ page.&lt;/li&gt;
 &lt;p&gt;For the start of the project, I will go with direct solar powering from the panels. No storage. Once the principle has been proven, I will be charging a battery. I did some research on Open Source solar charge controller projects with the idea of making my own charger. While there are some very nice designs around, I really prefer to go with a proven technology. I want the development of the camera to be the fun part, not the screwing with a battery charger. Ultimate efficiency is also not a parameter for me, so I will probably go with either one of these 2 options:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Steca SOLSUM 6.6F (&lt;a href=&quot;http://www.conrad.nl/ce/nl/product/110678?WT.mc_id=mpfeed&amp;amp;insert=8T&quot;&gt;from Conrad probably&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Steca SOLSUM 6.6F (&lt;a href=&quot;http://www.conrad.nl/ce/nl/product/110678?WT.mc_id=mpfeed&amp;insert=8T&quot;&gt;from Conrad probably&lt;/a&gt;)&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://steca.de/data/media/26/2628_231x315_SolsumF_72dpi_315px.jpg&quot; alt=&quot;SOLSUM&quot;&gt;&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;MorningStar SHS6 (&lt;a href=&quot;http://hobby.marktplaats.nl/elektronica-componenten/544588648-steca-en-morningstar-laadregelaars-accu-zonnepaneel.html?return=eJwljEsKwzAMRO8SSJb%2BNF0UB1PSm5jYxSb%2BiEihpaV3r0JW8540jDPafJNRExp9vZkOg9uWOEUiMFKuDUIVxW0rQXaOUNQsz4qACPd3tnrwaKn149yPD5%2FOzMT5ScCIT48smhGOq2Io%2FJjrXsKWFtb1xYot417YGh4jlwFgt2ogtLqbfn%2FEGzUB&amp;amp;df=1&amp;amp;fta=eNpFkEluwzAMRe%2BihdcaPVDwFXoFg4rsVKgcC6GcCA1y98pG0e4eOP0HInTwIuiB7fc4PTASswSdBFbiKBpPY97A%2BgA2ZvgOydLiCYRNGbhdE9z2db6Hi%2F16Am2R9tVuFEA2Ke0jbzKN4ringSW8zsyGukqggAV%2FBgnRAlPOaY%2B6LxUUN0NXpOi9QrdU6BwXvS6St9pw1deKM4tCc4CuI0MF7YWY64wY3CCxLX8HJfetMgordOai2v%2BIM7x65C2hpynOt2v%2BPPxkbQzAVizToVwt%2FelcP4JPZj9%2B8cEsAofX%2B%2F0DyKNhYA%3D%3D&amp;amp;fta_ind=12&amp;amp;fs=1&quot;&gt;probably from Sunnyside on Marktplaats&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;MorningStar SHS6 (&lt;a href=&quot;http://hobby.marktplaats.nl/elektronica-componenten/544588648-steca-en-morningstar-laadregelaars-accu-zonnepaneel.html?return=eJwljEsKwzAMRO8SSJb%2BNF0UB1PSm5jYxSb%2BiEihpaV3r0JW8540jDPafJNRExp9vZkOg9uWOEUiMFKuDUIVxW0rQXaOUNQsz4qACPd3tnrwaKn149yPD5%2FOzMT5ScCIT48smhGOq2Io%2FJjrXsKWFtb1xYot417YGh4jlwFgt2ogtLqbfn%2FEGzUB&amp;df=1&amp;fta=eNpFkEluwzAMRe%2BihdcaPVDwFXoFg4rsVKgcC6GcCA1y98pG0e4eOP0HInTwIuiB7fc4PTASswSdBFbiKBpPY97A%2BgA2ZvgOydLiCYRNGbhdE9z2db6Hi%2F16Am2R9tVuFEA2Ke0jbzKN4ringSW8zsyGukqggAV%2FBgnRAlPOaY%2B6LxUUN0NXpOi9QrdU6BwXvS6St9pw1deKM4tCc4CuI0MF7YWY64wY3CCxLX8HJfetMgordOai2v%2BIM7x65C2hpynOt2v%2BPPxkbQzAVizToVwt%2FelcP4JPZj9%2B8cEsAofX%2B%2F0DyKNhYA%3D%3D&amp;fta_ind=12&amp;fs=1&quot;&gt;probably from Sunnyside on Marktplaats&lt;/a&gt;)&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;And realistically, at around EUR 20 a piece, there is not a lot to lose.&lt;/p&gt;
@@ -2505,7 +2639,7 @@ Visit the file and &lt;code&gt;M-x byte-compile-file RET template.el RET&lt;/cod
 * I want to try and disable it from &lt;code&gt;C-x C-f&lt;/code&gt; -- that would only be confusing&lt;/p&gt;
 
 &lt;p&gt;Created the following empty markdown article with Nanoc header in &lt;code&gt;~/.templates&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;--- 
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;--- 
 title: (&amp;gt;&amp;gt;&amp;gt;TITLE&amp;lt;&amp;lt;&amp;lt;)
 kind: article
 category: Computer stuff
@@ -2550,19 +2684,19 @@ summary: (&amp;gt;&amp;gt;&amp;gt;SUMMARY&amp;lt;&amp;lt;&amp;lt;)
 &lt;p&gt;Of course, a blog should have a RSS feed. Even though you have no readers yet... One never knows when it will be useful.&lt;/p&gt;
 
 &lt;p&gt;So, I am trying to get the Blogging helper RSS stuff to work. The &lt;a href=&quot;http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method&quot;&gt;documentation&lt;/a&gt; shows that we need to set up some stuff. I did just that, although I must say I really dislike the &lt;code&gt;excerpt&lt;/code&gt; tag, because of its American English brutality. I will try to come up with a way to use &lt;code&gt;summary&lt;/code&gt; instead.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;base_url: &amp;#39;http://http://members.home.nl/pragtich&amp;#39;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;base_url: &amp;#39;http://http://members.home.nl/pragtich&amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Created a &lt;code&gt;content/atom.xml&lt;/code&gt; with the contents:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; &amp;lt;%%= atom_feed %&amp;gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt; &amp;lt;%%= atom_feed %&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And created &lt;code&gt;content/atom.yaml&lt;/code&gt; with:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;title: Joris Pragt&amp;#39;s blog feed
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;title: Joris Pragt&amp;#39;s blog feed
 author_name: Joris Pragt
 author_uri: http://members.home.nl/pragtich
 is_hidden: true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Edited &lt;code&gt;Rules&lt;/code&gt; to add:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;compile &amp;#39;/atom/&amp;#39; do
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;compile &amp;#39;/atom/&amp;#39; do
   filter :erb
 end
 
@@ -2597,7 +2731,7 @@ end
 &lt;h1&gt;Now for the real stuff&lt;/h1&gt;
 
 &lt;p&gt;Once sitecopy was running, it actually ran very quickly. I copied an example rakefile &lt;a href=&quot;http://www.remerson.plus.com/articles/nanoc-rake&quot;&gt;From here&lt;/a&gt; and followed the directory structure suggested by it:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;nanoc/
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;nanoc/
   site/
     content/
     layouts/
@@ -2607,7 +2741,7 @@ end
 &lt;p&gt;So, that is: no dotfiles, all files visible to the filesystem. Of course, this is not the default for sitecopy, so we specify the sitecopy rc file locations in the rakefile.&lt;/p&gt;
 
 &lt;p&gt;Then, I created the sitecopyrc as follows:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;site my.pretty.name
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/trunk/output/
@@ -2620,7 +2754,7 @@ protocol ftp
 &lt;p&gt;I then used the initialization from the example rakefile:
     sitecopy -r sitecopy/sitecopyrc -p sitecopy -i my.pretty.name
 And crated a &amp;#39;compile and upload&amp;#39; rake addition to the &lt;code&gt;Rakefile&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;desc &amp;quot;compile and upload.&amp;quot;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;desc &amp;quot;compile and upload.&amp;quot;
 task :co do
   system &amp;#39;nanoc co &amp;amp;&amp;amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name&amp;#39;
 end
@@ -2639,7 +2773,7 @@ end
 &lt;code&gt;sitecopyrc&lt;/code&gt;. I added several of the disturbing dotfiles (which my
 server was not allowing me to upload) to the &lt;code&gt;exclude&lt;/code&gt; list. The
 &lt;code&gt;sitecopy/sitecopyrc&lt;/code&gt; now looks something like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;site my.pretty.name
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/output/

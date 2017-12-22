@@ -43,7 +43,7 @@ would expect them. And sadly, when you simply <code>ln -s</code> the Emacs files
 to <code>/usr/local/bin</code> or <code>/usr/bin</code>, it breaks with a very unfriendly
 error message that actually refers to folders that do not exist on
 this system, but did on the build system!</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!console
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!console
 $ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
 $ ./emacs
 Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
@@ -73,7 +73,7 @@ use to get a text console instead of a graphical frame).</p>
 
 <p>In the end, the solution is quite easy. Just gave up and added the
 Emacs.app folder to early in my <code>PATH</code>. So, added to <code>~/.bashrc</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 export PATH
 </code></pre></div>
@@ -85,14 +85,14 @@ default, so it works to type <code>emacs</code> anyway.</p>
 
 <p>The standard emacs that comes with OS X is very old and you really do
 not want the confusion between the two versions. So, I did:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 sudo mv /usr/bin/emacs /usr/bin/emacs.orig
 sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig
 </code></pre></div>
 <p>And then it is a good idea to put the new <code>emacsclient</code> in a standard
 location (but not <code>/usr/bin</code>, because this is a system place that
 could get overwritten whenever Apple wants to):</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient
 </code></pre></div>
 <h2>Setting up some aliases</h2>
@@ -101,7 +101,7 @@ ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emac
 easy access to the editor through the alias <code>e</code>. This should
 automatically launch emacs when it is not yet running, or connect to
 it using <code>emacsclient</code> if it is. I had some trouble when <code>ssh</code>&#39;ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the <code>-s</code> option. This works most of the time, although when autostarting the <code>Emacs</code> binary from <code>emacsclient</code>, all options are dropped by <code>emacsclient</code>, so things like <code>-nw</code> will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with <code>-nw</code> when working in a text only environment.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">emacsclient: can&#39;t find socket; have you started the server?
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>emacsclient: can&#39;t find socket; have you started the server?
 To start the server in Emacs, type &quot;M-x server-start&quot;.
 emacsclient: No socket or alternate editor.  Please use:
 
@@ -112,7 +112,7 @@ emacsclient: No socket or alternate editor.  Please use:
 <p>I also fill some editor variables that tell other programs that they
 should launch emacs when they want to edit a file. This is my
 <code>~/.bash_profile</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 # Get the aliases and functions
 if [ -f ~/.bashrc ]; then
         . ~/.bashrc
@@ -135,7 +135,7 @@ alias e=$VISUAL
 <h2>Setting up server mode</h2>
 
 <p>To start the emacs server when emacs starts, you need to add the following to <code>~/.emacs</code>. I needed to provide a stable place for the sockets, otherwise they break when <code>ssh</code>&#39;in in. Don&#39;t understand why.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(setq server-socket-dir (format &quot;/tmp/emacs%d&quot; (user-uid))) 
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(setq server-socket-dir (format &quot;/tmp/emacs%d&quot; (user-uid))) 
 (server-start)
 </code></pre></div>
 <h1>Migrating my settings</h1>
@@ -151,12 +151,12 @@ alias e=$VISUAL
 <h2>Some differences</h2>
 
 <p>It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let&#39;s get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let&#39;s also drop the ugly toolbar.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(setq inhibit-startup-echo-area-message t)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
 (tool-bar-mode -1)
 </code></pre></div>
 <p>Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. <a href="http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient">The fix was quite easy, thankfully</a>. </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(select-frame-set-input-focus (nth 0 (frame-list)))
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(select-frame-set-input-focus (nth 0 (frame-list)))
 </code></pre></div>
 <h1>Getting the most out of it</h1>
 
@@ -167,7 +167,7 @@ alias e=$VISUAL
 <h2>Enabling package management</h2>
 
 <p>Added the following to <code>~/.emacs</code> (and deleted some package stuff that was left from before).</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(require &#39;package)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(require &#39;package)
 (add-to-list &#39;package-archives &#39;(&quot;marmalade&quot; . &quot;http://marmalade-repo.org/packages/&quot;))
 </code></pre></div>
 <p>Now I can list the packages available with <code>M-x list-packages</code>. Need to start learning how that works.</p>
@@ -175,7 +175,7 @@ alias e=$VISUAL
 <h2>Using Magit</h2>
 
 <p>i used the package manager to install Magit. A great frontend to <code>git</code>!</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">M-x list-packages
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>M-x list-packages
 
 ; find magit
 i    ; for install
@@ -183,12 +183,12 @@ x    ; for execute
 y    ; for yes
 </code></pre></div>
 <p>In order to avoid typing <code>magit-status</code> a lot, I bound it to a key in <code>~/.emacs</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(global-set-key (kbd &quot;C-x g&quot;) &#39;magit-status)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(global-set-key (kbd &quot;C-x g&quot;) &#39;magit-status)
 </code></pre></div>
 <h2>Enabling Ido mode</h2>
 
 <p>Although it has been around, I had not yet heard of Ido mode. <a href="http://www.masteringemacs.org/articles/2010/10/10/introduction-to-ido-mode/">It sounds very useful</a>. So let&#39;s enable it:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(setq ido-enable-flex-matching t)
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
 </code></pre></div>

@@ -45,7 +45,7 @@
 <p>Because of trouble getting a USB cardreader to show up un VirtualBox, and the incompatibility of the <code>mkcard.txt</code> script with OS X, I decided to use the BBB itself to write the SD card. This is based on the standard firmware from the circuitco website. So that is the set of executables that I had available. I booted the BBB with a nonbooting card (so that it will boot from the eMMC). The SD card then is located at <code>/mnt/sda</code>. The beaglebone is also on the network via the LAN port.</p>
 
 <p>Then:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 root@beaglebone:~# wget http://www.angstrom-distribution.org/demo/beaglebone/mkcard.txt
 mkcard.txt mkcard.sh  
 chmod +x mkcard.sh 
@@ -60,7 +60,7 @@ mount /dev/disk/by-label/Angstrom Angstrom/
 df -h
 </code></pre></div>
 <p>This results in the following confirmation that we have stuff mounted right:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 Filesystem      Size  Used Avail Use% Mounted on
 rootfs          1.7G  1.1G  515M  69% /
 /dev/root       1.7G  1.1G  515M  69% /
@@ -78,7 +78,7 @@ tmpfs           250M  4.0K  250M   1% /tmp
 <h1>Installing the images</h1>
 
 <p>Simply followed the stuff <a href="http://cwraig.id.au/?p=507">from here</a>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 cd
 mkdir installs
 cd installs
@@ -93,7 +93,7 @@ umount /mnt/Angstrom
 <p>Then reboot and...</p>
 
 <h1>Test!</h1>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 root@beaglebone:~# uname -a
 Linux beaglebone 3.8.13 #1 SMP Sun Oct 13 15:59:25 CEST 2013 armv7l GNU/Linux
 root@beaglebone:~# ps aux
@@ -103,7 +103,7 @@ BusyBox v1.20.2 (2013-09-14 09:40:16 CEST) multi-call binary.
 Usage: ps 
 </code></pre></div>
 <p>So the smaller <code>ps</code> delivered by <code>BusyBox</code> is now active, not the richer GNU version in the default install. Running <code>ps</code> also shows much less processes:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!bash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
 root@beaglebone:~# ps
 </code></pre></div>
 <p>PID USER       VSZ STAT COMMAND

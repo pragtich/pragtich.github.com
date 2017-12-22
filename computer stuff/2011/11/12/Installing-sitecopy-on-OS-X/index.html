@@ -43,7 +43,7 @@
 <h1>Now for the real stuff</h1>
 
 <p>Once sitecopy was running, it actually ran very quickly. I copied an example rakefile <a href="http://www.remerson.plus.com/articles/nanoc-rake">From here</a> and followed the directory structure suggested by it:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">nanoc/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>nanoc/
   site/
     content/
     layouts/
@@ -53,7 +53,7 @@
 <p>So, that is: no dotfiles, all files visible to the filesystem. Of course, this is not the default for sitecopy, so we specify the sitecopy rc file locations in the rakefile.</p>
 
 <p>Then, I created the sitecopyrc as follows:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">site my.pretty.name
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/trunk/output/
@@ -66,7 +66,7 @@ protocol ftp
 <p>I then used the initialization from the example rakefile:
     sitecopy -r sitecopy/sitecopyrc -p sitecopy -i my.pretty.name
 And crated a &#39;compile and upload&#39; rake addition to the <code>Rakefile</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">desc &quot;compile and upload.&quot;
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>desc &quot;compile and upload.&quot;
 task :co do
   system &#39;nanoc co &amp;&amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name&#39;
 end
@@ -85,7 +85,7 @@ end
 <code>sitecopyrc</code>. I added several of the disturbing dotfiles (which my
 server was not allowing me to upload) to the <code>exclude</code> list. The
 <code>sitecopy/sitecopyrc</code> now looks something like:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">site my.pretty.name
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/output/

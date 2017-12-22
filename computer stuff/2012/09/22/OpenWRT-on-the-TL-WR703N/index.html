@@ -58,7 +58,7 @@ changed nearly every day and I do not have 100% faith in my ability to
 manage all the possible version conflicts (did I ever say I hate Linux
 for all the version conflicts?). This is not very polite, so don&#39;t do
 it often.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> wget -mk -w 20 http://downloads.openwrt.org/snapshots/trunk/ar71xx/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> wget -mk -w 20 http://downloads.openwrt.org/snapshots/trunk/ar71xx/
 </code></pre></div>
 <p>I am on OS X, and perform above <code>wget</code> in the
 /Library/WebServer/Documents folder. This allows the OS X web server
@@ -70,14 +70,14 @@ it often.</p>
 <p><strong>Update</strong>: I did end up running into issues on this install. You may
   want to scroll down to &#39;fixing space issues&#39; to get my updates from
   there first.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/
 </code></pre></div>
 <p>md5sums
     wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
     md5sum -c md5sums</p>
 
 <p>This should report that (n-1) out of n files failed (so 1 passed) :-)</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sysupgrade -v
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>sysupgrade -v
 /tmp/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 </code></pre></div>
 <p>And hold your breath...</p>
@@ -85,7 +85,7 @@ it often.</p>
 <p>According to
 <a href="http://wiki.openwrt.org/doc/howto/generic.sysupgrade">the wiki</a>, the
 files in the libraries folder will still be loaded. Scary...</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:/tmp# ls /lib/modules/3.3.8/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:/tmp# ls /lib/modules/3.3.8/
 aes_generic.ko          iptable_nat.ko          ppp_generic.ko
 arc4.ko                 iptable_raw.ko          pppoe.ko
 ath.ko                  jbd2.ko                 pppox.ko
@@ -113,7 +113,7 @@ need to figure out how to update all the programs and kernel modules.</p>
 
 <p>It actually seems that my user space packages are gone (for example,
 e2fsck). How about kernel modules?</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# ls /lib/modules/3.3.8/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# ls /lib/modules/3.3.8/
 aes_generic.ko          iptable_nat.ko          ppp_generic.ko
 arc4.ko                 iptable_raw.ko          pppoe.ko
 ath.ko                  leds-gpio.ko            pppox.ko
@@ -135,7 +135,7 @@ iptable_filter.ko       ohci-hcd.ko
 iptable_mangle.ko       ppp_async.ko
 </code></pre></div>
 <p>Also <code>/usr/lib/</code> seems to be ok:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# ls /usr/lib/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# ls /usr/lib/
 iptables             libip4tc.so.0.0.0    libnl-tiny.so        libxtables.so.5.0.0
 libip4tc.so          libjson.so.0         libxtables.so        opkg
 libip4tc.so.0        libjson.so.0.0.1     libxtables.so.5      pppd
@@ -144,7 +144,7 @@ root@OpenWrt:~#
 <h1>Installing required stuff for USB &amp; cleaning up</h1>
 
 <p>Edit opkg.conf to send it to the mirrored packages:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#src/gz kippy http://10.0.0.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#src/gz kippy http://10.0.0.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 src/gz kippy http://192.168.1.102/downloads.openwrt.org-r32130/snapshots/trunk/ar71xx/pack
 #src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 dest root /
@@ -158,7 +158,7 @@ WiFi). <strong>Wrong address for the link</strong>: This should have been withou
 the revision number. </p>
 
 <p>Then:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">opkg update
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>opkg update
 opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scsi-generic
 
 root@OpenWrt:~# opkg install kernel kmod-usb-storage block-mount swap-utils kmod-fs-ext4 k
@@ -187,7 +187,7 @@ root@OpenWrt:~#
 <p>Apparently the kernel has updated during my mirroring? Rats... 
 Nope, I had the incorrect folder set in my opkg.conf, so it was
 fetching old package data. </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pac
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pac
 kages/kernel_3.3.8-1-5566392ba3947228e76b8c9283f833d0_ar71xx.ipk
 Connecting to 192.168.1.102 (192.168.1.102:80)
 kernel_3.3.8-1-55663 100% |*****************************************|   714   0:00:00 ETA
@@ -214,7 +214,7 @@ root@OpenWrt:~#
 </code></pre></div>
 <p>What&#39;s wrong with opkg? It can download, and it can install. But not
 together??</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">oot@OpenWrt:~# opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scs
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>oot@OpenWrt:~# opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scs
 i-generic
 Installing kmod-usb-storage (3.3.8-1) to root...
 Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-usb-storage_3.3.8-1_ar71xx.ipk.
@@ -260,7 +260,7 @@ Configuring kmod-fs-ext4.
 root@OpenWrt:~# 
 </code></pre></div>
 <p>Finally...</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# opkg list-upgradable
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# opkg list-upgradable
 libblkid - 2.21.1-1 - 2.21.2-1
 libuuid - 2.21.1-1 - 2.21.2-1
 blkid - 2.21.1-1 - 2.21.2-1
@@ -277,12 +277,12 @@ Configuring blkid.
 root@OpenWrt:~# 
 </code></pre></div>
 <p>Some updates</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">reboot
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>reboot
 </code></pre></div>
 <p>Plugin flash drive. Is recognized as /dev/sdb1. Will this change?
 Reboot again with disk plugged in (but first check fstab and disable
 partitions).</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# mount
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# mount
 rootfs on / type rootfs (rw)
 /dev/root on /rom type squashfs (ro,relatime)
 proc on /proc type proc (rw,noatime)
@@ -326,14 +326,14 @@ config swap
         option enabled  0
 </code></pre></div>
 <p>and then</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# mount /dev/sda1 /mnt/flash
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# mount /dev/sda1 /mnt/flash
 root@OpenWrt:~# mkdir /mnt/flash
 
 rm -Rf /mnt/flash/*
 root@OpenWrt:~# tar -C /overlay -cvf - . | tar -C /mnt/flash -xf -
 </code></pre></div>
 <p>And then edit /etc/config/fstab</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">config global automount
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>config global automount
         option from_fstab 1
         option anon_mount 1
 
@@ -369,7 +369,7 @@ Because of reset, telnet 192.168.1.1, passwd
 I needed to delete the root@192.168.1.1 entry from ~/.ssh/known_hosts</p>
 
 <p>/etc/opkg.conf:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 src/gz kippy http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 dest root /  
 dest ram /tmp                
@@ -377,7 +377,7 @@ lists_dir ext /var/opkg-lists
 option overlay_root /overlay
 </code></pre></div>
 <p>root@OpenWrt:~# free</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">total         used         free       shared      buffers
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>total         used         free       shared      buffers
 Mem:         29156        18208        10948            0         1348
 -/+ buffers:              16860        12296
 Swap:            0            0            0
@@ -394,7 +394,7 @@ overlayfs:/overlay        1344       208      1136  15% /
 root@OpenWrt:~# 
 </code></pre></div>
 <p>opkg now works properly also and nothing is upgradeable</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">opkg install e2fsprogs
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>opkg install e2fsprogs
 
 root@OpenWrt:~# free &amp;&amp; df
              total         used         free       shared      buffers
@@ -433,7 +433,7 @@ root@OpenWrt:~#
 </code></pre></div>
 <p>So the flash drive was automounted on /mnt/sdb1 (will be /sda1 when
 plugged in at boot).</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# ls /mnt/sdb2/
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# ls /mnt/sdb2/
 root@OpenWrt:~# ls /mnt/sdb1/
 etc   lib   mnt   root  sbin  usr
 root@OpenWrt:~# rm -Rf /mnt/sdb1/*
@@ -443,7 +443,7 @@ root@OpenWrt:~#
 tar -C /overlay -cvf - . | tar -C /mnt/sdb1 -xf -
 </code></pre></div>
 <p>Bach to /etc/config/fstab:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">config global automount
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>config global automount
         option from_fstab 1
         option anon_mount 1
 
@@ -464,7 +464,7 @@ config swap
         option enabled  1
 </code></pre></div>
 <p>reboot</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# df &amp;&amp; free
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# df &amp;&amp; free
 Filesystem           1K-blocks      Used Available Use% Mounted on
 rootfs                  465960     24944    417624   6% /
 /dev/root                 1536      1536         0 100% /rom
@@ -499,7 +499,7 @@ Swap:        32764            0        32764
 root@OpenWrt:~# 
 </code></pre></div>
 <p>And again back to /etc/config/fstab:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">config global automount
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>config global automount
         option from_fstab 1
         option anon_mount 1
 
@@ -520,7 +520,7 @@ config swap
         option enabled  1
 </code></pre></div>
 <p>reboot to test</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">root@OpenWrt:~# mount &amp;&amp; free &amp;&amp; df
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>root@OpenWrt:~# mount &amp;&amp; free &amp;&amp; df
 rootfs on / type rootfs (rw)
 /dev/root on /rom type squashfs (ro,relatime)
 proc on /proc type proc (rw,noatime)
@@ -546,7 +546,7 @@ overlayfs:/overlay      465960     24944    417624   6% /
 root@OpenWrt:~# 
 </code></pre></div>
 <p>And now to install <code>luci</code> and <code>mjpeg-streamer</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">opkg update
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>opkg update
 opkg install luci
 /etc/init.d/uhttpd enable
 /etc/init.d/uhttpd start
@@ -556,7 +556,7 @@ opkg install htop bash
 opkg install mjpg-streamer
 </code></pre></div>
 <p>and edit /etc/config/mjpg-streamer</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">config mjpg-streamer core
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>config mjpg-streamer core
         option enabled          &quot;1&quot;
         option device           &quot;/dev/video0&quot;
         option resolution       &quot;640x480&quot;
@@ -567,10 +567,10 @@ opkg install mjpg-streamer
 root@OpenWrt:~# /etc/init.d/mjpg-streamer start
 </code></pre></div>
 <p>oops, forgot the kermel modules... </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">opkg install kmod-video-uvc
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>opkg install kmod-video-uvc
 </code></pre></div>
 <p>Now let&#39;s check if it has been recognized:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[  719.130000] usbcore: registered new interface driver uvcvideo
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>[  719.130000] usbcore: registered new interface driver uvcvideo
 [  719.130000] USB Video Class driver (1.1.1)
 [  726.590000] usb 1-1.3: USB disconnect, device number 5
 [  729.390000] usb 1-1.3: new high-speed USB device number 6 using ehci-platform
