@@ -8,7 +8,7 @@
 <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
-    feed" href="http://pragti.ch/atom.xml">
+    feed" href="https://pragti.ch/atom.xml">
 </head>
 <body>
   <titleframe><titlebar><div id="largetitle"> <a href="../../../../../">Pragtich</a>
@@ -23,7 +23,7 @@
 <article>
   <header>
 	<hgroup>
-	  <img src="http://www.pragti.ch/indeximages/index-i2c.jpg">
+	  <img src="http://localhost:4000/indeximages/index-i2c.jpg">
 	  <h1 class="itemtitle">Adding an I2C interface to the TL-WR703N</h1>
       <h2 class="itemdate">15 Aug 2012</h2>
 	</hgroup>
@@ -121,7 +121,7 @@ attempt to keep the signal wires apart:</p>
 I2C
 <a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c">at this link</a>. Let&#39;s
 start with the basics:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&gt; opkg update
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; opkg update
 &gt; opkg install i2c-tools
 &gt;opkg install kmod-i2c-gpio-custom
 
@@ -150,7 +150,7 @@ go...?</p>
 found. <code>trunk/build_dir/linux-ar71xx_generic/linux-3.3.8/modules.builtin</code>
 tells exactly where it went: into the kernel (built-in, not as a
 module). Here&#39;s a list of all the stuff that was builtin:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>kernel/fs/jffs2/jffs2.ko
+<div class="highlight"><pre><code class="language-" data-lang="">kernel/fs/jffs2/jffs2.ko
 kernel/fs/overlayfs/overlayfs.ko
 kernel/fs/squashfs/squashfs.ko
 kernel/crypto/crypto.ko
@@ -226,7 +226,7 @@ default.</li>
 
 <p>I do not understand the kernel enough to know who&#39;s wrong, but the
 solution is clear:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&gt; opkg install --force-depends kmod-i2c-gpio-custom
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; opkg install --force-depends kmod-i2c-gpio-custom
 Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
 Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
 Installing kmod-i2c-gpio (3.3.8-1) to root...
@@ -238,7 +238,7 @@ Collected errors:
 *   kmod-i2c-algo-bit * 
 </code></pre></div>
 <p>But does it work?</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&gt; insmod i2c-gpio-custom bus0=0,29,7
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; insmod i2c-gpio-custom bus0=0,29,7
 &gt; dmesg |tail
 
 [  711.120000] Custom GPIO-based I2C driver version 0.1.1
@@ -256,7 +256,7 @@ takes the 3.3V power from the router, pulls up and has 8 LEDs from
 the breadboard later, but it&#39;s mainly just the datasheet
 application. Later I switched to 5V and added level shifting MOSFETs,
 again, maybe some day I&#39;ll write it up.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># i2cdetect 0
+<div class="highlight"><pre><code class="language-" data-lang=""># i2cdetect 0
 WARNING! This program can confuse your I2C bus, cause data loss and worse!
 I will probe file /dev/i2c-0.
 I will probe address range 0x03-0x77.
@@ -272,7 +272,7 @@ Continue? [Y/n]
 70: -- -- -- -- -- -- -- -- 
 </code></pre></div>
 <p>It works!</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span># echo pcf8574 0x20 &gt; /sys/bus/i2c/devices/i2c-0/new_device
+<div class="highlight"><pre><code class="language-" data-lang=""># echo pcf8574 0x20 &gt; /sys/bus/i2c/devices/i2c-0/new_device
 # dmesg | tail
 [  153.590000] Custom GPIO-based I2C driver version 0.1.1
 [  153.590000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
@@ -289,11 +289,11 @@ confirmation.</p>
 <h1>Actually blinking LEDs</h1>
 
 <p>Let&#39;s try to set one of the pins manually:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
-# cd /sys/class/gpio
-# echo 57 &gt; export
-# echo out&gt;gpio57/direction
-# echo 0 &gt; gpio57/value 
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+<span class="c"># cd /sys/class/gpio</span>
+<span class="c"># echo 57 &gt; export</span>
+<span class="c"># echo out&gt;gpio57/direction</span>
+<span class="c"># echo 0 &gt; gpio57/value </span>
 </code></pre></div>
 <p>Upon setting <code>output</code>, the LED lights up. Success!</p>
 
@@ -311,48 +311,48 @@ the outputs and inputs. Wicked.</p>
 blinks. And found it <a href="http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/">on this blog</a>. Tweaked it a little
 bit, which was easy because it&#39;s so well written. I added an argument
 for the GPIO pin to use, to try all 8 pins. This is what I ended up with:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
-#!/bin/bash
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+<span class="c">#!/bin/bash</span>
 
-# blink_arg.bash -- must run as root!
-#       
-# Blink GPIO pin on and off
+<span class="c"># blink_arg.bash -- must run as root!</span>
+<span class="c">#       </span>
+<span class="c"># Blink GPIO pin on and off</span>
 
-LEDPIN=${1-57}
-OFF=1
-ON=0
-# Make sure we have root access
-if [ $EUID -ne 0 ]; then
-        echo &quot;You must be root to run this. Try &#39;sudo $0&#39;&quot;
-        exit
-fi
+<span class="nv">LEDPIN</span><span class="o">=</span><span class="k">${</span><span class="nv">1</span><span class="p">-57</span><span class="k">}</span>
+<span class="nv">OFF</span><span class="o">=</span>1
+<span class="nv">ON</span><span class="o">=</span>0
+<span class="c"># Make sure we have root access</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$EUID</span> <span class="nt">-ne</span> 0 <span class="o">]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"You must be root to run this. Try 'sudo </span><span class="nv">$0</span><span class="s2">'"</span>
+        <span class="nb">exit
+</span><span class="k">fi</span>
 
-# Clean up procedure--turn off the LED, unexport the GPIO, and exit
-cleanup()
-{
-        PIN=$1
-        echo $OFF &gt; /sys/class/gpio/gpio$PIN/value      # turn off
-        echo $PIN &gt; /sys/class/gpio/unexport
-        echo Interrupted.
-        exit
-}
+<span class="c"># Clean up procedure--turn off the LED, unexport the GPIO, and exit</span>
+cleanup<span class="o">()</span>
+<span class="o">{</span>
+        <span class="nv">PIN</span><span class="o">=</span><span class="nv">$1</span>
+        <span class="nb">echo</span> <span class="nv">$OFF</span> <span class="o">&gt;</span> /sys/class/gpio/gpio<span class="nv">$PIN</span>/value      <span class="c"># turn off</span>
+        <span class="nb">echo</span> <span class="nv">$PIN</span> <span class="o">&gt;</span> /sys/class/gpio/unexport
+        <span class="nb">echo </span>Interrupted.
+        <span class="nb">exit</span>
+<span class="o">}</span>
 
-# Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
-echo $LEDPIN &gt; /sys/class/gpio/export
-echo out &gt; /sys/class/gpio/gpio$LEDPIN/direction
-trap &#39;cleanup $LEDPIN&#39; 1 2 15
+<span class="c"># Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL</span>
+<span class="nb">echo</span> <span class="nv">$LEDPIN</span> <span class="o">&gt;</span> /sys/class/gpio/export
+<span class="nb">echo </span>out <span class="o">&gt;</span> /sys/class/gpio/gpio<span class="nv">$LEDPIN</span>/direction
+<span class="nb">trap</span> <span class="s1">'cleanup $LEDPIN'</span> 1 2 15
 
-while true
-do
-        echo $ON &gt; /sys/class/gpio/gpio$LEDPIN/value    # turn on
+<span class="k">while </span><span class="nb">true
+</span><span class="k">do
+        </span><span class="nb">echo</span> <span class="nv">$ON</span> <span class="o">&gt;</span> /sys/class/gpio/gpio<span class="nv">$LEDPIN</span>/value    <span class="c"># turn on</span>
         sleep 1
-        echo $OFF &gt; /sys/class/gpio/gpio$LEDPIN/value   # turn off
+        <span class="nb">echo</span> <span class="nv">$OFF</span> <span class="o">&gt;</span> /sys/class/gpio/gpio<span class="nv">$LEDPIN</span>/value   <span class="c"># turn off</span>
         sleep 1
-done
+<span class="k">done</span>
 </code></pre></div>
 <p>And it works as expected. So now for some fun (we did not get all this
 linux power for nothing!). </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> # ./blink_arg.bash 56&amp;
+<div class="highlight"><pre><code class="language-" data-lang=""> # ./blink_arg.bash 56&amp;
  # ./blink_arg.bash 57&amp;
  # ./blink_arg.bash 58&amp;
  # # ... etcetera ...
@@ -377,7 +377,7 @@ all. How does that look?</p>
 
 <reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
 	  
-<img src="http://www.pragti.ch/indeximages/jekyll.jpg">
+<img src="http://localhost:4000/indeximages/jekyll.jpg">
 
       <h2 class="itemdate">03 Feb 2013</h2>
 </reftitle>
@@ -389,34 +389,38 @@ all. How does that look?</p>
 
 <reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
 	  
-<img src="http://www.pragti.ch/indeximages/emacs.jpg">
+<img src="http://localhost:4000/indeximages/emacs.jpg">
 
       <h2 class="itemdate">15 Dec 2012</h2>
 </reftitle>
 
 <reftitle><a href="/kippycam/2013/01/02/Mjpg-streamer-multiple/">Using multiple webcams in mjpg-streamer on OpenWRT </a>
 	  
-<img src="http://www.pragti.ch/indeximages/mjpg-streamer-twocams.jpg">
+<img src="http://localhost:4000/indeximages/mjpg-streamer-twocams.jpg">
 
       <h2 class="itemdate">02 Jan 2013</h2>
 </reftitle>
 
 
   </p>
+
+
   <div id="disqus_thread"></div>
-  <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  var disqus_shortname = 'pragtich'; // required: replace example with your forum shortname
-  var disqus_identifier = 'wr703n-i2c';
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-  </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
-  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span>
+<script>
+
+var disqus_config = function () {
+    this.page.url = 'http://localhost:4000/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/';  
+    this.page.identifier = 'wr703n-i2c'; 
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://pragtich.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   </a>
 </footer>
 </article>
@@ -425,39 +429,39 @@ all. How does that look?</p>
     <h2>All articles</h2> 
 	<ul>
 	  <li>
-		<a href="http://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
+		<a href="http://localhost:4000/blog/index.html">Index of all articles</a> </li>
 
 	</ul>
 	<H2>Categories</h2>
     <ul>
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
+		  <a href="http://localhost:4000/categories/computer-stuff">Computer stuff</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/life">Life</a>
+		  <a href="http://localhost:4000/categories/life">Life</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/kippycam">Kippycam</a>
+		  <a href="http://localhost:4000/categories/kippycam">Kippycam</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/blogging">Blogging</a>
+		  <a href="http://localhost:4000/categories/blogging">Blogging</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/project-euler">Project Euler</a>
+		  <a href="http://localhost:4000/categories/project-euler">Project Euler</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/mechanical">Mechanical</a>
+		  <a href="http://localhost:4000/categories/mechanical">Mechanical</a>
 		</li>
 
 	  

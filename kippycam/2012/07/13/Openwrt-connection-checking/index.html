@@ -8,7 +8,7 @@
 <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
-    feed" href="http://pragti.ch/atom.xml">
+    feed" href="https://pragti.ch/atom.xml">
 </head>
 <body>
   <titleframe><titlebar><div id="largetitle"> <a href="../../../../../">Pragtich</a>
@@ -46,11 +46,11 @@ also turn out to be helpful in making sure that all other services on
 the router remain healthy. </p>
 
 <h1>Installing &amp; configuring</h1>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>opkg update
+<div class="highlight"><pre><code class="language-" data-lang="">opkg update
 
 # I am getting the packages from my local copy of the trunk, just
 to have it all be consistent. That probably is only critical for
-the kernel modules packages, but let&#39;s do it for sake of
+the kernel modules packages, but let's do it for sake of
 simplicity
 
 opkg install monit
@@ -61,12 +61,12 @@ vi /etc/monitrc
 <code>/etc/monitrc</code>, mainly to start as a daemon, put the work files in
 <code>/tmp</code> and set the frequency of the checks. And the check for a
 connection:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>check host kiprouter with address 10.0.0.4                                     
+<div class="highlight"><pre><code class="language-" data-lang="">check host kiprouter with address 10.0.0.4                                     
     if failed icmp type echo count 3 with timeout 3 seconds then
-    exec &quot;/etc/init.d/network restart&quot;
+    exec "/etc/init.d/network restart"
 </code></pre></div>
 <p>Then to enable and start monit:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>/etc/init.d/monit enable
+<div class="highlight"><pre><code class="language-" data-lang="">/etc/init.d/monit enable
 /etc/init.d/monit start
 </code></pre></div>
 <p>Testing results later...</p>
@@ -82,14 +82,14 @@ connection:</p>
 
 <reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
 	  
-<img src="http://www.pragti.ch/indeximages/index-i2c.jpg">
+<img src="http://localhost:4000/indeximages/index-i2c.jpg">
 
       <h2 class="itemdate">15 Aug 2012</h2>
 </reftitle>
 
 <reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
 	  
-<img src="http://www.pragti.ch/indeximages/emacs.jpg">
+<img src="http://localhost:4000/indeximages/emacs.jpg">
 
       <h2 class="itemdate">15 Dec 2012</h2>
 </reftitle>
@@ -101,27 +101,31 @@ connection:</p>
 
 <reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
 	  
-<img src="http://www.pragti.ch/indeximages/jekyll.jpg">
+<img src="http://localhost:4000/indeximages/jekyll.jpg">
 
       <h2 class="itemdate">03 Feb 2013</h2>
 </reftitle>
 
 
   </p>
+
+
   <div id="disqus_thread"></div>
-  <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  var disqus_shortname = 'pragtich'; // required: replace example with your forum shortname
-  var disqus_identifier = 'openwrt-monit';
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-  </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
-  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span>
+<script>
+
+var disqus_config = function () {
+    this.page.url = 'http://localhost:4000/kippycam/2012/07/13/Openwrt-connection-checking/';  
+    this.page.identifier = 'openwrt-monit'; 
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://pragtich.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   </a>
 </footer>
 </article>
@@ -130,39 +134,39 @@ connection:</p>
     <h2>All articles</h2> 
 	<ul>
 	  <li>
-		<a href="http://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
+		<a href="http://localhost:4000/blog/index.html">Index of all articles</a> </li>
 
 	</ul>
 	<H2>Categories</h2>
     <ul>
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
+		  <a href="http://localhost:4000/categories/computer-stuff">Computer stuff</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/life">Life</a>
+		  <a href="http://localhost:4000/categories/life">Life</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/kippycam">Kippycam</a>
+		  <a href="http://localhost:4000/categories/kippycam">Kippycam</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/blogging">Blogging</a>
+		  <a href="http://localhost:4000/categories/blogging">Blogging</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/project-euler">Project Euler</a>
+		  <a href="http://localhost:4000/categories/project-euler">Project Euler</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/mechanical">Mechanical</a>
+		  <a href="http://localhost:4000/categories/mechanical">Mechanical</a>
 		</li>
 
 	  

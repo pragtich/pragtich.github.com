@@ -3,7 +3,7 @@
 <p>For my Kippycam project, I am trying to run the mjpg-streamer with various instances, so that I can stream from multiple cameras from my TL-WR3020 or TL-WR703N routers. There is a nice init and config system that comes with the mjpg-streamer package in OpenWRT, that does most of the work. It puts configuration for the server in the UCI file <code>/etc/config/mjpg-streamer</code>, and the <code>/etc/init.d/mjpg-streamer</code> script actually loops over any possible configurations already. So, to instantiate multiple servers, I only need to add a second server definition in the config file. </p>
 
 <p>BUT, then I get the following error in the logfile, and the second server does not start:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Using V4L2 device.: /dev/video0
+<div class="highlight"><pre><code class="language-" data-lang="">Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Using V4L2 device.: /dev/video0
 Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Desired Resolution: 640 x 481
 Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Frames Per Second.: 2
 Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Format............: MJPEG
@@ -16,90 +16,90 @@ Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 <p>I do not understand the root cause fully, but it is clear that the <code>/etc/init.d/mjpg-streamer</code> script contains some layout so that it is more legible. This layout does, however, introduce some whitespace into the command line that is causing our trouble. I will leave analysis of the true root cause to the experts, but describe the quick and dirty solution.</p>
 
 <p>This is a part of the original file, below. The problem is with the line continuation with slashes.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
-start_instance() {
-    local s=&quot;$1&quot;
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+start_instance<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">s</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
 
-    section_enabled &quot;$s&quot; || return 1
+    section_enabled <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="o">||</span> <span class="k">return </span>1
 
-    config_get device &quot;$s&quot; &#39;device&#39;
-    config_get resolution &quot;$s&quot; &#39;resolution&#39;
-    config_get fps &quot;$s&quot; &#39;fps&#39;
-    config_get www &quot;$s&quot; &#39;www&#39;
-    config_get port &quot;$s&quot; &#39;port&#39;
+    config_get device <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'device'</span>
+    config_get resolution <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'resolution'</span>
+    config_get fps <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'fps'</span>
+    config_get www <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'www'</span>
+    config_get port <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'port'</span>
 
-    [ -c &quot;$device&quot; ] || {
-        error &quot;device &#39;$device&#39; does not exist&quot;
-        return 1
-    }
+    <span class="o">[</span> <span class="nt">-c</span> <span class="s2">"</span><span class="nv">$device</span><span class="s2">"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">{</span>
+        error <span class="s2">"device '</span><span class="nv">$device</span><span class="s2">' does not exist"</span>
+        <span class="k">return </span>1
+    <span class="o">}</span>
 
-    service_start /usr/bin/mjpg_streamer --input &quot;input_uvc.so \   # &lt;=== Problem is here
-        --device $device --fps $fps --resolution $resolution&quot; \
-        --output &quot;output_http.so --www $www --port $port&quot;
-}
+    service_start /usr/bin/mjpg_streamer <span class="nt">--input</span> <span class="s2">"input_uvc.so </span><span class="se">\ </span><span class="s2">  # &lt;=== Problem is here
+        --device </span><span class="nv">$device</span><span class="s2"> --fps </span><span class="nv">$fps</span><span class="s2"> --resolution </span><span class="nv">$resolution</span><span class="s2">"</span> <span class="se">\</span>
+        <span class="nt">--output</span> <span class="s2">"output_http.so --www </span><span class="nv">$www</span><span class="s2"> --port </span><span class="nv">$port</span><span class="s2">"</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>I simply removed the backslashed line continuations and put everything in one line, and that solves the issue for me:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
-service_start /usr/bin/mjpg_streamer --input &quot;input_uvc.so --device $device --fps $fps --resolution $resolution&quot;  --output &quot;output_http.so --www $www --port $port&quot;
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+service_start /usr/bin/mjpg_streamer <span class="nt">--input</span> <span class="s2">"input_uvc.so --device </span><span class="nv">$device</span><span class="s2"> --fps </span><span class="nv">$fps</span><span class="s2"> --resolution </span><span class="nv">$resolution</span><span class="s2">"</span>  <span class="nt">--output</span> <span class="s2">"output_http.so --www </span><span class="nv">$www</span><span class="s2"> --port </span><span class="nv">$port</span><span class="s2">"</span>
 </code></pre></div>
 <h1>Correcting PIDfile issue</h1>
 
 <p>There is a second issue, because the default <code>service_start</code> behaviour is to prevent starting of multiple instances of the same daemon. So, we need to explicitly make sure that it does make multiple instances for us (because we are asking nicely). There are several ways to this, but I chose to explicitly help by supplying a pid file name for each camera. By using the unique configuration name from the config file, these will be unique. It is an easy edit in two places of <code>/etc/init.d/mjpg-streamer</code>. First, the function <code>start_instance</code> again:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
-start_instance() {
-    local s=&quot;$1&quot;
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+start_instance<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">s</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
 
-    section_enabled &quot;$s&quot; || return 1
+    section_enabled <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="o">||</span> <span class="k">return </span>1
 
-    SERVICE_PID_FILE=${PIDLOC}-${s}.pid
+    <span class="nv">SERVICE_PID_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">PIDLOC</span><span class="k">}</span>-<span class="k">${</span><span class="nv">s</span><span class="k">}</span>.pid
 
-    config_get device &quot;$s&quot; &#39;device&#39;
-    config_get resolution &quot;$s&quot; &#39;resolution&#39;
-    config_get fps &quot;$s&quot; &#39;fps&#39;
-    config_get www &quot;$s&quot; &#39;www&#39;
-    config_get port &quot;$s&quot; &#39;port&#39;
+    config_get device <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'device'</span>
+    config_get resolution <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'resolution'</span>
+    config_get fps <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'fps'</span>
+    config_get www <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'www'</span>
+    config_get port <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="s1">'port'</span>
 
-    [ -c &quot;$device&quot; ] || {
-        error &quot;device &#39;$device&#39; does not exist&quot;
-        return 1
-    }
+    <span class="o">[</span> <span class="nt">-c</span> <span class="s2">"</span><span class="nv">$device</span><span class="s2">"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">{</span>
+        error <span class="s2">"device '</span><span class="nv">$device</span><span class="s2">' does not exist"</span>
+        <span class="k">return </span>1
+    <span class="o">}</span>
 
-    service_start /usr/bin/mjpg_streamer --input &quot;input_uvc.so --device $device --fps $fps --resolution $resolution&quot;  --output &quot;output_http.so --www $www --port $port&quot;
+    service_start /usr/bin/mjpg_streamer <span class="nt">--input</span> <span class="s2">"input_uvc.so --device </span><span class="nv">$device</span><span class="s2"> --fps </span><span class="nv">$fps</span><span class="s2"> --resolution </span><span class="nv">$resolution</span><span class="s2">"</span>  <span class="nt">--output</span> <span class="s2">"output_http.so --www </span><span class="nv">$www</span><span class="s2"> --port </span><span class="nv">$port</span><span class="s2">"</span>
 
-}
+<span class="o">}</span>
 </code></pre></div>
 <p>So in short, I generate a <code>$SERVICE_PID_FILE</code> that uniquely identifies the service. Of course, for killing the service we need to go back to the same pidfile:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#!bash
-stop_instance() {
-    local s=&quot;$1&quot;
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+stop_instance<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">s</span><span class="o">=</span><span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
 
-    section_enabled &quot;$s&quot; || return 1
+    section_enabled <span class="s2">"</span><span class="nv">$s</span><span class="s2">"</span> <span class="o">||</span> <span class="k">return </span>1
 
-    SERVICE_PID_FILE=${PIDLOC}-${s}.pid
+    <span class="nv">SERVICE_PID_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">PIDLOC</span><span class="k">}</span>-<span class="k">${</span><span class="nv">s</span><span class="k">}</span>.pid
 
     service_stop /usr/bin/mjpg_streamer
-}
+<span class="o">}</span>
 </code></pre></div>
 <h1>Configuration</h1>
 
 <p>Now, it is really easy to edit <code>/etc/config/mjpg-streamer</code> for multiple devices. Do be careful not to exceed the memory of your device, and also the USB and memory bandwidths, or you may make the device very unstable. Adding a name for each <code>config</code> heading is not strictly necessary, but very helpful as it gives some identification. I am assuming that each device has a fixed <code>/dev/video</code> devicename, which is the case on my device as long as I do not replug any camera.</p>
 
 <p>This is my config file:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>config mjpg-streamer c920
-    option device       &quot;/dev/video0&quot;
-    option enabled      &quot;1&quot;
-    option resolution   &quot;960x720&quot;   
-    option fps      &quot;3&quot;
-    option www      &quot;/www/webcam&quot;
-    option port     &quot;8080&quot;
+<div class="highlight"><pre><code class="language-" data-lang="">config mjpg-streamer c920
+    option device       "/dev/video0"
+    option enabled      "1"
+    option resolution   "960x720"   
+    option fps      "3"
+    option www      "/www/webcam"
+    option port     "8080"
 
 config mjpg-streamer logi
-    option enabled      &quot;1&quot;
-    option device       &quot;/dev/video1&quot;
-    option resolution   &quot;640x480&quot;
-    option fps      &quot;2&quot;
-    option www      &quot;/www/webcam&quot;
-    option port     &quot;8081&quot;
+    option enabled      "1"
+    option device       "/dev/video1"
+    option resolution   "640x480"
+    option fps      "2"
+    option www      "/www/webcam"
+    option port     "8081"
 </code></pre></div>
 <h1>Version update</h1>
 

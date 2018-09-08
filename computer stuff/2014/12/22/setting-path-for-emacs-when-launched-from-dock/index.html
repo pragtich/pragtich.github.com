@@ -8,7 +8,7 @@
 <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
-    feed" href="http://pragti.ch/atom.xml">
+    feed" href="https://pragti.ch/atom.xml">
 </head>
 <body>
   <titleframe><titlebar><div id="largetitle"> <a href="../../../../../">Pragtich</a>
@@ -23,7 +23,7 @@
 <article>
   <header>
 	<hgroup>
-	  <img src="http://www.pragti.ch/indeximages/EmacsAutomator.jpg">
+	  <img src="http://localhost:4000/indeximages/EmacsAutomator.jpg">
 	  <h1 class="itemtitle">Setting PATH for Emacs when launched from Dock</h1>
       <h2 class="itemdate">22 Dec 2014</h2>
 	</hgroup>
@@ -35,7 +35,7 @@
   <h1>Setting PATH for applications started from the Dock in OS X 10.10 Yosemite</h1>
 
 <p>I recently switched from Fink to Homebrew, the most up-to-date packaging system for Mac OS X 10.10 Yosemite. With that, I also decided to install the Emacs 24.1 directly from Homebrew instead of from one of the OS X-specific compiled versions available. This works fine:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>brew install emacs --cocoa
+<div class="highlight"><pre><code class="language-" data-lang="">brew install emacs --cocoa
 </code></pre></div>
 <p>However, there is a problem: when an application is run from the Dock, it has only a very minimal environment, and it definitely does not get a PATH from any of the shell configuration files. Without this PATH, all kinds of things do not work. The first thing I noticed, was that python-mode was finding Mac OS&#39;s builtin Python instead of my updated version.</p>
 
@@ -46,7 +46,7 @@
 <p>Cocretely, I have attached an Automator script to the Dock, that starts Emacs for me. The drawback is, that even if you give it the same icon, the running instance of Emacs will get a separate icon on the dock. I have not yet found a solution for this, and am experiencing the same on Windows 7. Not a problem.</p>
 
 <p>The Automator code:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>echo &#39;/Applications/Emacs.app/Contents/MacOS/Emacs &quot;$@&quot;&#39; | bash --login -s &amp;&gt; /dev/null &amp;
+<div class="highlight"><pre><code class="language-" data-lang="">echo '/Applications/Emacs.app/Contents/MacOS/Emacs "$@"' | bash --login -s &amp;&gt; /dev/null &amp;
 </code></pre></div>
 <p>The <code>&amp;&gt; /dev/null &amp;</code> part makes sure that the Automator task does not hang around waiting for the Emacs instance to exit or close its pipes. </p>
 
@@ -56,28 +56,28 @@
   	  
 <reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
 	  
-<img src="http://www.pragti.ch/indeximages/emacs.jpg">
+<img src="http://localhost:4000/indeximages/emacs.jpg">
 
       <h2 class="itemdate">15 Dec 2012</h2>
 </reftitle>
 
 <reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
 	  
-<img src="http://www.pragti.ch/indeximages/index-i2c.jpg">
+<img src="http://localhost:4000/indeximages/index-i2c.jpg">
 
       <h2 class="itemdate">15 Aug 2012</h2>
 </reftitle>
 
 <reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
 	  
-<img src="http://www.pragti.ch/indeximages/jekyll.jpg">
+<img src="http://localhost:4000/indeximages/jekyll.jpg">
 
       <h2 class="itemdate">03 Feb 2013</h2>
 </reftitle>
 
 <reftitle><a href="/kippycam/2013/01/02/Mjpg-streamer-multiple/">Using multiple webcams in mjpg-streamer on OpenWRT </a>
 	  
-<img src="http://www.pragti.ch/indeximages/mjpg-streamer-twocams.jpg">
+<img src="http://localhost:4000/indeximages/mjpg-streamer-twocams.jpg">
 
       <h2 class="itemdate">02 Jan 2013</h2>
 </reftitle>
@@ -89,20 +89,24 @@
 
 
   </p>
+
+
   <div id="disqus_thread"></div>
-  <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  var disqus_shortname = 'pragtich'; // required: replace example with your forum shortname
-  var disqus_identifier = 'EmacsPath';
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-  </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-</noscript>
-  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span>
+<script>
+
+var disqus_config = function () {
+    this.page.url = 'http://localhost:4000/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock/';  
+    this.page.identifier = 'EmacsPath'; 
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://pragtich.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   </a>
 </footer>
 </article>
@@ -111,39 +115,39 @@
     <h2>All articles</h2> 
 	<ul>
 	  <li>
-		<a href="http://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
+		<a href="http://localhost:4000/blog/index.html">Index of all articles</a> </li>
 
 	</ul>
 	<H2>Categories</h2>
     <ul>
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
+		  <a href="http://localhost:4000/categories/computer-stuff">Computer stuff</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/life">Life</a>
+		  <a href="http://localhost:4000/categories/life">Life</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/kippycam">Kippycam</a>
+		  <a href="http://localhost:4000/categories/kippycam">Kippycam</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/blogging">Blogging</a>
+		  <a href="http://localhost:4000/categories/blogging">Blogging</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/project-euler">Project Euler</a>
+		  <a href="http://localhost:4000/categories/project-euler">Project Euler</a>
 		</li>
 
 	  
 	    <li>
-		  <a href="http://www.pragti.ch/categories/mechanical">Mechanical</a>
+		  <a href="http://localhost:4000/categories/mechanical">Mechanical</a>
 		</li>
 
 	  
