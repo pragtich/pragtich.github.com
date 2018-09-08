@@ -1,7 +1,7 @@
 permalink: pretty
 lsi: true
 markdown: redcarpet
-highlighter: pygments
+
 exclude: [Rakefile]
 include: [atom.xml]
 url: https://www.pragti.ch
@@ -15,6 +15,7 @@ git:
 
 kramdown:
   input: GFM
-
+  
 plugins:
   - jekyll-gist
+  
