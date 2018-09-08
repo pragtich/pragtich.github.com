@@ -115,12 +115,12 @@ end # task :page
 
 desc "Launch preview environment"
 task :preview do
-  system "jekyll  serve --watch"
+  system "bundle exec jekyll  serve --watch"
 end # task :preview
 
 desc "Compile using jekyll"
 task :compile do
-  system "jekyll build"
+  system "bundle exec jekyll build"
 end # task :preview
 
 
