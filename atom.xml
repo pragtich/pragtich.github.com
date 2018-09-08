@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
-  <link rel="self" type="application/atom+xml" href="http://localhost:4000/atom.xml" />
-  <link rel="alternate" type="text/html" href="http://localhost:4000/blog"/>
-  <updated>2018-09-08T17:25:00+02:00</updated>
+  <link rel="self" type="application/atom+xml" href="https://www.pragti.ch/atom.xml" />
+  <link rel="alternate" type="text/html" href="https://www.pragti.ch/blog"/>
+  <updated>2018-09-08T17:37:09+02:00</updated>
   <author>
     <name>Joris Pragt</name>
 
@@ -15,7 +15,7 @@
   <entry>
     <title type="text" xml:lang="en">Installing LibreElec 8 on an Odroid C2</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2017/12/22/installing-libreelec-8-on-an-odroid-c2</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2017/12/22/installing-libreelec-8-on-an-odroid-c2/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2017/12/22/installing-libreelec-8-on-an-odroid-c2/"/>
     
     <published>2017-12-22T00:00:00+01:00</published>
     <updated>2017-12-22T00:00:00+01:00</updated>
@@ -153,7 +153,7 @@ ps aux|grep lirc&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Fixing an Alecto (Fine Offset) wind speed meter</title>
     <id>tag:pragti.ch,2013-02-09:/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/"/>
     
     <published>2017-05-01T00:00:00+02:00</published>
     <updated>2017-05-01T00:00:00+02:00</updated>
@@ -197,7 +197,7 @@ ps aux|grep lirc&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Project Euler 37: Truncatable primes</title>
     <id>tag:pragti.ch,2013-02-09:/project%20euler/2015/01/20/project-euler-37-truncatable-primes</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/project%20euler/2015/01/20/project-euler-37-truncatable-primes/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/project%20euler/2015/01/20/project-euler-37-truncatable-primes/"/>
     
     <published>2015-01-20T00:00:00+01:00</published>
     <updated>2015-01-20T00:00:00+01:00</updated>
@@ -336,7 +336,7 @@ ps aux|grep lirc&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Setting PATH for Emacs when launched from Dock</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2014/12/22/setting-path-for-emacs-when-launched-from-dock/"/>
     
     <published>2014-12-22T00:00:00+01:00</published>
     <updated>2014-12-22T00:00:00+01:00</updated>
@@ -366,7 +366,7 @@ ps aux|grep lirc&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Installing compiled images onto Beaglebone Black SD card</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/kippycam/2013/10/10/installing-comiled-images-onto-beaglebone-black-sd-card/"/>
     
     <published>2013-10-10T00:00:00+02:00</published>
     <updated>2013-10-10T00:00:00+02:00</updated>
@@ -517,7 +517,7 @@ root@beaglebone:~# ps
   <entry>
     <title type="text" xml:lang="en">Editing jekyll postfiles plugin to work with spaces in category names</title>
     <id>tag:pragti.ch,2013-02-09:/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/"/>
     
     <published>2013-02-07T00:00:00+01:00</published>
     <updated>2013-02-07T00:00:00+01:00</updated>
@@ -562,7 +562,7 @@ root@beaglebone:~# ps
   <entry>
     <title type="text" xml:lang="en">Migrating from nanoc to jekyll</title>
     <id>tag:pragti.ch,2013-02-09:/blogging/2013/02/03/migrating-from-nanoc-to-jekyll</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/"/>
     
     <published>2013-02-03T00:00:00+01:00</published>
     <updated>2013-02-03T00:00:00+01:00</updated>
@@ -816,7 +816,7 @@ git push -u origin source
   <entry>
     <title type="text" xml:lang="en">Using multiple webcams in mjpg-streamer on OpenWRT</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2013/01/02/Mjpg-streamer-multiple</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/kippycam/2013/01/02/Mjpg-streamer-multiple/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/kippycam/2013/01/02/Mjpg-streamer-multiple/"/>
     
     <published>2013-01-02T00:00:00+01:00</published>
     <updated>2013-01-02T00:00:00+01:00</updated>
@@ -937,7 +937,7 @@ config mjpg-streamer logi
   <entry>
     <title type="text" xml:lang="en">Switching to GNU Emacs 24 on Mac OS X</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/12/15/GNU-Emacs-24</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2012/12/15/GNU-Emacs-24/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2012/12/15/GNU-Emacs-24/"/>
     
     <published>2012-12-15T00:00:00+01:00</published>
     <updated>2012-12-15T00:00:00+01:00</updated>
@@ -1109,7 +1109,7 @@ y    ; for yes
   <entry>
     <title type="text" xml:lang="en">Installing OpenWRT on a TL-WR703N router using a USB stick as storage</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/"/>
     
     <published>2012-09-22T00:00:00+02:00</published>
     <updated>2012-09-22T00:00:00+02:00</updated>
@@ -1714,7 +1714,7 @@ website&lt;/a&gt; and copied the www folder into &lt;code&gt;/www/webcam0/&lt;/c
   <entry>
     <title type="text" xml:lang="en">Adding an I2C interface to the TL-WR703N</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/"/>
     
     <published>2012-08-15T00:00:00+02:00</published>
     <updated>2012-08-15T00:00:00+02:00</updated>
@@ -2060,7 +2060,7 @@ all. How does that look?&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Keeping Openwrt online using DHCP</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/07/13/Openwrt-connection-checking</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/kippycam/2012/07/13/Openwrt-connection-checking/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/kippycam/2012/07/13/Openwrt-connection-checking/"/>
     
     <published>2012-07-13T00:00:00+02:00</published>
     <updated>2012-07-13T00:00:00+02:00</updated>
@@ -2111,7 +2111,7 @@ connection:&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Some notes on using Aquamacs</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/07/13/Aquamacs-Notes</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2012/07/13/Aquamacs-Notes/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2012/07/13/Aquamacs-Notes/"/>
     
     <published>2012-07-13T00:00:00+02:00</published>
     <updated>2012-07-13T00:00:00+02:00</updated>
@@ -2176,7 +2176,7 @@ other applications like GNUS or VCS. Maybe I will too, some day.&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Using Nanoc to fill Github Pages</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2012/07/04/Nanoc-Github-Pages</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2012/07/04/Nanoc-Github-Pages/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2012/07/04/Nanoc-Github-Pages/"/>
     
     <published>2012-07-04T00:00:00+02:00</published>
     <updated>2012-07-04T00:00:00+02:00</updated>
@@ -2351,7 +2351,7 @@ update. Let&amp;#39;s wait and see.&lt;/p&gt;
   <entry>
     <title type="text" xml:lang="en">Getting network access in the garden</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/06/22/Network-layout</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/kippycam/2012/06/22/Network-layout/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/kippycam/2012/06/22/Network-layout/"/>
     
     <published>2012-06-22T00:00:00+02:00</published>
     <updated>2012-06-22T00:00:00+02:00</updated>
@@ -2425,7 +2425,7 @@ Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2
   <entry>
     <title type="text" xml:lang="en">Things to do on this blog</title>
     <id>tag:pragti.ch,2013-02-09:/blogging/2012/06/04/TODO_website</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/blogging/2012/06/04/TODO_website/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/blogging/2012/06/04/TODO_website/"/>
     
     <published>2012-06-04T00:00:00+02:00</published>
     <updated>2012-06-04T00:00:00+02:00</updated>
@@ -2462,7 +2462,7 @@ page.&lt;/li&gt;
   <entry>
     <title type="text" xml:lang="en">The Kippencam -- starting a new project</title>
     <id>tag:pragti.ch,2013-02-09:/kippycam/2012/06/04/Starting-project-Chicken-Webcam</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/kippycam/2012/06/04/Starting-project-Chicken-Webcam/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/kippycam/2012/06/04/Starting-project-Chicken-Webcam/"/>
     
     <published>2012-06-04T00:00:00+02:00</published>
     <updated>2012-06-04T00:00:00+02:00</updated>
@@ -2553,7 +2553,7 @@ page.&lt;/li&gt;
   <entry>
     <title type="text" xml:lang="en">Listing life goals with 43things</title>
     <id>tag:pragti.ch,2013-02-09:/life/2011/11/22/43things</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/life/2011/11/22/43things/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/life/2011/11/22/43things/"/>
     
     <published>2011-11-22T00:00:00+01:00</published>
     <updated>2011-11-22T00:00:00+01:00</updated>
@@ -2617,7 +2617,7 @@ page.&lt;/li&gt;
   <entry>
     <title type="text" xml:lang="en">Easy new page creating using Emacs and Template.el</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2011/11/14/Installing-Emacs-Template-mode</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2011/11/14/Installing-Emacs-Template-mode/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2011/11/14/Installing-Emacs-Template-mode/"/>
     
     <published>2011-11-14T00:00:00+01:00</published>
     <updated>2011-11-14T00:00:00+01:00</updated>
@@ -2667,7 +2667,7 @@ summary: (&amp;gt;&amp;gt;&amp;gt;SUMMARY&amp;lt;&amp;lt;&amp;lt;)
   <entry>
     <title type="text" xml:lang="en">Making a personal website using Nanoc</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2011/11/12/Nanoc</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2011/11/12/Nanoc/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2011/11/12/Nanoc/"/>
     
     <published>2011-11-12T00:00:00+01:00</published>
     <updated>2011-11-12T00:00:00+01:00</updated>
@@ -2718,7 +2718,7 @@ end
   <entry>
     <title type="text" xml:lang="en">Installing sitecopy on OS X Snow Leopard and using it with Nanoc</title>
     <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X</id>
-    <link rel="alternate" type="text/html" href="http://localhost:4000/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X/"/>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X/"/>
     
     <published>2011-11-12T00:00:00+01:00</published>
     <updated>2011-11-12T00:00:00+01:00</updated>
