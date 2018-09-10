@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – A battery powered Mysensors node from an Arduino Pro Mini clone</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" media="screen">
+<link rel="stylesheet" type="text/css" href="../../../../../default.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="https://pragti.ch/atom.xml">
+</head>
+<body>
+  <titleframe><titlebar><div id="largetitle"> <a href="../../../../../">Pragtich</a>
+	  </div>
+
+	  <div id="secnav">
+	  </div>
+	  <div id="artnav">
+	  </div> 
+	</titlebar>
+  </titleframe>
+<article>
+  <header>
+	<hgroup>
+	  <img src="https://www.pragti.ch/indeximages/Battery-sensor.jpg">
+	  <h1 class="itemtitle">A battery powered Mysensors node from an Arduino Pro Mini clone</h1>
+      <h2 class="itemdate">10 Sep 2018</h2>
+	</hgroup>
+  </header>
+  <summary>
+	It is not very difficult to build a reasonably nice MySensors node based on very affordable hardware. This is a reminder for myself in order to be able to reproduce one.
+</summary>
+<bodytext>
+  <h1>A basic battery powered Mysensors node</h1>
+
+<p>Based on: <a href="https://www.mysensors.org/build/battery">the documentation by MySensors</a> and a 3.3V 8MHz Arduino (clone) Pro Mini from the usual sources (<a href="https://www.banggood.com/">Banggood</a>, <a href="http://aliexpress.com/">AliExpress</a>).</p>
+
+<p><a href="https://blog.adafruit.com/wp-content/uploads/2016/07/promini_final.png">Handy pinout guide</a></p>
+
+<p>Perform the hardware mods from above link:</p>
+
+<ul>
+<li>Disable power LED (either remove it or the resistor next to it).</li>
+<li>Remove voltage regulator (in this case I linked the in &amp; out pins to be able to power through the <code>RAW</code> pin.</li>
+</ul>
+
+<h1>Make an Arduino ISP programmer</h1>
+
+<p>In order to reflash the bootloader, we need an In-System Programmer (ISP). It is possible to use another Arduino as the ISP, and I like to use another Pro Mini.</p>
+
+<h2>Hardware</h2>
+
+<p>I follow the following schematic: 
+<img src="/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/ProMiniISP_bb.jpg" alt="Fritzing schematic of Pro Mini ISP"></p>
+
+<p>And in reality on a breadboard, it looks like this (with a LED added to pin 9):</p>
+
+<p><img src="/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/ProMiniISP.jpg" alt="Breadboard Pro Mini ISP"></p>
+
+<h2>Flash the ISP firmware</h2>
+
+<ul>
+<li>Start the Arduino IDE</li>
+<li>Open <code>ArduinoISP</code> sketch from <a href="https://github.com/pragtich/Sensors/tree/master/ArduinoISP">the repository</a></li>
+<li>Connect the ISP using a USB-serial connection</li>
+<li>Select board <code>Arduino Pro or Pro Mini</code></li>
+<li>Flash the sketch. </li>
+</ul>
+
+<h1>Install boot loader:</h1>
+
+<p>In order to get a lower Brown Out voltage, we need to flash a new bootloader. Actually that&#39;s not strictly required, but it&#39;s the easiest way. I am using <a href="https://www.openhardware.io/view/33/Various-bootloader-files-based-on-Optiboot-62">Optiboot bootloaders compiled by Gert Sanders</a>, so many thanks to him.</p>
+
+<ul>
+<li>Unpack rar in <code>Various-bootloader-files-based-on-Optiboot-62</code></li>
+<li>Move folder <code>atmega328p</code> to <code>Arduino.app/Contents/Java/hardware</code> (this is the OS X location)</li>
+<li>Start <code>Arduino.app</code></li>
+<li>Select Tools-&gt;Board-&gt;<code>atmega328p based - 32 pin TQFP</code></li>
+<li>Select <code>8MHz - crystal - 38K4 - D13</code></li>
+<li>Select <code>Brown out detection - 1V8</code></li>
+<li>Select correct USB port</li>
+<li>Select <code>Programmer: &quot;Arduino as ISP&quot;</code></li>
+<li><code>Tools-&gt;Burn Bootloader</code></li>
+</ul>
+
+<h1>Test</h1>
+
+<ul>
+<li>Connect the board to the USB serial adapter (disconnect the ISP)</li>
+<li>Upload example Blink</li>
+<li>Upload Blink with modified timings</li>
+<li>I also like to try the <code>ASCIITable</code> example</li>
+<li>Quit the Arduino IDE</li>
+</ul>
+
+<h1>Upload the real script</h1>
+
+<p>I use platformio to run my projects, so uploading is pretty easy:</p>
+
+<ul>
+<li>Switch to the project folder</li>
+<li>Edit baud rates in the <code>platformio.ini</code>. I use <code>38400</code> for upload and <code>9600</code> for monitor.</li>
+<li><code>pio run -t upload</code> or if you want a debug monitor: <code>pio run -t upload -t monitor</code></li>
+</ul>
+
+<footer>
+  <p>
+<h1>Possibly related posts:</h1>
+  	  
+<reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
+	  
+<img src="https://www.pragti.ch/indeximages/jekyll.jpg">
+
+      <h2 class="itemdate">03 Feb 2013</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/06/04/Starting-project-Chicken-Webcam/">The Kippencam -- starting a new project </a>
+	  
+      <h2 class="itemdate">04 Jun 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
+	  
+<img src="https://www.pragti.ch/indeximages/index-i2c.jpg">
+
+      <h2 class="itemdate">15 Aug 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/">Installing OpenWRT on a TL-WR703N router using a USB stick as storage </a>
+	  
+      <h2 class="itemdate">22 Sep 2012</h2>
+</reftitle>
+
+<reftitle><a href="/project%20euler/2015/01/20/project-euler-37-truncatable-primes/">Project Euler 37: Truncatable primes </a>
+	  
+<img src="https://www.pragti.ch/indeximages/Euler0037.jpg">
+
+      <h2 class="itemdate">20 Jan 2015</h2>
+</reftitle>
+
+
+  </p>
+
+
+  <div id="disqus_thread"></div>
+<script>
+
+var disqus_config = function () {
+    this.page.url = 'https://www.pragti.ch/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/';  
+    this.page.identifier = 'MysProMiniBatt'; 
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://pragtich.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </a>
+</footer>
+</article>
+  
+<nav>
+    <h2>All articles</h2> 
+	<ul>
+	  <li>
+		<a href="https://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
+
+	</ul>
+	<H2>Categories</h2>
+    <ul>
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/life">Life</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/kippycam">Kippycam</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/blogging">Blogging</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/project-euler">Project Euler</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/mechanical">Mechanical</a>
+		</li>
+
+	  
+    </ul>
+	<h2>About</h2>
+    <ul>
+	  <li><a href="../../../../../about/">About me</a></li>
+  </ul>
+  </nav>
+</body>
+</html>

@@ -3,13 +3,97 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="https://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="https://www.pragti.ch/blog"/>
-  <updated>2018-09-08T17:37:09+02:00</updated>
+  <updated>2018-09-10T15:48:59+02:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
   <rights>Copyright (c) 2018, Joris Pragt; all rights reserved.</rights>
+
+
+  <entry>
+    <title type="text" xml:lang="en">A battery powered Mysensors node from an Arduino Pro Mini clone</title>
+    <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini</id>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/"/>
+    
+    <published>2018-09-10T00:00:00+02:00</published>
+    <updated>2018-09-10T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">It is not very difficult to build a reasonably nice MySensors node based on very affordable hardware. This is a reminder for myself in order to be able to reproduce one.</summary>
+    <category term="computer stuff" />
+	<content type="html">&lt;h1&gt;A basic battery powered Mysensors node&lt;/h1&gt;
+
+&lt;p&gt;Based on: &lt;a href=&quot;https://www.mysensors.org/build/battery&quot;&gt;the documentation by MySensors&lt;/a&gt; and a 3.3V 8MHz Arduino (clone) Pro Mini from the usual sources (&lt;a href=&quot;https://www.banggood.com/&quot;&gt;Banggood&lt;/a&gt;, &lt;a href=&quot;http://aliexpress.com/&quot;&gt;AliExpress&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://blog.adafruit.com/wp-content/uploads/2016/07/promini_final.png&quot;&gt;Handy pinout guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Perform the hardware mods from above link:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Disable power LED (either remove it or the resistor next to it).&lt;/li&gt;
+&lt;li&gt;Remove voltage regulator (in this case I linked the in &amp;amp; out pins to be able to power through the &lt;code&gt;RAW&lt;/code&gt; pin.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Make an Arduino ISP programmer&lt;/h1&gt;
+
+&lt;p&gt;In order to reflash the bootloader, we need an In-System Programmer (ISP). It is possible to use another Arduino as the ISP, and I like to use another Pro Mini.&lt;/p&gt;
+
+&lt;h2&gt;Hardware&lt;/h2&gt;
+
+&lt;p&gt;I follow the following schematic: 
+&lt;img src=&quot;/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/ProMiniISP_bb.jpg&quot; alt=&quot;Fritzing schematic of Pro Mini ISP&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;And in reality on a breadboard, it looks like this (with a LED added to pin 9):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/ProMiniISP.jpg&quot; alt=&quot;Breadboard Pro Mini ISP&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Flash the ISP firmware&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Start the Arduino IDE&lt;/li&gt;
+&lt;li&gt;Open &lt;code&gt;ArduinoISP&lt;/code&gt; sketch from &lt;a href=&quot;https://github.com/pragtich/Sensors/tree/master/ArduinoISP&quot;&gt;the repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Connect the ISP using a USB-serial connection&lt;/li&gt;
+&lt;li&gt;Select board &lt;code&gt;Arduino Pro or Pro Mini&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Flash the sketch. &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Install boot loader:&lt;/h1&gt;
+
+&lt;p&gt;In order to get a lower Brown Out voltage, we need to flash a new bootloader. Actually that&amp;#39;s not strictly required, but it&amp;#39;s the easiest way. I am using &lt;a href=&quot;https://www.openhardware.io/view/33/Various-bootloader-files-based-on-Optiboot-62&quot;&gt;Optiboot bootloaders compiled by Gert Sanders&lt;/a&gt;, so many thanks to him.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Unpack rar in &lt;code&gt;Various-bootloader-files-based-on-Optiboot-62&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Move folder &lt;code&gt;atmega328p&lt;/code&gt; to &lt;code&gt;Arduino.app/Contents/Java/hardware&lt;/code&gt; (this is the OS X location)&lt;/li&gt;
+&lt;li&gt;Start &lt;code&gt;Arduino.app&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select Tools-&amp;gt;Board-&amp;gt;&lt;code&gt;atmega328p based - 32 pin TQFP&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;8MHz - crystal - 38K4 - D13&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Brown out detection - 1V8&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select correct USB port&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Programmer: &amp;quot;Arduino as ISP&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Tools-&amp;gt;Burn Bootloader&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Test&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Connect the board to the USB serial adapter (disconnect the ISP)&lt;/li&gt;
+&lt;li&gt;Upload example Blink&lt;/li&gt;
+&lt;li&gt;Upload Blink with modified timings&lt;/li&gt;
+&lt;li&gt;I also like to try the &lt;code&gt;ASCIITable&lt;/code&gt; example&lt;/li&gt;
+&lt;li&gt;Quit the Arduino IDE&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Upload the real script&lt;/h1&gt;
+
+&lt;p&gt;I use platformio to run my projects, so uploading is pretty easy:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Switch to the project folder&lt;/li&gt;
+&lt;li&gt;Edit baud rates in the &lt;code&gt;platformio.ini&lt;/code&gt;. I use &lt;code&gt;38400&lt;/code&gt; for upload and &lt;code&gt;9600&lt;/code&gt; for monitor.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pio run -t upload&lt;/code&gt; or if you want a debug monitor: &lt;code&gt;pio run -t upload -t monitor&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
 
 
   <entry>
