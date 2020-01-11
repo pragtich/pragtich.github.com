@@ -51,11 +51,13 @@ Een van de ogen is uitgescheurd, waarschijnlijk handig om dat ook te lassen.
 ![Tekening]({% postfile  Tekening.png %} )
 ![Uitgevreten]({% postfile  IMG_20200108_165347.jpg %} )
  
- In de tekeningen kun je zien, dat er oorspronkelijk een gootje tussen de twee haken zit, zodat de druk verdeeld wordt. Je kunt de resten van de las nog zien zitten. Het zou mooi zijn om dat gootje weer te herstellen, gaat dat?
+ In de tekeningen kun je zien, dat er oorspronkelijk een gootje tussen de twee haken zit, zodat de druk verdeeld wordt. Je kunt de resten van de las nog zien zitten. En het vuil wat zich onder dit gootje heeft verzameld over de jaren.
+ 
+ Het zou mooi zijn om dat gootje weer te herstellen, gaat dat?
  
  In een ebay advertentie zag ik een plaatje van een machine waar het gootje duidelijk op staat:
  
-![Gootje]({% postfile  IMG_0010.jpg %} )
+![Gootje]({% postfile  IMG_0010.JPG %} )
 
 
 # Oranje deel:
@@ -65,8 +67,6 @@ Een van de ogen is uitgescheurd, waarschijnlijk handig om dat ook te lassen.
 Enkele scheuren rondom de montage gaten. Is het mogelijk deze te lassen?
 
 
-
-Inslijten van de draagstang. Dit is verergerd omdat de 'goot' in het groene deel afgebroken is. Ik denk dat als we de 'goot' in het groene deel kunnen herstellen, dat dit niet zo erg is.
 
 ![Slijtage]({% postfile IMG_20200108_165122.jpg %} )
 ![Slijtage nokken]({% postfile  IMG_20200108_165449.jpg %} )
