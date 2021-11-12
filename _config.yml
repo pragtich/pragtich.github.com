@@ -1,6 +1,6 @@
 permalink: pretty
 lsi: true
-markdown: redcarpet
+markdown: kramdown
 
 exclude: [Rakefile]
 include: [atom.xml]
