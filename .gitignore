@@ -4,3 +4,5 @@
 # output folder
 _site/
 Gemfile.lock
+.jekyll-cache
+.jekyll-metadata
