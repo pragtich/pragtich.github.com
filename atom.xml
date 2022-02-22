@@ -3,7 +3,7 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="https://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="https://www.pragti.ch/blog"/>
-  <updated>2022-02-22T19:33:37+01:00</updated>
+  <updated>2022-02-22T19:52:34+01:00</updated>
   <author>
     <name>Joris Pragt</name>
 
@@ -19,13 +19,17 @@
     
     <published>2022-02-22T00:00:00+01:00</published>
     <updated>2022-02-22T00:00:00+01:00</updated>
-    <summary type="text" xml:lang="en">Some fun adventures in time-wasting with another great innovation: virtual machined in Linux.</summary>
+    <summary type="text" xml:lang="en">Some fun adventures in time-wasting with another great innovation: virtual machines in Linux.</summary>
     <category term="computer stuff" />
 	<content type="html">&lt;p&gt;As has been the case since my first attempts at linux around 1997, it’s always a challenge. Everything changes quickly, so lots of things break and the documentation is always out of date. Nevertheless, more and more becomes possible and the excitement never fails to keep up with the frustration.&lt;/p&gt;
 
 &lt;p&gt;In recent years, the available ARM hardware has become very exciting. After having played with an Odroid C2 (fun for LibreELEC, haven’t used it for much more), an NanoPi Neo2 (Fantastically small, not very powerful but the aluminium housing is quite irresistible), now is the turn for an Odroid N2+. Wat a beast! Apparently the IO is not very fast, but the processor is great. And the Homeassistant Blue version is quite pretty.&lt;/p&gt;
 
+&lt;p&gt;&lt;img src=&quot;/computer%20stuff/2022/02/22/installing-a-linux-virtual-machine-on-arm64odroid-n2/blue_dev_mode.png&quot; alt=&quot;Home assistant blue&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;I was trying to install specific stuff on it, and learned some lessons w.r.t. the use of libvirt/KVM/QEMU on this ARM64/aarch64 platform. These were some fun lessons. I am using Armbian, in general.&lt;/p&gt;
+
+&lt;p&gt;I always wonder where we would be without the internet. Only with lots of searching, would I have been able to solve my problems. And even then, it’s been hours and hours of experimentation…&lt;/p&gt;
 
 &lt;h1 id=&quot;kernel-error-on-some-older-linux-kernels&quot;&gt;Kernel error on some older linux kernels&lt;/h1&gt;
 
@@ -39,9 +43,12 @@
 &lt;p&gt;First I was concerned, because one of my guests requires a Debian OS (and Armbian does not have the newer kernels for Debian), but since we are only updating the host OS, we are fine.
 I ended up switching to the Jammy variant of Armbian (Ubuntu, kernel 5.15) and it resolves this issue.&lt;/p&gt;
 
-&lt;h1 id=&quot;installing-docker-into-debian-on-a-libvirtkvm-debian-guest-os&quot;&gt;Installing docker into debian on a libvirt/KVM Debian guest OS&lt;/h1&gt;
+&lt;h1 id=&quot;installing-docker-into-debian-on-a-libvirtkvmqemu-debian-guest-os&quot;&gt;Installing Docker into Debian on a libvirt/KVM/QEMU Debian guest OS&lt;/h1&gt;
 
-&lt;p&gt;Home assistant supervised recommends the simple method of installing Docker by piping a script to the shell. I do not like this, because of security concerns. Perhaps it is overly cautious, but I prefer to know what code I am running (I know, what’s in de packages themselves, right…?). I found a nice tip on how to install Docker through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cloud-config&lt;/code&gt;, which fits my desire. However, it requires GPG to be installed, which is not the case on the Debian cloud images that I’m using.
+&lt;p&gt;Home assistant supervised recommends the simple method of installing Docker by piping a script to the shell. I do not like this, because of security concerns. Perhaps it is overly cautious, but I prefer to know what code I am running (I know, what’s in de packages themselves, right…?).&lt;/p&gt;
+
+&lt;p&gt;Because I want to run in a QEMU/libvirt virtual machine, it is easiest to configure everyting using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cloud-config&lt;/code&gt; file.
+I found a nice tip on how to install Docker through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cloud-config&lt;/code&gt;, which fits my desire. However, it requires GPG to be installed, which is not the case on the Debian cloud images that I’m using.
 &lt;a href=&quot;https://stackoverflow.com/questions/24418815/how-do-i-install-docker-using-cloud-init&quot;&gt;The tip is an example for an Ubuntu guest, but does not transfer cleanly to Debian&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;So, how to fix this?
@@ -69,25 +76,26 @@ I ran into &lt;a href=&quot;https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=97
   &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
     &lt;span class=&quot;na&quot;&gt;docker.list&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
       &lt;span class=&quot;na&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;deb&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;[signed-by=/usr/share/keyrings/docker.asc]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;https://download.docker.com/linux/debian&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;buster&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;stable&quot;&lt;/span&gt;
+
 &lt;span class=&quot;na&quot;&gt;packages&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;docker-ce&lt;/span&gt;
   &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;docker-ce-cli&lt;/span&gt;
   &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;... all my other requirements&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h1 id=&quot;setting-homeassistant-supervised-machine-type-from-command-line-install&quot;&gt;Setting homeassistant Supervised machine type from command line install&lt;/h1&gt;
+&lt;h1 id=&quot;setting-homeassistant-supervised-machine-type-from-command-line-install&quot;&gt;Setting Homeassistant Supervised machine type from command line install&lt;/h1&gt;
 
-&lt;p&gt;The homeassistant-supervisor can be installed &lt;a href=&quot;https://github.com/home-assistant/supervised-installer&quot;&gt;using the instructions on the Homeassistant Github&lt;/a&gt;. These instructions do not, however, explain how to install Homeassistant Supervised programmattically, that is non-interactively. The installer actually wants to know your machine type, so will present you with a ment. Since I was installing using Ansible at first, and later using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cloud-config&lt;/code&gt;, there was no way to provide this information interactively. So how do you set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ha/machine-type&lt;/code&gt; programmattically?&lt;/p&gt;
+&lt;p&gt;The homeassistant-supervisor can be installed &lt;a href=&quot;https://github.com/home-assistant/supervised-installer&quot;&gt;using the instructions on the Homeassistant Github&lt;/a&gt;. These instructions do not, however, explain how to install Homeassistant Supervised programmattically, that is non-interactively. The installer actually wants to know your machine type, so will present you with a menu. Since I was installing using Ansible at first, and later using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cloud-config&lt;/code&gt;, there was no way to provide this information interactively. So how do you set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ha/machine-type&lt;/code&gt; programmattically?&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/computer%20stuff/2022/02/22/installing-a-linux-virtual-machine-on-arm64odroid-n2/Home-Assistant-Supervised-select-machine-type.jpg&quot; alt=&quot;Screenshot of ha/machine-type menu&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;It turns out that this is a general mechanism called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;debconf&lt;/code&gt;. It’s the mechanism that Debian uses to configure its package settings. In some ways it is very nice, because it also allows you to change settings on already-installed packages using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dpkg-reconfigure&lt;/code&gt;, etc.&lt;/p&gt;
-
-&lt;p&gt;The key to what I want, then, is to preseed the database with the desired setting. If the package is well designed (it seems to be), it should accept this value and not present the menu when the value is already available.&lt;/p&gt;
+&lt;p&gt;It turns out that this is a general mechanism called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;debconf&lt;/code&gt;. It’s the mechanism that Debian uses to configure its package settings. In some ways it is very nice, because it also allows you to change settings on already-installed packages using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dpkg-reconfigure&lt;/code&gt;, etc.
+The key to what I want, then, is to preseed the database with the desired setting. If the package is well designed (it seems to be), it should accept this value and not present the menu when the value is already available.&lt;/p&gt;
 
 &lt;p&gt;This can be done by importing an entire database, &lt;a href=&quot;http://manpages.ubuntu.com/manpages/impish/man7/debconf.7.html&quot;&gt;such as is recommended in some manuals&lt;/a&gt;. However, in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;debconf-utils&lt;/code&gt; package, there are some tools to help. Based on &lt;a href=&quot;https://unix.stackexchange.com/questions/106552/apt-get-install-without-debconf-prompt&quot;&gt;a helpful StackExchange post&lt;/a&gt; and confirmed by &lt;a href=&quot;http://www.microhowto.info/howto/perform_an_unattended_installation_of_a_debian_package.html&quot;&gt;another helpful site&lt;/a&gt;, the following turns out to be the solution, assuming that the installer was downloaded into a package called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ha.deb&lt;/code&gt;. I chose the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;qemuarm-64&lt;/code&gt; machine, all choices are listed in the &lt;a href=&quot;https://github.com/home-assistant/supervised-installer/blob/main/README.md&quot;&gt;README on Github&lt;/a&gt; or in the &lt;a href=&quot;https://github.com/home-assistant/supervised-installer/blob/main/homeassistant-supervised/DEBIAN/templates&quot;&gt;Template definition&lt;/a&gt;. 
-The utility &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;debconf-set-selections&lt;/code&gt; (&lt;a href=&quot;http://manpages.ubuntu.com/manpages/bionic/man1/debconf-set-selections.1.html&quot;&gt;manual here&lt;/a&gt;to the rescue!
-Later, I actually found a reference in the Debian wiki. The trouble sometimes is, to find the correct search terms. Especially for concepts that are getting to be quite ancient. &lt;a href=&quot;https://wiki.debian.org/PackageManagement/Preseed&quot;&gt;Preseed is the way to go&lt;/a&gt;, apparently!&lt;/p&gt;
+The utility &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;debconf-set-selections&lt;/code&gt; (&lt;a href=&quot;http://manpages.ubuntu.com/manpages/bionic/man1/debconf-set-selections.1.html&quot;&gt;manual here&lt;/a&gt;) to the rescue!&lt;/p&gt;
+
+&lt;p&gt;Later, I actually found a reference in the Debian wiki. The trouble sometimes is, to find the correct search terms. Especially for concepts that are getting to be quite ancient. &lt;a href=&quot;https://wiki.debian.org/PackageManagement/Preseed&quot;&gt;Preseed is the way to go&lt;/a&gt;, apparently!&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;homeassistant-supervised ha/machine-type string qemuarm-64&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;debconf-set-selections
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;dpkg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; ha.deb
