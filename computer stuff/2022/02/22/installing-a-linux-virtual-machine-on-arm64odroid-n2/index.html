@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Installing a linux virtual machine on ARM64/Odroid N2</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" media="screen">
+<link rel="stylesheet" type="text/css" href="../../../../../default.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="https://pragti.ch/atom.xml">
+</head>
+<body>
+  <titleframe><titlebar><div id="largetitle"> <a href="../../../../../">Pragtich</a>
+	  </div>
+
+	  <div id="secnav">
+	  </div>
+	  <div id="artnav">
+	  </div> 
+	</titlebar>
+  </titleframe>
+<article>
+  <header>
+	<hgroup>
+	  <img src="https://www.pragti.ch/indeximages/libvirt.jpg">
+	  <h1 class="itemtitle">Installing a linux virtual machine on ARM64/Odroid N2</h1>
+      <h2 class="itemdate">22 Feb 2022</h2>
+	</hgroup>
+  </header>
+  <summary>
+	Some fun adventures in time-wasting with another great innovation: virtual machined in Linux.
+</summary>
+<bodytext>
+  <p>As has been the case since my first attempts at linux around 1997, it’s always a challenge. Everything changes quickly, so lots of things break and the documentation is always out of date. Nevertheless, more and more becomes possible and the excitement never fails to keep up with the frustration.</p>
+
+<p>In recent years, the available ARM hardware has become very exciting. After having played with an Odroid C2 (fun for LibreELEC, haven’t used it for much more), an NanoPi Neo2 (Fantastically small, not very powerful but the aluminium housing is quite irresistible), now is the turn for an Odroid N2+. Wat a beast! Apparently the IO is not very fast, but the processor is great. And the Homeassistant Blue version is quite pretty.</p>
+
+<p>I was trying to install specific stuff on it, and learned some lessons w.r.t. the use of libvirt/KVM/QEMU on this ARM64/aarch64 platform. These were some fun lessons. I am using Armbian, in general.</p>
+
+<h1 id="kernel-error-on-some-older-linux-kernels">Kernel error on some older linux kernels</h1>
+
+<p>I ran into a specific error when starting a virtual machine running under Armbian Buster (Debian) as a host OS.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qemu-system-aarch64: …/target/arm/helper.c:1948: pmevcntr_rawwrite: Assertion <span class="sb">`</span>counter &lt; pmu_num_counters<span class="o">(</span><span class="nb">env</span><span class="o">)</span>’ failed. 
+</code></pre></div></div>
+
+<p>Quite an obtuse failure message. Thanks to people who are kind enough to document their struggles, <a href="https://discuss.linuxcontainers.org/t/vms-do-not-start-on-lxd-4-10-4-11-on-aarch64-with-kernel-5-10/10227/5">it is clear that this is a kernel bug with the <code class="language-plaintext highlighter-rouge">5.8</code> kernel</a>. The easiest way out, therefore, was to switch to a newer kernel.</p>
+
+<p>First I was concerned, because one of my guests requires a Debian OS (and Armbian does not have the newer kernels for Debian), but since we are only updating the host OS, we are fine.
+I ended up switching to the Jammy variant of Armbian (Ubuntu, kernel 5.15) and it resolves this issue.</p>
+
+<h1 id="installing-docker-into-debian-on-a-libvirtkvm-debian-guest-os">Installing docker into debian on a libvirt/KVM Debian guest OS</h1>
+
+<p>Home assistant supervised recommends the simple method of installing Docker by piping a script to the shell. I do not like this, because of security concerns. Perhaps it is overly cautious, but I prefer to know what code I am running (I know, what’s in de packages themselves, right…?). I found a nice tip on how to install Docker through <code class="language-plaintext highlighter-rouge">cloud-config</code>, which fits my desire. However, it requires GPG to be installed, which is not the case on the Debian cloud images that I’m using.
+<a href="https://stackoverflow.com/questions/24418815/how-do-i-install-docker-using-cloud-init">The tip is an example for an Ubuntu guest, but does not transfer cleanly to Debian</a>.</p>
+
+<p>So, how to fix this?
+I ran into <a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=970796">a discussion in a Debian mailing list which documents their preferred solution</a>. It explains that there are several reasons to not use the proposed method, including that the keyservers are not seen to be future-proof. They propose including the key into the <code class="language-plaintext highlighter-rouge">cloud-config</code> file and writing it to a place that <code class="language-plaintext highlighter-rouge">apt</code> can find. It works, apart from a small typo: the <code class="language-plaintext highlighter-rouge">write_files</code> module needs an array, so the <code class="language-plaintext highlighter-rouge">path</code> entry needs a dash.</p>
+
+<p>I added groups and it looks something like this (<a href="https://download.docker.com/linux/debian/gpg">PGP key from the Docker repository</a>):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#cloud-config</span>
+<span class="na">write_files</span><span class="pi">:</span>
+  <span class="na">path</span><span class="pi">:</span> <span class="s">/usr/share/keyrings/docker.asc</span>
+  <span class="na">owner</span><span class="pi">:</span> <span class="s">root:root</span>
+  <span class="na">permissions</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0644'</span>
+  <span class="na">content</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">---- BEGIN PGP PUBLIC KEY BLOCK -----</span>
+    <span class="s">....</span>
+
+<span class="na">users</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">myname</span>
+    <span class="na">groups</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">sudo</span><span class="pi">,</span> <span class="nv">docker</span><span class="pi">]</span>
+
+<span class="na">groups</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">docker</span>
+
+<span class="na">apt</span><span class="pi">:</span>
+  <span class="na">sources</span><span class="pi">:</span>
+    <span class="na">docker.list</span><span class="pi">:</span>
+      <span class="na">source</span><span class="pi">:</span> <span class="s2">"</span><span class="s">deb</span><span class="nv"> </span><span class="s">[signed-by=/usr/share/keyrings/docker.asc]</span><span class="nv"> </span><span class="s">https://download.docker.com/linux/debian</span><span class="nv"> </span><span class="s">buster</span><span class="nv"> </span><span class="s">stable"</span>
+<span class="na">packages</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">docker-ce</span>
+  <span class="pi">-</span> <span class="s">docker-ce-cli</span>
+  <span class="pi">-</span> <span class="s">... all my other requirements</span>
+</code></pre></div></div>
+
+<h1 id="setting-homeassistant-supervised-machine-type-from-command-line-install">Setting homeassistant Supervised machine type from command line install</h1>
+
+<p>The homeassistant-supervisor can be installed <a href="https://github.com/home-assistant/supervised-installer">using the instructions on the Homeassistant Github</a>. These instructions do not, however, explain how to install Homeassistant Supervised programmattically, that is non-interactively. The installer actually wants to know your machine type, so will present you with a ment. Since I was installing using Ansible at first, and later using <code class="language-plaintext highlighter-rouge">cloud-config</code>, there was no way to provide this information interactively. So how do you set <code class="language-plaintext highlighter-rouge">ha/machine-type</code> programmattically?</p>
+
+<p><img src="/computer%20stuff/2022/02/22/installing-a-linux-virtual-machine-on-arm64odroid-n2/Home-Assistant-Supervised-select-machine-type.jpg" alt="Screenshot of ha/machine-type menu" /></p>
+
+<p>It turns out that this is a general mechanism called <code class="language-plaintext highlighter-rouge">debconf</code>. It’s the mechanism that Debian uses to configure its package settings. In some ways it is very nice, because it also allows you to change settings on already-installed packages using <code class="language-plaintext highlighter-rouge">dpkg-reconfigure</code>, etc.</p>
+
+<p>The key to what I want, then, is to preseed the database with the desired setting. If the package is well designed (it seems to be), it should accept this value and not present the menu when the value is already available.</p>
+
+<p>This can be done by importing an entire database, <a href="http://manpages.ubuntu.com/manpages/impish/man7/debconf.7.html">such as is recommended in some manuals</a>. However, in the <code class="language-plaintext highlighter-rouge">debconf-utils</code> package, there are some tools to help. Based on <a href="https://unix.stackexchange.com/questions/106552/apt-get-install-without-debconf-prompt">a helpful StackExchange post</a> and confirmed by <a href="http://www.microhowto.info/howto/perform_an_unattended_installation_of_a_debian_package.html">another helpful site</a>, the following turns out to be the solution, assuming that the installer was downloaded into a package called <code class="language-plaintext highlighter-rouge">ha.deb</code>. I chose the <code class="language-plaintext highlighter-rouge">qemuarm-64</code> machine, all choices are listed in the <a href="https://github.com/home-assistant/supervised-installer/blob/main/README.md">README on Github</a> or in the <a href="https://github.com/home-assistant/supervised-installer/blob/main/homeassistant-supervised/DEBIAN/templates">Template definition</a>. 
+The utility <code class="language-plaintext highlighter-rouge">debconf-set-selections</code> (<a href="http://manpages.ubuntu.com/manpages/bionic/man1/debconf-set-selections.1.html">manual here</a>to the rescue!
+Later, I actually found a reference in the Debian wiki. The trouble sometimes is, to find the correct search terms. Especially for concepts that are getting to be quite ancient. <a href="https://wiki.debian.org/PackageManagement/Preseed">Preseed is the way to go</a>, apparently!</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"homeassistant-supervised ha/machine-type string qemuarm-64"</span> | <span class="nb">sudo </span>debconf-set-selections
+<span class="nv">$ </span><span class="nb">sudo </span>dpkg <span class="nt">-i</span> ha.deb
+</code></pre></div></div>
+
+<p>In order to check weither the selection has caught on, you could use <code class="language-plaintext highlighter-rouge">debconf-get-selections</code> or <code class="language-plaintext highlighter-rouge">debconf-show</code>:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nv">$ </span><span class="nb">sudo </span>debconf-show homeassistant-supervised
+<span class="k">*</span> ha/machine-type: qemuarm-64
+
+<span class="nv">$ </span><span class="nb">sudo </span>debconf-get-selections|grep <span class="s1">'ha/machine-type'</span>
+homeassistant-supervised	ha/machine-type	Select	qemuarm-64
+</code></pre></div></div>
+
+
+<footer>
+  <p>
+<h1>Possibly related posts:</h1>
+  	  
+<reftitle><a href="/blogging/2013/02/03/migrating-from-nanoc-to-jekyll/">Migrating from nanoc to jekyll </a>
+	  
+<img src="https://www.pragti.ch/indeximages/jekyll.jpg">
+
+      <h2 class="itemdate">03 Feb 2013</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/">Installing OpenWRT on a TL-WR703N router using a USB stick as storage </a>
+	  
+      <h2 class="itemdate">22 Sep 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
+	  
+<img src="https://www.pragti.ch/indeximages/emacs.jpg">
+
+      <h2 class="itemdate">15 Dec 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/08/15/Adding-an-I2C-interface-to-the-TL-WR703N/">Adding an I2C interface to the TL-WR703N </a>
+	  
+<img src="https://www.pragti.ch/indeximages/index-i2c.jpg">
+
+      <h2 class="itemdate">15 Aug 2012</h2>
+</reftitle>
+
+<reftitle><a href="/kippycam/2012/06/04/Starting-project-Chicken-Webcam/">The Kippencam -- starting a new project </a>
+	  
+      <h2 class="itemdate">04 Jun 2012</h2>
+</reftitle>
+
+
+  </p>
+
+
+  <div id="disqus_thread"></div>
+<script>
+
+var disqus_config = function () {
+    this.page.url = 'https://www.pragti.ch/computer%20stuff/2022/02/22/installing-a-linux-virtual-machine-on-arm64odroid-n2/';  
+    this.page.identifier = 'libvirt'; 
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://pragtich.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </a>
+</footer>
+</article>
+  
+<nav>
+    <h2>All articles</h2> 
+	<ul>
+	  <li>
+		<a href="https://www.pragti.ch/blog/index.html">Index of all articles</a> </li>
+
+	</ul>
+	<H2>Categories</h2>
+    <ul>
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/computer-stuff">Computer stuff</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/life">Life</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/kippycam">Kippycam</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/blogging">Blogging</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/project-euler">Project Euler</a>
+		</li>
+
+	  
+	    <li>
+		  <a href="https://www.pragti.ch/categories/mechanical">Mechanical</a>
+		</li>
+
+	  
+    </ul>
+	<h2>About</h2>
+    <ul>
+	  <li><a href="../../../../../about/">About me</a></li>
+  </ul>
+  </nav>
+</body>
+</html>

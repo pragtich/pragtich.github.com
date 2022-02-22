@@ -32,60 +32,67 @@
 	I use Sitecopy to upload my Nanoc site to the server. This is how I managed to do it.
 </summary>
 <bodytext>
-  <p>In order to sync my nanoc site to my provider&#39;s server, I have installed sitecopy. Sitecopy requires one of the ports packages. I chose fink, but Darwinports should also work I guess.</p>
+  <p>In order to sync my nanoc site to my provider’s server, I have installed sitecopy. Sitecopy requires one of the ports packages. I chose fink, but Darwinports should also work I guess.</p>
 
 <p>First, I downloaded the Xcode and iOS developer software from Apple (registration required as an Apple developer, but free). This installed without issue.</p>
 
-<p>Then, I followed the instructions on the <a href="http://www.finkproject.org/download/srcdist.php">Fink website</a>. The instructions are quite clear I think. I tried to fill in as many local servers as possible while running <code>./bootstrap</code>. It would be a shame to transfer everything over the Atlantic cables, right?</p>
+<p>Then, I followed the instructions on the <a href="http://www.finkproject.org/download/srcdist.php">Fink website</a>. The instructions are quite clear I think. I tried to fill in as many local servers as possible while running <code class="language-plaintext highlighter-rouge">./bootstrap</code>. It would be a shame to transfer everything over the Atlantic cables, right?</p>
 
-<p>What doe surprise me, is that many packages were installed, which I actually already have, many already built into OS X. One that jumped out to me, was python. I can only assume that this is done in order to have all libraries in control of Fink. I just really hope having some programs around twice, does not cause conflicts. fingers crossed...</p>
+<p>What doe surprise me, is that many packages were installed, which I actually already have, many already built into OS X. One that jumped out to me, was python. I can only assume that this is done in order to have all libraries in control of Fink. I just really hope having some programs around twice, does not cause conflicts. fingers crossed…</p>
 
-<h1>Now for the real stuff</h1>
+<h1 id="now-for-the-real-stuff">Now for the real stuff</h1>
 
 <p>Once sitecopy was running, it actually ran very quickly. I copied an example rakefile <a href="http://www.remerson.plus.com/articles/nanoc-rake">From here</a> and followed the directory structure suggested by it:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">nanoc/
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nanoc/
   site/
     content/
     layouts/
     sitecopy/
       sitecopyrc
-</code></pre></div>
+</code></pre></div></div>
+
 <p>So, that is: no dotfiles, all files visible to the filesystem. Of course, this is not the default for sitecopy, so we specify the sitecopy rc file locations in the rakefile.</p>
 
 <p>Then, I created the sitecopyrc as follows:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">site my.pretty.name
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/trunk/output/
 username myFTPusernae
 password thepassword
 protocol ftp
-</code></pre></div>
-<p>Where the folder after <code>local</code> is the nanoc <code>output</code> folder.</p>
+</code></pre></div></div>
+
+<p>Where the folder after <code class="language-plaintext highlighter-rouge">local</code> is the nanoc <code class="language-plaintext highlighter-rouge">output</code> folder.</p>
 
 <p>I then used the initialization from the example rakefile:
     sitecopy -r sitecopy/sitecopyrc -p sitecopy -i my.pretty.name
-And crated a &#39;compile and upload&#39; rake addition to the <code>Rakefile</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">desc "compile and upload."
+And crated a ‘compile and upload’ rake addition to the <code class="language-plaintext highlighter-rouge">Rakefile</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>desc "compile and upload."
 task :co do
   system 'nanoc co &amp;&amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name'
 end
-</code></pre></div>
-<p>So now, each time I edit something in my page, I only have to go...</p>
+</code></pre></div></div>
+
+<p>So now, each time I edit something in my page, I only have to go…</p>
 
 <p>rake co</p>
 
-<p>...and the entire thing is recompiled and synchronized to the server. </p>
+<p>…and the entire thing is recompiled and synchronized to the server.</p>
 
-<h1>Mission accomplished!</h1>
+<h1 id="mission-accomplished">Mission accomplished!</h1>
 
-<h1>Update</h1>
+<h1 id="update">Update</h1>
 
-<p>When I started using <code>git</code>, I needed to add a line to the
-<code>sitecopyrc</code>. I added several of the disturbing dotfiles (which my
-server was not allowing me to upload) to the <code>exclude</code> list. The
-<code>sitecopy/sitecopyrc</code> now looks something like:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">site my.pretty.name
+<p>When I started using <code class="language-plaintext highlighter-rouge">git</code>, I needed to add a line to the
+<code class="language-plaintext highlighter-rouge">sitecopyrc</code>. I added several of the disturbing dotfiles (which my
+server was not allowing me to upload) to the <code class="language-plaintext highlighter-rouge">exclude</code> list. The
+<code class="language-plaintext highlighter-rouge">sitecopy/sitecopyrc</code> now looks something like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>site my.pretty.name
 server ftp.server.url
 remote /
 local ~/nanoc/pragtich/output/
@@ -94,8 +101,10 @@ password thepassword
 protocol ftp
 exclude .DS_Store
 exclude .git
-</code></pre></div>
+</code></pre></div></div>
+
 <p>This saves a lot of error messages, which eventually led to a failing sitecopy.</p>
+
 
 <footer>
   <p>
@@ -113,11 +122,11 @@ exclude .git
       <h2 class="itemdate">04 Jul 2012</h2>
 </reftitle>
 
-<reftitle><a href="/computer%20stuff/2011/11/12/Nanoc/">Making a personal website using Nanoc </a>
+<reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
 	  
-<img src="https://www.pragti.ch/indeximages/Nanoc_index.jpg">
+<img src="https://www.pragti.ch/indeximages/emacs.jpg">
 
-      <h2 class="itemdate">12 Nov 2011</h2>
+      <h2 class="itemdate">15 Dec 2012</h2>
 </reftitle>
 
 <reftitle><a href="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/">Installing OpenWRT on a TL-WR703N router using a USB stick as storage </a>
@@ -125,11 +134,11 @@ exclude .git
       <h2 class="itemdate">22 Sep 2012</h2>
 </reftitle>
 
-<reftitle><a href="/computer%20stuff/2012/12/15/GNU-Emacs-24/">Switching to GNU Emacs 24 on Mac OS X </a>
+<reftitle><a href="/computer%20stuff/2011/11/12/Nanoc/">Making a personal website using Nanoc </a>
 	  
-<img src="https://www.pragti.ch/indeximages/emacs.jpg">
+<img src="https://www.pragti.ch/indeximages/Nanoc_index.jpg">
 
-      <h2 class="itemdate">15 Dec 2012</h2>
+      <h2 class="itemdate">12 Nov 2011</h2>
 </reftitle>
 
 

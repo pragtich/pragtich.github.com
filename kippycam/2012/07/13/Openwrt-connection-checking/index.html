@@ -35,18 +35,19 @@
   <p>I noticed, when
 <a href="network-layout.html">installing the WiFi network bridge to the garden shed</a>,
 that the DHCP client does not reconnect when the connection has been
-lost. It just sits there (don&#39;t know when it would reconnect, maybe
-when the lease expires?) unconnected. For my purpose, that&#39;s not very
-satisfying, as I need the connection to be robust. </p>
+lost. It just sits there (don’t know when it would reconnect, maybe
+when the lease expires?) unconnected. For my purpose, that’s not very
+satisfying, as I need the connection to be robust.</p>
 
-<p>Since I had worked with <code>monit</code> before, I figured this would be a
+<p>Since I had worked with <code class="language-plaintext highlighter-rouge">monit</code> before, I figured this would be a
 great way to periodically check the state of the connection and
-re-enable it when it has dropped out. At a later date, <code>monit</code> could
+re-enable it when it has dropped out. At a later date, <code class="language-plaintext highlighter-rouge">monit</code> could
 also turn out to be helpful in making sure that all other services on
-the router remain healthy. </p>
+the router remain healthy.</p>
 
-<h1>Installing &amp; configuring</h1>
-<div class="highlight"><pre><code class="language-" data-lang="">opkg update
+<h1 id="installing--configuring">Installing &amp; configuring</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg update
 
 # I am getting the packages from my local copy of the trunk, just
 to have it all be consistent. That probably is only critical for
@@ -56,20 +57,25 @@ simplicity
 opkg install monit
 
 vi /etc/monitrc
-</code></pre></div>
+</code></pre></div></div>
+
 <p>I added some sensible settings from the template that is in
-<code>/etc/monitrc</code>, mainly to start as a daemon, put the work files in
-<code>/tmp</code> and set the frequency of the checks. And the check for a
+<code class="language-plaintext highlighter-rouge">/etc/monitrc</code>, mainly to start as a daemon, put the work files in
+<code class="language-plaintext highlighter-rouge">/tmp</code> and set the frequency of the checks. And the check for a
 connection:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">check host kiprouter with address 10.0.0.4                                     
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>check host kiprouter with address 10.0.0.4                                     
     if failed icmp type echo count 3 with timeout 3 seconds then
-    exec "/etc/init.d/network restart"
-</code></pre></div>
+	exec "/etc/init.d/network restart"
+</code></pre></div></div>
+
 <p>Then to enable and start monit:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">/etc/init.d/monit enable
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/etc/init.d/monit enable
 /etc/init.d/monit start
-</code></pre></div>
-<p>Testing results later...</p>
+</code></pre></div></div>
+
+<p>Testing results later…</p>
 
 <footer>
   <p>

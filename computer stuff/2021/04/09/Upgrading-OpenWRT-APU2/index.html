@@ -32,105 +32,125 @@
 	It should be trivial to upgrade OpenWRT, but there are some things that you need to remember.
 </summary>
 <bodytext>
-  <h1>Upgrading OpenWRT on an APU2</h1>
+  <h1 id="upgrading-openwrt-on-an-apu2">Upgrading OpenWRT on an APU2</h1>
 
 <p>I am running OpenWRT on a PC Engines APU2 board. After too many broken promises regarding consumer grade routers, this one is really proving to be superior. The combination with <a href="https://teklager.se/en/knowledge-base/compex-wle200nx-wle600vx-benchmark/">OpenWRT is ideal when used as a Wifi router, since OpenWRT gives much better performance on Wifi than the competitors</a>.</p>
 
-<p>One drawback with OpenWRT on <code>x86</code> is that the upgrade process is not trivial. Since OpenWRT is normally installed from device-specific packages, it assumes that all required programs (and especially kernel modules) are included in the install package. In the case of the <code>x86</code> platform, this is impossible. This makes upgrades a tad more involved.</p>
+<p>One drawback with OpenWRT on <code class="language-plaintext highlighter-rouge">x86</code> is that the upgrade process is not trivial. Since OpenWRT is normally installed from device-specific packages, it assumes that all required programs (and especially kernel modules) are included in the install package. In the case of the <code class="language-plaintext highlighter-rouge">x86</code> platform, this is impossible. This makes upgrades a tad more involved.</p>
 
-<h2>Get access</h2>
+<h2 id="get-access">Get access</h2>
 
-<p>Luci can do a <code>sysupgrade</code> for you, but I always end up locked out in the end, so might as well go straigt to the serial console. This is best anyway, because you can follow what&#39;s going on. 
-I am guessing that, if I were to invest in a hardware network adapter for my laptop, a wired network connection would also work. </p>
+<p>Luci can do a <code class="language-plaintext highlighter-rouge">sysupgrade</code> for you, but I always end up locked out in the end, so might as well go straigt to the serial console. This is best anyway, because you can follow what’s going on. 
+I am guessing that, if I were to invest in a hardware network adapter for my laptop, a wired network connection would also work.</p>
 
-<p>The APU2 has an industry standard RS-232, so a simple RS-232 to USB adapter helps. I bought one with the APU2. The console runs at 115200 baud by default. </p>
+<p>The APU2 has an industry standard RS-232, so a simple RS-232 to USB adapter helps. I bought one with the APU2. The console runs at 115200 baud by default.</p>
 
-<h2>Backup</h2>
+<h2 id="backup">Backup</h2>
 
 <p>Backup entire router <a href="https://10.0.0.1/cgi-bin/luci/admin/system/flash">through Luci</a>. It will not hurt and is very quick on this system.</p>
 
-<p>Later on, we will need a list of the installed packages, so let&#39;s make that and transfer it to a safe place.</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">opkg list-installed | awk <span class="s1">'{print $1}'</span> <span class="o">&gt;</span> mypackages.txt
-scp mypackages.txt user@machine:
-</code></pre></div>
-<h2>Download the package</h2>
+<p>Later on, we will need a list of the installed packages, so let’s make that and transfer it to a safe place.</p>
 
-<p>This is inspired by <a href="https://openwrt.org/docs/guide-user/installation/sysupgrade.cli">The OpenWRT wiki</a>. Of course, choose the latest release folder (<code>targets/x86/64/*combined-ext4*</code>).</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">wget https://downloads.openwrt.org/releases/19.07.7/targets/x86/64/openwrt-19.07.7-x86-64-combined-ext4.img.gz
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg list-installed | <span class="nb">awk</span> <span class="s1">'{print $1}'</span> <span class="o">&gt;</span> mypackages.txt
+scp mypackages.txt user@machine:
+</code></pre></div></div>
+
+<h2 id="download-the-package">Download the package</h2>
+
+<p>This is inspired by <a href="https://openwrt.org/docs/guide-user/installation/sysupgrade.cli">The OpenWRT wiki</a>. Of course, choose the latest release folder (<code class="language-plaintext highlighter-rouge">targets/x86/64/*combined-ext4*</code>).</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://downloads.openwrt.org/releases/19.07.7/targets/x86/64/openwrt-19.07.7-x86-64-combined-ext4.img.gz
 wget https://downloads.openwrt.org/releases/19.07.7/targets/x86/64/sha256sums
-sha256sum <span class="nt">-c</span> sha256sums | <span class="nb">grep</span> <span class="nt">-v</span> FAILED
-</code></pre></div>
+<span class="nb">sha256sum</span> <span class="nt">-c</span> sha256sums | <span class="nb">grep</span> <span class="nt">-v</span> FAILED
+</code></pre></div></div>
+
 <p>If OK, continue.</p>
 
-<h2>sysupgrade</h2>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">sysupgrade <span class="nt">-v</span> openwrt-19.07.7-x86-64-combined-ext4.img.gz
-</code></pre></div>
-<p>The system will reboot and will come back up without the important kernel modules (for example, for the Wifi cards). Thankfully, it does have the drivers required for the Ethernet ports, and the Ethernet configuration has also been recovered. So at lease, we can run <code>opkg</code> without problems. This is where a wired connection or a console login are essential.</p>
+<h2 id="sysupgrade">sysupgrade</h2>
 
-<h2>Upgrade packages</h2>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysupgrade <span class="nt">-v</span> openwrt-19.07.7-x86-64-combined-ext4.img.gz
+</code></pre></div></div>
+
+<p>The system will reboot and will come back up without the important kernel modules (for example, for the Wifi cards). Thankfully, it does have the drivers required for the Ethernet ports, and the Ethernet configuration has also been recovered. So at lease, we can run <code class="language-plaintext highlighter-rouge">opkg</code> without problems. This is where a wired connection or a console login are essential.</p>
+
+<h2 id="upgrade-packages">Upgrade packages</h2>
 
 <p>The Wiki says that it is necessary to upgrade the existing packages:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">opkg update
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg update
 opkg list-upgradable
-opkg list-upgradable | cut <span class="nt">-f</span> 1 <span class="nt">-d</span> <span class="s1">' '</span> | xargs opkg upgrade 
-</code></pre></div>
+opkg list-upgradable | <span class="nb">cut</span> <span class="nt">-f</span> 1 <span class="nt">-d</span> <span class="s1">' '</span> | xargs opkg upgrade 
+</code></pre></div></div>
+
 <p>For me, there were none when installing to 19.07.7. Perhaps we might see a few upgrades when the release gets older? Since OpenWRT warns against blind upgrading, I do not think this is a great idea in general.</p>
 
-<h2>Restore packages</h2>
+<h2 id="restore-packages">Restore packages</h2>
 
-<p>Since the <code>x86</code> package is by necessity very general, we need to install our preferred packages. That&#39;s where the prepared list comes in handy!</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#On the system where the list was saved before</span>
+<p>Since the <code class="language-plaintext highlighter-rouge">x86</code> package is by necessity very general, we need to install our preferred packages. That’s where the prepared list comes in handy!</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#On the system where the list was saved before</span>
 <span class="nb">cat </span>mypackages.txt | pbcopy
 <span class="nb">cat</span>  <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh"> &gt; mypackages.txt
 &lt;&lt;paste&gt;&gt;
 </span><span class="no">EOF
 </span>opkg update
-<span class="nb">cat </span>mypackages.txt |xargs opkg install
-</code></pre></div>
+<span class="nb">cat </span>mypackages.txt |xargs opkg <span class="nb">install</span>
+</code></pre></div></div>
+
 <p>This feeds the list to opkg as a long list in the argument vector. Thankfully the wired networks are back online, so this should be painless.</p>
 
-<h2>Opkg Error</h2>
+<h2 id="opkg-error">Opkg Error</h2>
 
-<p>Most likely, <code>opkg</code> will complain about some config files being different from default.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">Collected errors:
+<p>Most likely, <code class="language-plaintext highlighter-rouge">opkg</code> will complain about some config files being different from default.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Collected errors:
  * resolve_conffiles: Existing conffile /etc/config/ddns is different from the conffile in the new package. The new conffil.
  * resolve_conffiles: Existing conffile /etc/ssl/openssl.cnf is different from the conffile in the new package. The new con.
  * resolve_conffiles: Existing conffile /etc/config/sqm is different from the conffile in the new package. The new conffile.
  * resolve_conffiles: Existing conffile /etc/config/luci is different from the conffile in the new package. The new conffil.
  * resolve_conffiles: Existing conffile /etc/config/ucitrack is different from the conffile in the new package. The new con.
  * resolve_conffiles: Existing conffile /etc/config/openvpn is different from the conffile in the new package. The new conf.
-</code></pre></div>
+</code></pre></div></div>
+
 <p>This makes sense, because we edited them. I tend to ignore this unless something breaks. If you are really conscientious, you can inspect each one:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">opkg install diffutils
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg <span class="nb">install </span>diffutils
 diff file1 file1-opkg
-</code></pre></div>
-<h2>Reboot</h2>
+</code></pre></div></div>
+
+<h2 id="reboot">Reboot</h2>
 
 <p>Is it all working now?</p>
 
-<h2>Resize partition</h2>
+<h2 id="resize-partition">Resize partition</h2>
 
-<p>Reflashing the SSD causes the filesystem to reflect the package&#39;s setting, therefore wasting most of the SSD&#39;s ample space (16GB in my case). This is not difficult to do, but is most easily done when not booting from the SSD.</p>
+<p>Reflashing the SSD causes the filesystem to reflect the package’s setting, therefore wasting most of the SSD’s ample space (16GB in my case). This is not difficult to do, but is most easily done when not booting from the SSD.</p>
 
-<p>Following <a href="https://teklager.se/en/knowledge-base/openwrt-installation-instructions/">a part of Teklager&#39;s instructions</a>, I used a Debian Live USB stick. Boot from it (you don&#39;t need the boot menu, it boots from USB by default) and hit <code>TAB</code> in the Debian menu. Add the following to the kernel command line:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""> console=ttyS0,115200
-</code></pre></div>
-<p>Hit <code>Enter</code> and it should boot. Login as user <code>user</code> with password <code>live</code> and <code>sudo su</code> into a root shell.</p>
+<p>Following <a href="https://teklager.se/en/knowledge-base/openwrt-installation-instructions/">a part of Teklager’s instructions</a>, I used a Debian Live USB stick. Boot from it (you don’t need the boot menu, it boots from USB by default) and hit <code class="language-plaintext highlighter-rouge">TAB</code> in the Debian menu. Add the following to the kernel command line:</p>
 
-<p>Get network access somehow. I typically use Wifi through my phone. It might also work to temporarily switch back to my provider&#39;s router.</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">apt-get update
-apt-get install parted
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> console=ttyS0,115200
+</code></pre></div></div>
+
+<p>Hit <code class="language-plaintext highlighter-rouge">Enter</code> and it should boot. Login as user <code class="language-plaintext highlighter-rouge">user</code> with password <code class="language-plaintext highlighter-rouge">live</code> and <code class="language-plaintext highlighter-rouge">sudo su</code> into a root shell.</p>
+
+<p>Get network access somehow. I typically use Wifi through my phone. It might also work to temporarily switch back to my provider’s router.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get update
+apt-get <span class="nb">install </span>parted
 parted /dev/sda print
 parted /dev/sda resizepart 2 16G
 parted /dev/sda print
 e2fsck <span class="nt">-f</span> /dev/sda2
 resize2fs /dev/sda2 
-</code></pre></div>
-<p>This is all really quick on these SSDs, and painless once you have <code>parted</code> installed.</p>
+</code></pre></div></div>
 
-<h2>Reboot back into OpenWRT</h2>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">reboot now
-</code></pre></div>
+<p>This is all really quick on these SSDs, and painless once you have <code class="language-plaintext highlighter-rouge">parted</code> installed.</p>
+
+<h2 id="reboot-back-into-openwrt">Reboot back into OpenWRT</h2>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reboot now
+</code></pre></div></div>
+
 <p>And everything should be back up and running!</p>
 
 <footer>

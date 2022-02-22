@@ -34,11 +34,11 @@
 <bodytext>
   <p>installing Emacs Template mode in Aquamacs. Based on <a href="http://emacs-template.sourceforge.net/details.html">This web site</a>.</p>
 
-<p>Downloaded and put the template.el file into <code>~/.xemacs/lisp</code>. 
-Visit the file and <code>M-x byte-compile-file RET template.el RET</code>. Loads of errors.</p>
+<p>Downloaded and put the template.el file into <code class="language-plaintext highlighter-rouge">~/.xemacs/lisp</code>. 
+Visit the file and `  M-x byte-compile-file RET template.el RET`. Loads of errors.</p>
 
 <p>Put into Emacs settings (Library in Aquamacs):
-    (require &#39;template)
+    (require ‘template)
     (template-initialize)
     M-C-x</p>
 
@@ -46,14 +46,17 @@ Visit the file and <code>M-x byte-compile-file RET template.el RET</code>. Loads
 
 <p>Restarted Emacs</p>
 
-<p>Read the <a href="http://emacs-template.sourceforge.net/details.html">manual</a>.
-* <code>C-x t</code> Creates a file with template
-* <code>template-new-file</code> Should do the same
-* I want to try and disable it from <code>C-x C-f</code> -- that would only be confusing</p>
+<p>Read the <a href="http://emacs-template.sourceforge.net/details.html">manual</a>.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">C-x t</code> Creates a file with template</li>
+  <li><code class="language-plaintext highlighter-rouge">template-new-file</code> Should do the same</li>
+  <li>I want to try and disable it from <code class="language-plaintext highlighter-rouge">C-x C-f</code> – that would only be confusing</li>
+</ul>
 
-<p>Created the following empty markdown article with Nanoc header in <code>~/.templates</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="gd">--- 
-</span>title: (&gt;&gt;&gt;TITLE&lt;&lt;&lt;)
+<p>Created the following empty markdown article with Nanoc header in <code class="language-plaintext highlighter-rouge">~/.templates</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--- 
+title: (&gt;&gt;&gt;TITLE&lt;&lt;&lt;)
 kind: article
 category: Computer stuff
 created_at: (&gt;&gt;&gt;DATE&lt;&lt;&lt;)
@@ -65,10 +68,12 @@ summary: (&gt;&gt;&gt;SUMMARY&lt;&lt;&lt;)
 &gt;&gt;&gt;TEMPLATE-DEFINITION-SECTION&lt;&lt;&lt;
 ("SUMMARY" "Summary?" "" "" "-- no summary --")
 ("TITLE" "Title?" "" "" "")
-</code></pre></div>
-<p>Now, to submit a now article, I can do: <code>C-x t</code>, type the new folder and filename with the <code>.md</code> extension, and type <code>RET</code>. Further filling in the prompts for template (<code>RET</code>), summary and title is a breeze, and then I have the cursor placed at exactly the right point for starting to blog.</p>
+</code></pre></div></div>
+
+<p>Now, to submit a now article, I can do: <code class="language-plaintext highlighter-rouge">C-x t</code>, type the new folder and filename with the <code class="language-plaintext highlighter-rouge">.md</code> extension, and type <code class="language-plaintext highlighter-rouge">RET</code>. Further filling in the prompts for template (<code class="language-plaintext highlighter-rouge">RET</code>), summary and title is a breeze, and then I have the cursor placed at exactly the right point for starting to blog.</p>
 
 <p>Great stuff.</p>
+
 
 <footer>
   <p>
@@ -93,16 +98,14 @@ summary: (&gt;&gt;&gt;SUMMARY&lt;&lt;&lt;)
       <h2 class="itemdate">22 Sep 2012</h2>
 </reftitle>
 
-<reftitle><a href="/computer%20stuff/2011/11/12/Nanoc/">Making a personal website using Nanoc </a>
+<reftitle><a href="/computer%20stuff/2012/07/13/Aquamacs-Notes/">Some notes on using Aquamacs </a>
 	  
-<img src="https://www.pragti.ch/indeximages/Nanoc_index.jpg">
-
-      <h2 class="itemdate">12 Nov 2011</h2>
+      <h2 class="itemdate">13 Jul 2012</h2>
 </reftitle>
 
-<reftitle><a href="/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X/">Installing sitecopy on OS X Snow Leopard and using it with Nanoc </a>
+<reftitle><a href="/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/">Editing jekyll postfiles plugin to work with spaces in category names </a>
 	  
-      <h2 class="itemdate">12 Nov 2011</h2>
+      <h2 class="itemdate">07 Feb 2013</h2>
 </reftitle>
 
 

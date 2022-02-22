@@ -32,15 +32,15 @@
 	Installing openwrt onto the TL-WR703N using a USB flash drive as the root is not hard. It did however take me a serious amount of research to figure everything out. Here's my try at documenting how to do it.
 </summary>
 <bodytext>
-  <h1>The situation</h1>
+  <h1 id="the-situation">The situation</h1>
 
 <p>I have actually been working with the TL-WR703N for a while. I got I2C
 hardware control to work, and it has been serving mjpeg-streamer
 images from a webcam happily for a while. There has been some
 crashing, however, and when I got a better webcam (Logitech C920) as a
 gift, the crashing is now 100% once the camera is put to work. So,
-let&#39;s try an upgrade to the latest release of openwrt, and take the
-chance to document the steps along the way. </p>
+let’s try an upgrade to the latest release of openwrt, and take the
+chance to document the steps along the way.</p>
 
 <p>YMMV, of course. This <em>is</em> Linux, after all.</p>
 
@@ -50,42 +50,47 @@ where possible, but it could be that I am missing something. The
 router specific pages of the OpenWRT wiki clearly document how to
 install the first time, and how to make a USB filesystem.</p>
 
-<h1>Mirroring the openwrt folders</h1>
+<h1 id="mirroring-the-openwrt-folders">Mirroring the openwrt folders</h1>
 
 <p>Although not strictly required, I like to mirror the openwrt downloads
 folder. This keeps all files compatible, as the trunk files get
 changed nearly every day and I do not have 100% faith in my ability to
 manage all the possible version conflicts (did I ever say I hate Linux
-for all the version conflicts?). This is not very polite, so don&#39;t do
+for all the version conflicts?). This is not very polite, so don’t do
 it often.</p>
-<div class="highlight"><pre><code class="language-" data-lang=""> wget -mk -w 20 http://downloads.openwrt.org/snapshots/trunk/ar71xx/
-</code></pre></div>
-<p>I am on OS X, and perform above <code>wget</code> in the
-/Library/WebServer/Documents folder. This allows the OS X web server
-(enable it first) to serve the files, so that I can <code>opkg update</code> and
-<code>opkg install</code> locally: <strong>nice to have</strong>.</p>
 
-<h1>Flashing the new version</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> wget -mk -w 20 http://downloads.openwrt.org/snapshots/trunk/ar71xx/
+</code></pre></div></div>
+
+<p>I am on OS X, and perform above <code class="language-plaintext highlighter-rouge">wget</code> in the
+/Library/WebServer/Documents folder. This allows the OS X web server
+(enable it first) to serve the files, so that I can <code class="language-plaintext highlighter-rouge">opkg update</code> and
+<code class="language-plaintext highlighter-rouge">opkg install</code> locally: <strong>nice to have</strong>.</p>
+
+<h1 id="flashing-the-new-version">Flashing the new version</h1>
 
 <p><strong>Update</strong>: I did end up running into issues on this install. You may
-  want to scroll down to &#39;fixing space issues&#39; to get my updates from
+  want to scroll down to ‘fixing space issues’ to get my updates from
   there first.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/
-</code></pre></div>
-<p>md5sums
-    wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
-    md5sum -c md5sums</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/ md5sums
+wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
+md5sum -c md5sums
+</code></pre></div></div>
 
 <p>This should report that (n-1) out of n files failed (so 1 passed) :-)</p>
-<div class="highlight"><pre><code class="language-" data-lang="">sysupgrade -v
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sysupgrade -v
 /tmp/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
-</code></pre></div>
-<p>And hold your breath...</p>
+</code></pre></div></div>
+
+<p>And hold your breath…</p>
 
 <p>According to
 <a href="http://wiki.openwrt.org/doc/howto/generic.sysupgrade">the wiki</a>, the
-files in the libraries folder will still be loaded. Scary...</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:/tmp# ls /lib/modules/3.3.8/
+files in the libraries folder will still be loaded. Scary…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:/tmp# ls /lib/modules/3.3.8/
 aes_generic.ko          iptable_nat.ko          ppp_generic.ko
 arc4.ko                 iptable_raw.ko          pppoe.ko
 ath.ko                  jbd2.ko                 pppox.ko
@@ -107,13 +112,15 @@ ipt_MASQUERADE.ko       nf_nat_irc.ko           xt_mac.ko
 ipt_REJECT.ko           nls_base.ko             xt_multiport.ko
 iptable_filter.ko       ohci-hcd.ko             xt_state.ko
 iptable_mangle.ko       ppp_async.ko            xt_tcpudp.ko
-</code></pre></div>
+</code></pre></div></div>
+
 <p>It did actually auto-reboot and it is the newest kernel. Nice! Now I
 need to figure out how to update all the programs and kernel modules.</p>
 
 <p>It actually seems that my user space packages are gone (for example,
 e2fsck). How about kernel modules?</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# ls /lib/modules/3.3.8/
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# ls /lib/modules/3.3.8/
 aes_generic.ko          iptable_nat.ko          ppp_generic.ko
 arc4.ko                 iptable_raw.ko          pppoe.ko
 ath.ko                  leds-gpio.ko            pppox.ko
@@ -133,32 +140,38 @@ ipt_MASQUERADE.ko       nf_nat_irc.ko           xt_state.ko
 ipt_REJECT.ko           nls_base.ko             xt_tcpudp.ko
 iptable_filter.ko       ohci-hcd.ko
 iptable_mangle.ko       ppp_async.ko
-</code></pre></div>
-<p>Also <code>/usr/lib/</code> seems to be ok:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# ls /usr/lib/
+</code></pre></div></div>
+
+<p>Also <code class="language-plaintext highlighter-rouge">/usr/lib/</code> seems to be ok:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# ls /usr/lib/
 iptables             libip4tc.so.0.0.0    libnl-tiny.so        libxtables.so.5.0.0
 libip4tc.so          libjson.so.0         libxtables.so        opkg
 libip4tc.so.0        libjson.so.0.0.1     libxtables.so.5      pppd
 root@OpenWrt:~# 
-</code></pre></div>
-<h1>Installing required stuff for USB &amp; cleaning up</h1>
+</code></pre></div></div>
+
+<h1 id="installing-required-stuff-for-usb--cleaning-up">Installing required stuff for USB &amp; cleaning up</h1>
 
 <p>Edit opkg.conf to send it to the mirrored packages:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">#src/gz kippy http://10.0.0.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#src/gz kippy http://10.0.0.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 src/gz kippy http://192.168.1.102/downloads.openwrt.org-r32130/snapshots/trunk/ar71xx/pack
 #src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 dest root /
 dest ram /tmp
 lists_dir ext /var/opkg-lists
 option overlay_root /overlay
-</code></pre></div>
+</code></pre></div></div>
+
 <p>These are my settings (note, I have 2 different IP ranges depending on
-weither I&#39;m hard-wiring the router to my laptop, or going through
+weither I’m hard-wiring the router to my laptop, or going through
 WiFi). <strong>Wrong address for the link</strong>: This should have been without
-the revision number. </p>
+the revision number.</p>
 
 <p>Then:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">opkg update
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg update
 opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scsi-generic
 
 root@OpenWrt:~# opkg install kernel kmod-usb-storage block-mount swap-utils kmod-fs-ext4 k
@@ -174,20 +187,22 @@ Installing kmod-scsi-generic (3.3.8-1) to root...
 Downloading http://192.168.1.102/downloads.openwrt.org-r32130/snapshots/trunk/ar71xx/packages/kmod-scsi-generic_3.3.8-1_ar71xx.ipk.
 Collected errors:
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-usb-storage:
- *  kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) *   kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
+ * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
  * opkg_install_cmd: Cannot install package kmod-usb-storage.
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-fs-ext4:
- *  kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) *   kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
+ * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
  * opkg_install_cmd: Cannot install package kmod-fs-ext4.
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-scsi-generic:
- *  kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
+ * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
  * opkg_install_cmd: Cannot install package kmod-scsi-generic.
 root@OpenWrt:~# 
-</code></pre></div>
-<p>Apparently the kernel has updated during my mirroring? Rats... 
+</code></pre></div></div>
+
+<p>Apparently the kernel has updated during my mirroring? Rats… 
 Nope, I had the incorrect folder set in my opkg.conf, so it was
-fetching old package data. </p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pac
+fetching old package data.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pac
 kages/kernel_3.3.8-1-5566392ba3947228e76b8c9283f833d0_ar71xx.ipk
 Connecting to 192.168.1.102 (192.168.1.102:80)
 kernel_3.3.8-1-55663 100% |*****************************************|   714   0:00:00 ETA
@@ -202,7 +217,7 @@ Installing kmod-scsi-generic (3.3.8-1) to root...
 Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-scsi-generic_3.3.8-1_ar71xx.ipk.
 Collected errors:
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-scsi-generic:
- *  kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
+ * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
  * opkg_install_cmd: Cannot install package kmod-scsi-generic.
 root@OpenWrt:~# opkg download kmod-scsi-generic
 Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-scsi-generic_3.3.8-1_ar71xx.ipk.
@@ -211,10 +226,12 @@ root@OpenWrt:~# opkg install ./kmod-scsi-generic_3.3.8-1_ar71xx.ipk
 Installing kmod-scsi-generic (3.3.8-1) to root...
 Configuring kmod-scsi-generic.
 root@OpenWrt:~# 
-</code></pre></div>
-<p>What&#39;s wrong with opkg? It can download, and it can install. But not
+</code></pre></div></div>
+
+<p>What’s wrong with opkg? It can download, and it can install. But not
 together??</p>
-<div class="highlight"><pre><code class="language-" data-lang="">oot@OpenWrt:~# opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scs
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oot@OpenWrt:~# opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scs
 i-generic
 Installing kmod-usb-storage (3.3.8-1) to root...
 Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-usb-storage_3.3.8-1_ar71xx.ipk.
@@ -225,10 +242,10 @@ Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pa
 Package kmod-scsi-generic (3.3.8-1) installed in root is up to date.
 Collected errors:
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-usb-storage:
- *  kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
+ * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
  * opkg_install_cmd: Cannot install package kmod-usb-storage.
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-fs-ext4:
- *  kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
+ * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
  * opkg_install_cmd: Cannot install package kmod-fs-ext4.
 root@OpenWrt:~# opkg download kmod-usb-storage
 Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-usb-storage_3.3.8-1_ar71xx.ipk.
@@ -246,7 +263,7 @@ Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pa
 Package kmod-scsi-generic (3.3.8-1) installed in root is up to date.
 Collected errors:
  * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-fs-ext4:
- *  kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
+ * 	kernel (= 3.3.8-1-ce90e6b3a0d7ebfa8f36ba3494997207) * 
  * opkg_install_cmd: Cannot install package kmod-fs-ext4.
 root@OpenWrt:~# opkg download kmod-fs-ext4
 Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-fs-ext4_3.3.8-1_ar71xx.ipk.
@@ -258,9 +275,11 @@ Downloading http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/pa
 Configuring kmod-lib-crc16.
 Configuring kmod-fs-ext4.
 root@OpenWrt:~# 
-</code></pre></div>
-<p>Finally...</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# opkg list-upgradable
+</code></pre></div></div>
+
+<p>Finally…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# opkg list-upgradable
 libblkid - 2.21.1-1 - 2.21.2-1
 libuuid - 2.21.1-1 - 2.21.2-1
 blkid - 2.21.1-1 - 2.21.2-1
@@ -275,14 +294,18 @@ Configuring libuuid.
 Configuring libblkid.
 Configuring blkid.
 root@OpenWrt:~# 
-</code></pre></div>
+</code></pre></div></div>
+
 <p>Some updates</p>
-<div class="highlight"><pre><code class="language-" data-lang="">reboot
-</code></pre></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reboot
+</code></pre></div></div>
+
 <p>Plugin flash drive. Is recognized as /dev/sdb1. Will this change?
 Reboot again with disk plugged in (but first check fstab and disable
 partitions).</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# mount
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# mount
 rootfs on / type rootfs (rw)
 /dev/root on /rom type squashfs (ro,relatime)
 proc on /proc type proc (rw,noatime)
@@ -306,58 +329,63 @@ mount: mounting /dev/sda2 on /mnt/flash failed: Invalid argument
 root@OpenWrt:~# vi /etc/config/fstab
 
 config global automount
-        option from_fstab 1
-        option anon_mount 1
+		option from_fstab 1
+		option anon_mount 1
 
 config global autoswap
-        option from_fstab 1
-        option anon_swap 0
+		option from_fstab 1
+		option anon_swap 0
 
 config mount
-        option target   /overlay
-        option device   /dev/sda1
-        option fstype   ext4
-        option options  rw,sync
-        option enabled  0
-        option enabled_fsck 0
+		option target   /overlay
+		option device   /dev/sda1
+		option fstype   ext4
+		option options  rw,sync
+		option enabled  0
+		option enabled_fsck 0
 
 config swap
-        option device   /dev/sda2
-        option enabled  0
-</code></pre></div>
+		option device   /dev/sda2
+		option enabled  0
+</code></pre></div></div>
+
 <p>and then</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# mount /dev/sda1 /mnt/flash
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# mount /dev/sda1 /mnt/flash
 root@OpenWrt:~# mkdir /mnt/flash
 
 rm -Rf /mnt/flash/*
 root@OpenWrt:~# tar -C /overlay -cvf - . | tar -C /mnt/flash -xf -
-</code></pre></div>
+</code></pre></div></div>
+
 <p>And then edit /etc/config/fstab</p>
-<div class="highlight"><pre><code class="language-" data-lang="">config global automount
-        option from_fstab 1
-        option anon_mount 1
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config global automount
+		option from_fstab 1
+		option anon_mount 1
 
 config global autoswap
-        option from_fstab 1
-        option anon_swap 0
+		option from_fstab 1
+		option anon_swap 0
 
 config mount
-        option target   /overlay
-        option device   /dev/sda1
-        option fstype   ext4
-        option options  rw,sync
-        option enabled  1
-        option enabled_fsck 1
+		option target   /overlay
+		option device   /dev/sda1
+		option fstype   ext4
+		option options  rw,sync
+		option enabled  1
+		option enabled_fsck 1
 
 config swap
-        option device   /dev/sda2
-        option enabled  0
-</code></pre></div>
+		option device   /dev/sda2
+		option enabled  0
+</code></pre></div></div>
+
 <p>opkg install e2fsprogs</p>
 
-<p>device full... Hrmpf again</p>
+<p>device full… Hrmpf again</p>
 
-<h1>Fixing space issue</h1>
+<h1 id="fixing-space-issue">Fixing space issue</h1>
 
 <p>Any time you play around and overwrite a file in flash, it wastes
 memory. This probably caused the out of memory issue here.</p>
@@ -369,15 +397,18 @@ Because of reset, telnet 192.168.1.1, passwd
 I needed to delete the root@192.168.1.1 entry from ~/.ssh/known_hosts</p>
 
 <p>/etc/opkg.conf:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">#src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#src/gz attitude_adjustment http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 src/gz kippy http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/packages
 dest root /  
 dest ram /tmp                
 lists_dir ext /var/opkg-lists
 option overlay_root /overlay
-</code></pre></div>
+</code></pre></div></div>
+
 <p>root@OpenWrt:~# free</p>
-<div class="highlight"><pre><code class="language-" data-lang="">total         used         free       shared      buffers
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>total         used         free       shared      buffers
 Mem:         29156        18208        10948            0         1348
 -/+ buffers:              16860        12296
 Swap:            0            0            0
@@ -392,12 +423,14 @@ overlayfs:/tmp/root      14576        28     14548   0% /tmp/root
 /dev/mtdblock3            1344       208      1136  15% /overlay
 overlayfs:/overlay        1344       208      1136  15% /
 root@OpenWrt:~# 
-</code></pre></div>
+</code></pre></div></div>
+
 <p>opkg now works properly also and nothing is upgradeable</p>
-<div class="highlight"><pre><code class="language-" data-lang="">opkg install e2fsprogs
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg install e2fsprogs
 
 root@OpenWrt:~# free &amp;&amp; df
-             total         used         free       shared      buffers
+			 total         used         free       shared      buffers
 Mem:         29156        21740         7416            0         1492
 -/+ buffers:              20248         8908
 Swap:            0            0            0
@@ -430,10 +463,12 @@ none on /proc/bus/usb type usbfs (rw,relatime)
 overlayfs:/overlay on / type overlayfs (rw,noatime,lowerdir=/,upperdir=/overlay)
 /dev/sdb1 on /mnt/sdb1 type ext4 (rw,relatime,user_xattr,barrier=1,data=ordered)
 root@OpenWrt:~# 
-</code></pre></div>
+</code></pre></div></div>
+
 <p>So the flash drive was automounted on /mnt/sdb1 (will be /sda1 when
 plugged in at boot).</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# ls /mnt/sdb2/
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# ls /mnt/sdb2/
 root@OpenWrt:~# ls /mnt/sdb1/
 etc   lib   mnt   root  sbin  usr
 root@OpenWrt:~# rm -Rf /mnt/sdb1/*
@@ -441,30 +476,34 @@ root@OpenWrt:~# ls /mnt/sdb1/
 root@OpenWrt:~# 
 
 tar -C /overlay -cvf - . | tar -C /mnt/sdb1 -xf -
-</code></pre></div>
+</code></pre></div></div>
+
 <p>Bach to /etc/config/fstab:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">config global automount
-        option from_fstab 1
-        option anon_mount 1
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config global automount
+		option from_fstab 1
+		option anon_mount 1
 
 config global autoswap
-        option from_fstab 1
-        option anon_swap 0
+		option from_fstab 1
+		option anon_swap 0
 
 config mount
-        option target   /overlay                         
-        option device   /dev/sda1
-        option fstype   ext4   
-        option options  rw,sync
-        option enabled  1    
-        option enabled_fsck 1
+		option target   /overlay                         
+		option device   /dev/sda1
+		option fstype   ext4   
+		option options  rw,sync
+		option enabled  1    
+		option enabled_fsck 1
 
 config swap                      
-        option device   /dev/sda2
-        option enabled  1
-</code></pre></div>
+		option device   /dev/sda2
+		option enabled  1
+</code></pre></div></div>
+
 <p>reboot</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# df &amp;&amp; free
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# df &amp;&amp; free
 Filesystem           1K-blocks      Used Available Use% Mounted on
 rootfs                  465960     24944    417624   6% /
 /dev/root                 1536      1536         0 100% /rom
@@ -472,7 +511,7 @@ tmpfs                    14580        64     14516   0% /tmp
 tmpfs                      512         0       512   0% /dev
 /dev/sda1               465960     24944    417624   6% /overlay
 overlayfs:/overlay      465960     24944    417624   6% /
-             total         used         free       shared      buffers
+			 total         used         free       shared      buffers
 Mem:         29156        17988        11168            0         1644
 -/+ buffers:              16344        12812
 Swap:            0            0            0
@@ -492,35 +531,39 @@ root@OpenWrt:~#
 
 root@OpenWrt:~# swapon /dev/sda2
 root@OpenWrt:~# free
-             total         used         free       shared      buffers
+			 total         used         free       shared      buffers
 Mem:         29156        18208        10948            0         1664
 -/+ buffers:              16544        12612
 Swap:        32764            0        32764
 root@OpenWrt:~# 
-</code></pre></div>
+</code></pre></div></div>
+
 <p>And again back to /etc/config/fstab:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">config global automount
-        option from_fstab 1
-        option anon_mount 1
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config global automount
+		option from_fstab 1
+		option anon_mount 1
 
 config global autoswap
-        option from_fstab 1
-        option anon_swap 0
+		option from_fstab 1
+		option anon_swap 0
 
 config mount
-        option target   /home
-        option device   /dev/sda1
-        option fstype   ext4
-        option options  rw,sync
-        option enabled  1
-        option enabled_fsck 1
+		option target   /home
+		option device   /dev/sda1
+		option fstype   ext4
+		option options  rw,sync
+		option enabled  1
+		option enabled_fsck 1
 
 config swap
-        option device   /dev/sda2
-        option enabled  1
-</code></pre></div>
+		option device   /dev/sda2
+		option enabled  1
+</code></pre></div></div>
+
 <p>reboot to test</p>
-<div class="highlight"><pre><code class="language-" data-lang="">root@OpenWrt:~# mount &amp;&amp; free &amp;&amp; df
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@OpenWrt:~# mount &amp;&amp; free &amp;&amp; df
 rootfs on / type rootfs (rw)
 /dev/root on /rom type squashfs (ro,relatime)
 proc on /proc type proc (rw,noatime)
@@ -532,7 +575,7 @@ devpts on /dev/pts type devpts (rw,noatime,mode=600)
 overlayfs:/overlay on / type overlayfs (rw,relatime,lowerdir=/,upperdir=/overlay)
 debugfs on /sys/kernel/debug type debugfs (rw,relatime)
 none on /proc/bus/usb type usbfs (rw,relatime)
-             total         used         free       shared      buffers
+			 total         used         free       shared      buffers
 Mem:         29156        17724        11432            0         1968
 -/+ buffers:              15756        13400
 Swap:        32764            0        32764
@@ -544,9 +587,11 @@ tmpfs                      512         0       512   0% /dev
 /dev/sda1               465960     24944    417624   6% /overlay
 overlayfs:/overlay      465960     24944    417624   6% /
 root@OpenWrt:~# 
-</code></pre></div>
-<p>And now to install <code>luci</code> and <code>mjpeg-streamer</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">opkg update
+</code></pre></div></div>
+
+<p>And now to install <code class="language-plaintext highlighter-rouge">luci</code> and <code class="language-plaintext highlighter-rouge">mjpeg-streamer</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg update
 opkg install luci
 /etc/init.d/uhttpd enable
 /etc/init.d/uhttpd start
@@ -554,76 +599,84 @@ opkg install luci
 opkg install htop bash
 
 opkg install mjpg-streamer
-</code></pre></div>
-<p>and edit /etc/config/mjpg-streamer</p>
-<div class="highlight"><pre><code class="language-" data-lang="">config mjpg-streamer core
-        option enabled          "1"
-        option device           "/dev/video0"
-        option resolution       "640x480"
-        option fps              "10"
-        option www              "/www/webcam0"
-        option port             "8080"
+</code></pre></div></div>
 
+<p>and edit /etc/config/mjpg-streamer</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config mjpg-streamer core
+		option enabled          "1"
+		option device           "/dev/video0"
+		option resolution       "640x480"
+		option fps              "10"
+		option www              "/www/webcam0"
+		option port             "8080"
+ 
 root@OpenWrt:~# /etc/init.d/mjpg-streamer start
-</code></pre></div>
-<p>oops, forgot the kermel modules... </p>
-<div class="highlight"><pre><code class="language-" data-lang="">opkg install kmod-video-uvc
-</code></pre></div>
-<p>Now let&#39;s check if it has been recognized:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">[  719.130000] usbcore: registered new interface driver uvcvideo
+</code></pre></div></div>
+
+<p>oops, forgot the kermel modules…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>opkg install kmod-video-uvc
+</code></pre></div></div>
+
+<p>Now let’s check if it has been recognized:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[  719.130000] usbcore: registered new interface driver uvcvideo
 [  719.130000] USB Video Class driver (1.1.1)
 [  726.590000] usb 1-1.3: USB disconnect, device number 5
 [  729.390000] usb 1-1.3: new high-speed USB device number 6 using ehci-platform
 [  729.520000] uvcvideo: Found UVC 1.00 device HD Pro Webcam C920 (046d:082d)
 [  729.540000] input: HD Pro Webcam C920 as /devices/platform/ehci-platform/usb1/1-1/1-1.3/1-1.3:1.0/input/input1
-</code></pre></div>
-<h1>Does it work?</h1>
+</code></pre></div></div>
+
+<h1 id="does-it-work">Does it work?</h1>
 
 <p>Hotplug already works and automatically starts the mjpeg-streamer
-daemon as soon as the webcam is plugged in, and kills it when it&#39;s
+daemon as soon as the webcam is plugged in, and kills it when it’s
 plugged out. Nice!</p>
 
-<h2>Memory limitations</h2>
+<h2 id="memory-limitations">Memory limitations</h2>
 
 <p>When switching to higher resolutions, and/or higher framerates, I
 noticed lots of crashes of the router. This is a memory issue, where
 mjpg-streamer starts using too much. It needs several buffers of the
 size of the video frame to work, which at HDTV resolutions means lots
 of megabytes. I will try to upgrade the memory of the router to solve
-this, or at least alleviate it. </p>
+this, or at least alleviate it.</p>
 
 <p>This is the memory status after all this (at 640x480):</p>
 
-<p><img src="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/mjpegstreamer-640-480.jpg" alt="The screenshot of htop with the settings from this log" title="The screenshot of htop with the settings from this log"></p>
+<p><img src="/computer%20stuff/2012/09/22/OpenWRT-on-the-TL-WR703N/mjpegstreamer-640-480.jpg" alt="The screenshot of htop with the settings from this log" title="The screenshot of htop with the settings from this log" /></p>
 
-<h2>Garbled images</h2>
+<h2 id="garbled-images">Garbled images</h2>
 
 <p>The C920 camera seems to give garbled images when the frame rate is
 too high. This is probably due to some bug in the kernel drivers (or
 is it by design?) combined with the limited memory transfer bandwidth
 of these Atheros processors. It could be that the client reads from a
 buffer while another part of the buffer is still being written. Just
-guessing here: I&#39;m no kernel expert. </p>
+guessing here: I’m no kernel expert.</p>
 
 <p>Anyway, keeping the framerate low enough, everything is ok. I should
 not expect the world from a router that uses roughly 0.5W!</p>
 
-<h2>Instabilities</h2>
+<h2 id="instabilities">Instabilities</h2>
 
 <p>It seems that using the USB filesystem does cut down on the stability
 of the overall system. I have incorporated a cron job to reboot every
-24h, and <code>monit</code> to check the stability of various processes. That
+24h, and <code class="language-plaintext highlighter-rouge">monit</code> to check the stability of various processes. That
 way, things seem doable. In the future I will try and fit everything
 into the flash to eliminate these instabilities. Janis Alnis
 <a href="https://www.dropbox.com/sh/ity5ho0jq3vwq4l/bsE-hyPe0-">keeps a file with his notes online, that describes his experinces of doing this successfully</a></p>
 
-<h2>Web skeleton</h2>
+<h2 id="web-skeleton">Web skeleton</h2>
 
 <p>The standard mjpeg-streamer package for openwrt has no www files
 included, in order to reduce the storage requirements. I do want it
-there, because it&#39;s a quick way of getting some useful testing
+there, because it’s a quick way of getting some useful testing
 done. So, I downloaded the full mjpeg-streamer distribution from <a href="http://sourceforge.net/projects/mjpg-streamer/">their
-website</a> and copied the www folder into <code>/www/webcam0/</code>.</p>
+website</a> and copied the www folder into <code class="language-plaintext highlighter-rouge">/www/webcam0/</code>.</p>
+
 
 <footer>
   <p>

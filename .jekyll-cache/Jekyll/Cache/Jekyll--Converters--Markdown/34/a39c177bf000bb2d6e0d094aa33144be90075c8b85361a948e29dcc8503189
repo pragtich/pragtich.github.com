@@ -1,0 +1,188 @@
+I"l<p>Started out with an already-existing nanoc folder.</p>
+
+<p>I Installed git for mac using the standard installer supplied on
+git-scm.com (version 1.7.11.1) and created an account on github.</p>
+
+<p>Created a repository called <username>.github.com</username></p>
+
+<p><a href="http://schmurfy.github.com/2011/05/06/create_your_github_user_page_with_nanoc.html">Followed (approximately) this link</a>
+although I made a few changes.</p>
+
+<p>First of all, I already had a checkin, so could skip the first code
+box. I did rename the <code class="language-plaintext highlighter-rouge">master</code> branch to <code class="language-plaintext highlighter-rouge">source</code> and add a second remote:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git branch -m master source
+git remote add pages https://github.com/&lt;user&gt;/&lt;user&gt;.github.com.git
+git push -u pages source
+</code></pre></div></div>
+
+<p>The output sounds promising:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Counting objects: 102, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (95/95), done.
+Writing objects: 100% (102/102), 237.00 KiB, done.
+Total 102 (delta 19), reused 0 (delta 0)
+To https://github.com/pragtich/pragtich.github.com.git
+ * [new branch]      source -&gt; source
+Branch source set up to track remote branch source from pages.
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">source</code> branch now holds the entire page source (including
+any output).</p>
+
+<p>Now I followed the cloning instructions quite rigidly (because I do
+not really understand them yet).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># fetch a working copy of your repository
+  $ git clone https://github.com/&lt;user&gt;/&lt;user&gt;.github.com.git output
+  $ cd output
+# create the isolated branch
+  $ git symbolic-ref HEAD refs/heads/master
+  $ rm .git/index
+  $ git clean -fdx
+</code></pre></div></div>
+
+<p>Then recreate the output files:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ..
+nanoc compile
+git commit -a
+git push pages
+cd output/
+git add *
+git commit
+git push origin master
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">git push origin master</code> part was tricky to figure out to me. It
+pushes the output folder’s content to it’s set remote origin (which
+came from the <code class="language-plaintext highlighter-rouge">clone</code>, I assume. Adding the <code class="language-plaintext highlighter-rouge">master</code> determines that
+the files are going into the <code class="language-plaintext highlighter-rouge">master</code> branch (which is the leading
+branch for the GitHub Pages).</p>
+
+<p>Finally, I did:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> touch .nojekyll
+ git add .nojekyll
+ git commit
+ 
+ vi .gitignore       #add .nojekyll to this file
+</code></pre></div></div>
+
+<p>This should put a .nojekyll file into the repository, that will not
+get clobbered when I nuke the output/ folder (I hope).</p>
+
+<p>So now, the workflow is:</p>
+
+<ol>
+  <li>Update files in the <code class="language-plaintext highlighter-rouge">content/</code> folder</li>
+  <li>Compile and upload to test server (I use a rake file)</li>
+  <li>Verify results</li>
+  <li>In the source folder: <code class="language-plaintext highlighter-rouge">git commit -a; git push pages</code></li>
+  <li>In the output folder: <code class="language-plaintext highlighter-rouge">git commit -a; git push origin master</code></li>
+</ol>
+
+<p><strong>TODO</strong>: Add a rakefile to auto-push both the source and the output once
+I have a satisfactory build.</p>
+
+<h1 id="pushing-using-nanoc-git">Pushing using nanoc-git</h1>
+
+<p>I am playing with nanoc-git. I found it through a Google search. It’s
+maker claims it to be alpha-level software. Let’s see. It lives
+<a href="https://github.com/cspicker/nanoc-git">here</a>.</p>
+
+<p>The script does rebuild the output folder implicitly. So it breaks the
+prototyping build thing that I have described above. Maybe I’ll try to
+rewrite it to allow some kind of prototyping, or maybe I will stick
+with the plan before. I will see. Good thing I’m keeping this blog,
+because I tend to forget each syntax before I get to use it again.</p>
+
+<p>For sake of documentation, I did the following:</p>
+
+<ul>
+  <li>
+    <p>Updated <code class="language-plaintext highlighter-rouge">config.yaml</code>:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  # Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
+  deploy:
+    default:
+      dst_remote: pages
+      dst_branch: master
+      src_branch: source
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Installed nanoc-git:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   gem install nanoc-git
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Edited <code class="language-plaintext highlighter-rouge">Rakefile</code></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  require 'nanoc-git/tasks'
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Then, to execute: `rake deploy:git’ should</p>
+
+<ol>
+  <li>Clean the nanoc site</li>
+  <li>Check out the source (<code class="language-plaintext highlighter-rouge">source</code>) from <code class="language-plaintext highlighter-rouge">git</code></li>
+  <li>Compile the site using <code class="language-plaintext highlighter-rouge">nanoc</code></li>
+  <li>Check out the destination (<code class="language-plaintext highlighter-rouge">master</code>) from <code class="language-plaintext highlighter-rouge">git</code></li>
+  <li>Copy all the files from the <code class="language-plaintext highlighter-rouge">output/</code> folder to the root of
+<code class="language-plaintext highlighter-rouge">master</code></li>
+  <li>Commit in <code class="language-plaintext highlighter-rouge">git</code></li>
+  <li>Push to the remote <code class="language-plaintext highlighter-rouge">master</code></li>
+  <li>Check the source back out</li>
+</ol>
+
+<p>A possible workflow could be:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Edit the file 
+git add &lt;file&gt;
+git commit 
+rake co  #this is my prototyping (sitecopy) rake
+
+# Check: ok?
+
+rake deploy:git
+</code></pre></div></div>
+
+<p>or another option:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Edit the file 
+rake co  #this is my prototyping (sitecopy) rake
+
+# Check: ok?
+
+git add &lt;file&gt;
+git commit 
+
+rake deploy:git
+</code></pre></div></div>
+
+<h1 id="getting-a-domain-name">Getting a domain name</h1>
+
+<p>I registered <code class="language-plaintext highlighter-rouge">pragti.ch</code> at <a href="http://nic.ch">nic.ch</a> and organized a
+free DNS service to do the DNS hosting. Then, tried to set up the
+CNAME following
+<a href="https://help.github.com/articles/setting-up-a-custom-domain-with-pages">the documentation at Github</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout master
+vi CNAME
+# just one line: 
+# pragti.ch
+
+git add CNAME
+git commit
+git push pages
+git checkout source
+</code></pre></div></div>
+
+<p>Did not work immediately, but many times DNS can take some time to
+update. Let’s wait and see.</p>
+:ET

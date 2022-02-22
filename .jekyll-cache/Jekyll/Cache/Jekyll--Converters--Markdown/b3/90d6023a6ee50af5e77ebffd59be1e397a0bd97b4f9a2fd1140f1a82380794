@@ -1,0 +1,58 @@
+I"�
+<p>Aquamacs is a great text editor for OS X. It does, however, have its
+idiosyncrises. So, here I am keeping notes on what worked for me.</p>
+
+<h1 id="documentation">Documentation</h1>
+
+<p>First of all, Google is your friend. But there is also some
+<a href="http://www.emacswiki.org/emacs/AquamacsFAQ">good documentation on the EmacsWiki site</a>.</p>
+
+<h1 id="configuration-file">Configuration file</h1>
+
+<p>The Aquamacs does not use the standard <code class="language-plaintext highlighter-rouge">.emacs</code> locations. Instead,
+the stuff is hidden in the library. For details, check
+<a href="http://www.emacswiki.org/emacs/AquamacsFAQ">the Aquamacs FAQ</a>. I tend to edit the files in
+<code class="language-plaintext highlighter-rouge">~/Library/Preferences/Aquamacs Emacs/</code> by hand, especially <code class="language-plaintext highlighter-rouge">customizations.el</code>.</p>
+
+<p>To be honest, this exasperates me so much, that I have learned to use
+the ‘customization’ tool.</p>
+
+<h1 id="emacsclient">Emacsclient</h1>
+
+<p>In using Aquamacs, I wanted to start using it as the default
+editor. Some research was needed.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>I edited <code class="language-plaintext highlighter-rouge">.bash_profile</code> and added the following`;</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+# editor setup
+export EDITOR='/Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient'
+export ALTERNATE_EDITOR=vi
+alias e=$EDITOR
+</code></pre></div></div>
+
+<p>Probably I should research how to use ALTERNATE_EDITOR to startup
+Aquamacs, but I want to be sure that I am actually on a windowing
+station to do that – too lazy at the moment. Maybe later. As it is
+now, Aquamacs will be used when it’s running (like when I’m working on
+this website), and vi will be used otherwise.</p>
+
+<p>It also sets up a shorthand editing alias <code class="language-plaintext highlighter-rouge">e</code> for my convenience.</p>
+
+<p>To get the server to automatically load, I used the customization
+interface (Aquamacs -&gt; Preferences, Interfacing to external
+utilities, Server) to enable ‘Server Mode’. That way, any time
+Aquamacs starts up, it will be listening.</p>
+
+<h2 id="using">Using</h2>
+
+<p>Ending an editing session that was started this way, goes as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C-x #
+</code></pre></div></div>
+
+<p>Many people rebind this key to something like <code class="language-plaintext highlighter-rouge">C-c c</code> to better match
+other applications like GNUS or VCS. Maybe I will too, some day.</p>
+:ET

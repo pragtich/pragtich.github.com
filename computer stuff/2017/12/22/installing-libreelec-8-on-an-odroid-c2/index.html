@@ -32,50 +32,55 @@
 	I had to do quite a few small changes to make LE 8 work as I want on my Odroid C2
 </summary>
 <bodytext>
-  <h1>Installing LE</h1>
+  <h1 id="installing-le">Installing LE</h1>
 
-<p>Burning an SD card with the Libreelec utility did not work, but Etcher did the trick. I also switched from a 2 GB to an 8 GB card, perhaps that was a factor, too. </p>
+<p>Burning an SD card with the Libreelec utility did not work, but Etcher did the trick. I also switched from a 2 GB to an 8 GB card, perhaps that was a factor, too.</p>
 
-<p>Installed the image onto an SD card, so that I can switch back to the original installation if it doesn&#39;t work out. I ended up using <a href="http://releases.libreelec.tv/LibreELEC-Odroid_C2.aarch64-8.2.1.img.gz">LibreELEC-Odroid_C2.aarch64-8.2.1.img.gz</a></p>
+<p>Installed the image onto an SD card, so that I can switch back to the original installation if it doesn’t work out. I ended up using <a href="http://releases.libreelec.tv/LibreELEC-Odroid_C2.aarch64-8.2.1.img.gz">LibreELEC-Odroid_C2.aarch64-8.2.1.img.gz</a></p>
 
-<h1>Recovering the library</h1>
+<h1 id="recovering-the-library">Recovering the library</h1>
 
-<p>This is where I was really happy to have the EMMC with the original Kodi image. It&#39;s really easy to swap it in and out, so that you can get access to the original data and files.</p>
+<p>This is where I was really happy to have the EMMC with the original Kodi image. It’s really easy to swap it in and out, so that you can get access to the original data and files.</p>
 
 <p>Exported the original library to a single file.</p>
 
-<p>Imported it again in the new install. Seemless. You do need to switch the skin to <code>Advanced</code> mode in order to get access to the <code>Import</code> and <code>Export</code> functions.</p>
+<p>Imported it again in the new install. Seemless. You do need to switch the skin to <code class="language-plaintext highlighter-rouge">Advanced</code> mode in order to get access to the <code class="language-plaintext highlighter-rouge">Import</code> and <code class="language-plaintext highlighter-rouge">Export</code> functions.</p>
 
-<p>Browsing the network in order to open the library was a challenge at first. It helps if you set the <code>Workgroup</code> to the same workgroup that your server is in. I had to change it in 2 places: The LibreElec Add-on and the Kodi network settings. Then, it worked.</p>
+<p>Browsing the network in order to open the library was a challenge at first. It helps if you set the <code class="language-plaintext highlighter-rouge">Workgroup</code> to the same workgroup that your server is in. I had to change it in 2 places: The LibreElec Add-on and the Kodi network settings. Then, it worked.</p>
 
-<h1>Disable SSH password</h1>
+<h1 id="disable-ssh-password">Disable SSH password</h1>
 
-<p>SSH on Libreelec only supports the default user/pass combination (<code>root/libreelec</code>). In order to secure this, I used <code>ssh-copy-key root@libreelec</code> to copy my ssh keys to the device. You might need to make a key first, Google it.</p>
+<p>SSH on Libreelec only supports the default user/pass combination (<code class="language-plaintext highlighter-rouge">root/libreelec</code>). In order to secure this, I used <code class="language-plaintext highlighter-rouge">ssh-copy-key root@libreelec</code> to copy my ssh keys to the device. You might need to make a key first, Google it.</p>
 
 <p>Then, disable the password login in the Libreelec settings addon in Kodi.</p>
 
-<h1>Disable blinking blue led</h1>
+<h1 id="disable-blinking-blue-led">Disable blinking blue led</h1>
 
-<p><a href="https://jbtronics.wordpress.com/2016/05/12/odroid-c2-change-the-function-of-the-blue-led/">Followed this link</a> </p>
+<p><a href="https://jbtronics.wordpress.com/2016/05/12/odroid-c2-change-the-function-of-the-blue-led/">Followed this link</a></p>
 
-<p>The startup scripts in Libreelec are very simple, so actually you put the following into <code>/storage/.config/autostart.sh</code>:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">echo </span>none <span class="o">&gt;</span> /sys/devices/gpio_leds.43/leds/blue:heartbeat/trigger
-</code></pre></div>
+<p>The startup scripts in Libreelec are very simple, so actually you put the following into <code class="language-plaintext highlighter-rouge">/storage/.config/autostart.sh</code>:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo </span>none <span class="o">&gt;</span> /sys/devices/gpio_leds.43/leds/blue:heartbeat/trigger
+</code></pre></div></div>
+
 <p>and then (using ssh):</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">chmod a+x autostart.sh
-</code></pre></div>
-<p>Another option for the trigger, is <code>default-on</code>. I prefer this trigger in combination with a killing of the LED at shutdown, to confirm a safe shutdown state. This is in my <code>/Configfiles/shutdown.sh</code>:</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/sh</span>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod </span>a+x autostart.sh
+</code></pre></div></div>
+
+<p>Another option for the trigger, is <code class="language-plaintext highlighter-rouge">default-on</code>. I prefer this trigger in combination with a killing of the LED at shutdown, to confirm a safe shutdown state. This is in my <code class="language-plaintext highlighter-rouge">/Configfiles/shutdown.sh</code>:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
 
 <span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in
   </span>halt<span class="p">)</span>
     <span class="c"># your commands here</span>
 
-    <span class="nb">echo </span>none <span class="o">&gt;</span> /sys/class/leds/blue<span class="se">\:</span>heartbeat/trigger
+	<span class="nb">echo </span>none <span class="o">&gt;</span> /sys/class/leds/blue<span class="se">\:</span>heartbeat/trigger
     <span class="p">;;</span>
   poweroff<span class="p">)</span>
     <span class="c"># your commands here</span>
-    <span class="nb">echo </span>none <span class="o">&gt;</span> /sys/class/leds/blue<span class="se">\:</span>heartbeat/trigger
+	<span class="nb">echo </span>none <span class="o">&gt;</span> /sys/class/leds/blue<span class="se">\:</span>heartbeat/trigger
     <span class="p">;;</span>
   reboot<span class="p">)</span>
     <span class="c"># your commands here</span>
@@ -84,31 +89,33 @@
     <span class="c"># your commands here</span>
     <span class="p">;;</span>
 <span class="k">esac</span>
-</code></pre></div>
-<h1>Favourite plugins</h1>
+</code></pre></div></div>
+
+<h1 id="favourite-plugins">Favourite plugins</h1>
 
 <ul>
-<li>Youtube</li>
-<li>BSPlayer</li>
-<li>Arctic Zephyr</li>
-<li>Uitzendinggemist (NPO)</li>
-<li>Nederland 24</li>
+  <li>Youtube</li>
+  <li>BSPlayer</li>
+  <li>Arctic Zephyr</li>
+  <li>Uitzendinggemist (NPO)</li>
+  <li>Nederland 24</li>
 </ul>
 
-<h1>Keymap changes</h1>
+<h1 id="keymap-changes">Keymap changes</h1>
 
-<p>The Minix A2 Lite air mouse is quite nice, but the default support in Kodi is a bit lacking. You can improve it a lot with a few modifications. The first, is to be able to use the <code>back</code> button properly.</p>
+<p>The Minix A2 Lite air mouse is quite nice, but the default support in Kodi is a bit lacking. You can improve it a lot with a few modifications. The first, is to be able to use the <code class="language-plaintext highlighter-rouge">back</code> button properly.</p>
 
 <p>As a reference, <a href="http://kodi.wiki/view/MINIX_A2">the following site is really helpful, as it lists the key codes for the remote</a></p>
 
-<h2>Back button goes back in menus</h2>
+<h2 id="back-button-goes-back-in-menus">Back button goes back in menus</h2>
 
 <p><a href="http://www.minixforum.com/threads/fix-a2-a2-lite-back-button-in-xbmc.3294/">On the Odroid forum</a></p>
 
-<p>I created a file called <code>A2lite.xml</code> into the Samba share <code>/Userdata/keymaps</code> on the box. Restart (the skin?) and the back button behaves properly. Look at the forum posts for a few options, including automatically stopping the media playing.</p>
+<p>I created a file called <code class="language-plaintext highlighter-rouge">A2lite.xml</code> into the Samba share <code class="language-plaintext highlighter-rouge">/Userdata/keymaps</code> on the box. Restart (the skin?) and the back button behaves properly. Look at the forum posts for a few options, including automatically stopping the media playing.</p>
 
 <p>The file:</p>
-<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;keymap&gt;</span>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;keymap&gt;</span>
 <span class="nt">&lt;global&gt;</span>
 <span class="nt">&lt;keyboard&gt;</span>
 <span class="nt">&lt;backspace&gt;</span>Back<span class="nt">&lt;/backspace&gt;</span>
@@ -121,13 +128,15 @@
 <span class="nt">&lt;/keyboard&gt;</span>
 <span class="nt">&lt;/FullscreenVideo&gt;</span>
 <span class="nt">&lt;/keymap&gt;</span>
-</code></pre></div>
-<h2>Subtitle shifting</h2>
+</code></pre></div></div>
 
-<p>I like to use the Fast Forward and Fast Reverse buttons to shift the sub delay. That way, it&#39;s easy to fix small errors in timing. Also, I configure the key with the three horizontal lines, to switch subtitle options.</p>
+<h2 id="subtitle-shifting">Subtitle shifting</h2>
 
-<p>A <code>Subs.xml</code> could look like this:</p>
-<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;keymap&gt;</span>
+<p>I like to use the Fast Forward and Fast Reverse buttons to shift the sub delay. That way, it’s easy to fix small errors in timing. Also, I configure the key with the three horizontal lines, to switch subtitle options.</p>
+
+<p>A <code class="language-plaintext highlighter-rouge">Subs.xml</code> could look like this:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;keymap&gt;</span>
  <span class="nt">&lt;global&gt;</span>
   <span class="nt">&lt;keyboard&gt;</span>
    <span class="nt">&lt;key</span> <span class="na">id=</span><span class="s">"61654"</span><span class="nt">&gt;</span>contextmenu<span class="nt">&lt;/key&gt;</span>
@@ -141,8 +150,9 @@
   <span class="nt">&lt;/keyboard&gt;</span>
  <span class="nt">&lt;/fullscreenvideo&gt;</span>
 <span class="nt">&lt;/keymap&gt;</span>
-</code></pre></div>
-<h1>Getting LIRC to work</h1>
+</code></pre></div></div>
+
+<h1 id="getting-lirc-to-work">Getting LIRC to work</h1>
 
 <p><strong>Careful: this is untested and probably not really correct</strong></p>
 
@@ -152,11 +162,13 @@ reboot</p>
 <p>systemctl stop eventlircd.service 
 systemctl stop lircd@lirc0:default:lircd.conf.amremote.service
 ps aux|grep lirc</p>
-<div class="highlight"><pre><code class="language-" data-lang="">597 root       0:00 {kodi.sh} /bin/sh /usr/lib/kodi/kodi.sh --standalone -fs --lircdev /run/lirc/lircd
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>597 root       0:00 {kodi.sh} /bin/sh /usr/lib/kodi/kodi.sh --standalone -fs --lircdev /run/lirc/lircd
 602 root       2:15 /usr/lib/kodi/kodi.bin --standalone -fs --lircdev /run/lirc/lircd
 773 root       0:00 grep lirc
-</code></pre></div>
-<p>irrecord --device /dev/lirc0 /storage/.config/lircd.conf</p>
+</code></pre></div></div>
+
+<p>irrecord –device /dev/lirc0 /storage/.config/lircd.conf</p>
 
 <footer>
   <p>
@@ -188,11 +200,11 @@ ps aux|grep lirc</p>
       <h2 class="itemdate">15 Aug 2012</h2>
 </reftitle>
 
-<reftitle><a href="/computer%20stuff/2021/04/09/Upgrading-OpenWRT-APU2/">Upgrading OpenWRT on x86 (PC Engines APU2) </a>
+<reftitle><a href="/computer%20stuff/2022/02/22/installing-a-linux-virtual-machine-on-arm64odroid-n2/">Installing a linux virtual machine on ARM64/Odroid N2 </a>
 	  
-<img src="https://www.pragti.ch/indeximages/OpenWRT.jpg">
+<img src="https://www.pragti.ch/indeximages/libvirt.jpg">
 
-      <h2 class="itemdate">09 Apr 2021</h2>
+      <h2 class="itemdate">22 Feb 2022</h2>
 </reftitle>
 
 

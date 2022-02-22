@@ -1,0 +1,33 @@
+I"B<p>I use <a href="https://github.com/indirect/jekyll-postfiles">the postfiles plugin by André Arko</a> to add static files to the posts that I write. It is a great addition, because it allows to group the static files together with the post in a sensible way (although I still find myself searching for the correct folder name, and have added a rake task to make it easier to find, may blog on it later). However, I noticed a few issues in my blog, that has category names that include spaces. I assume that the same error occurs in other special characters, that get <code class="language-plaintext highlighter-rouge">CGI.escape</code>d during processing by Jekyll.</p>
+
+<h1 id="the-cause-12">The Cause (1/2)</h1>
+
+<p>In the <a href="https://github.com/mojombo/jekyll/tree/master/lib/jekyll">Jekyll source</a>, each of the file types (Post, Page and StaticFile) have a <code class="language-plaintext highlighter-rouge">write</code> method, that in turn calls <code class="language-plaintext highlighter-rouge">destination</code> to calculate the correct file/folder name. I guess it is by design that the <code class="language-plaintext highlighter-rouge">StaticFile</code> version uses the filenames verbatim, while <code class="language-plaintext highlighter-rouge">Post</code> and <code class="language-plaintext highlighter-rouge">Page</code> do some unescaping. I assume this was done because a static file typically has no Category, so will simply get its place in the filesystem under <code class="language-plaintext highlighter-rouge">_site</code> without needing processing. In the <code class="language-plaintext highlighter-rouge">postfiles</code> case, though, we are working with <code class="language-plaintext highlighter-rouge">CGI.encode</code>d folder names because they were generated from the processing of the matching post.</p>
+
+<p>The lack of unescaping causes a <code class="language-plaintext highlighter-rouge">StaticFile</code> that contains a special character in its category to have a path that contains a percent sign. For example, the category <code class="language-plaintext highlighter-rouge">Computer stuff</code> will end up in the folder <code class="language-plaintext highlighter-rouge">_site/Computer stuff</code>, but the <code class="language-plaintext highlighter-rouge">post.url</code> will contain the string <code class="language-plaintext highlighter-rouge">Computer%20stuff</code>. This ends up being a folder that the server cannot find, because it is uncoding the <code class="language-plaintext highlighter-rouge">%20</code> again, to a space.</p>
+
+<h1 id="the-cause-22">The Cause (2/2)</h1>
+
+<p>In <a href="https://github.com/indirect/jekyll-postfiles">the jekyll-postfiles plugin</a>, there is a regexp that splits out the parts of the post id, to form the folder name where it searches for the postfiles. This regexp uses <code class="language-plaintext highlighter-rouge">[\s\w\/]*</code> to parse away the leading path details. This chokes on the <code class="language-plaintext highlighter-rouge">CGI.encode</code>d paths, because the word characters <code class="language-plaintext highlighter-rouge">\w</code> do not match the percent sign <code class="language-plaintext highlighter-rouge">%</code>. This leads to the leading part of the path not matching the regexp, thus generating incorrect paths.</p>
+
+<h1 id="the-solutions">The solutions</h1>
+
+<p>Easy.  Add percent to the pathname regexp:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">	<span class="n">postfile_id</span> <span class="o">=</span> <span class="n">post</span><span class="p">.</span><span class="nf">id</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/[\s\w\/%]*(\d{4})\/(\d\d)\/(\d\d)\/(.*)/</span><span class="p">,</span> <span class="s1">'\1-\2-\3-\4'</span><span class="p">)</span>
+	</code></pre></figure>
+
+<p>and <code class="language-plaintext highlighter-rouge">CGI.decode</code> the directory portion of the filename before passing it back to Jekyll:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">      <span class="c1"># Add a static file entry for each postfile, if any</span>
+        <span class="no">Dir</span><span class="p">[</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">postfile_dir</span><span class="p">,</span> <span class="s1">'/*'</span><span class="p">)].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">pf</span><span class="o">|</span> 
+          <span class="n">site</span><span class="p">.</span><span class="nf">static_files</span> <span class="o">&lt;&lt;</span> <span class="no">PostFile</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">postfile_dir</span><span class="p">,</span> <span class="no">CGI</span><span class="p">.</span><span class="nf">unescape</span><span class="p">(</span><span class="n">post</span><span class="p">.</span><span class="nf">url</span><span class="p">),</span> <span class="no">File</span><span class="p">.</span><span class="nf">basename</span><span class="p">(</span><span class="n">pf</span><span class="p">))</span>
+        <span class="k">end</span>
+	</code></pre></figure>
+
+<p>The diff of my edits can be <a href="https://github.com/pragtich/jekyll-postfiles/commit/ec519615501cbbc6d603854eaa463f1f9e0fe777">found here on GitHub</a>.</p>
+
+<h1 id="making-it-permanent">Making it permanent</h1>
+
+<p>I have created a pull request against <a href="https://github.com/indirect/jekyll-postfiles">the jekyll-postfiles plugin</a>, <a href="https://github.com/indirect/jekyll-postfiles/pull/4">which can be found here</a>. It was subsequently accepted by the owner, so is now a permanent part of the repo.</p>
+:ET

@@ -36,40 +36,48 @@
 
 <p>My first real attempt at a personal page already had the design that is close to what is here now. I made it using Apache Cocoon, and the abstraction level really appealed to me. However, in practical use it turned out to be way too heavy on the server. The once-supercoputer server I was using (a SGI Indigo) could not handle the java. I ended up using a web spider to convert everything into static pages, not really a satisfactory approach.</p>
 
-<p>Now, years later, i am playing with Nanoc. It is one of a range of static webpage generation tools that have sprouted since the Ruby programming language has become popular. </p>
+<p>Now, years later, i am playing with Nanoc. It is one of a range of static webpage generation tools that have sprouted since the Ruby programming language has become popular.</p>
 
 <p>Nanoc is reasonably well documented (the objects very well, the use a bit less detailed), and there is a community site that includes several examples of web sites which are a great help. To set up my site, I used two main sources: The Nanoc website and the Schof.org site by Mark Schofield. Especially the practical example of schof.org has been a great help.</p>
 
-<p><img src="/computer%20stuff/2011/11/12/Nanoc/nanoc-ss.jpg" alt="Screenshot of nanoc running"></p>
+<p><img src="/computer%20stuff/2011/11/12/Nanoc/nanoc-ss.jpg" alt="Screenshot of nanoc running" /></p>
 
-<h1>An RSS feed for the site</h1>
+<h1 id="an-rss-feed-for-the-site">An RSS feed for the site</h1>
 
-<p>Of course, a blog should have a RSS feed. Even though you have no readers yet... One never knows when it will be useful.</p>
+<p>Of course, a blog should have a RSS feed. Even though you have no readers yet… One never knows when it will be useful.</p>
 
-<p>So, I am trying to get the Blogging helper RSS stuff to work. The <a href="http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method">documentation</a> shows that we need to set up some stuff. I did just that, although I must say I really dislike the <code>excerpt</code> tag, because of its American English brutality. I will try to come up with a way to use <code>summary</code> instead.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">base_url: 'http://http://members.home.nl/pragtich'
-</code></pre></div>
-<p>Created a <code>content/atom.xml</code> with the contents:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""> &lt;%%= atom_feed %&gt;
-</code></pre></div>
-<p>And created <code>content/atom.yaml</code> with:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">title: Joris Pragt's blog feed
+<p>So, I am trying to get the Blogging helper RSS stuff to work. The <a href="http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method">documentation</a> shows that we need to set up some stuff. I did just that, although I must say I really dislike the <code class="language-plaintext highlighter-rouge">excerpt</code> tag, because of its American English brutality. I will try to come up with a way to use <code class="language-plaintext highlighter-rouge">summary</code> instead.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>base_url: 'http://http://members.home.nl/pragtich'
+</code></pre></div></div>
+
+<p>Created a <code class="language-plaintext highlighter-rouge">content/atom.xml</code> with the contents:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;%%= atom_feed %&gt;
+</code></pre></div></div>
+
+<p>And created <code class="language-plaintext highlighter-rouge">content/atom.yaml</code> with:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>title: Joris Pragt's blog feed
 author_name: Joris Pragt
 author_uri: http://members.home.nl/pragtich
 is_hidden: true
-</code></pre></div>
-<p>Edited <code>Rules</code> to add:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">compile '/atom/' do
+</code></pre></div></div>
+
+<p>Edited <code class="language-plaintext highlighter-rouge">Rules</code> to add:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compile '/atom/' do
   filter :erb
 end
 
 route '/atom/' do
   '/atom.xml'
 end
-</code></pre></div>
-<p>Maruku threw some errors. Switched to Kramdown and all is well. </p>
+</code></pre></div></div>
 
-<p>I was confused for a while, because no orange icon was showing. Turns out that Firefox has removed the RSS feed icon from the toolbar. You can add it with <code>customize</code>, but even then it is oly black and gray. Not such a clear message anymore, compared to the old way. </p>
+<p>Maruku threw some errors. Switched to Kramdown and all is well.</p>
+
+<p>I was confused for a while, because no orange icon was showing. Turns out that Firefox has removed the RSS feed icon from the toolbar. You can add it with <code class="language-plaintext highlighter-rouge">customize</code>, but even then it is oly black and gray. Not such a clear message anymore, compared to the old way.</p>
 
 <footer>
   <p>
@@ -82,11 +90,6 @@ end
       <h2 class="itemdate">03 Feb 2013</h2>
 </reftitle>
 
-<reftitle><a href="/computer%20stuff/2011/11/12/Installing-sitecopy-on-OS-X/">Installing sitecopy on OS X Snow Leopard and using it with Nanoc </a>
-	  
-      <h2 class="itemdate">12 Nov 2011</h2>
-</reftitle>
-
 <reftitle><a href="/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/">Editing jekyll postfiles plugin to work with spaces in category names </a>
 	  
       <h2 class="itemdate">07 Feb 2013</h2>
@@ -97,6 +100,13 @@ end
 <img src="https://www.pragti.ch/indeximages/index-i2c.jpg">
 
       <h2 class="itemdate">15 Aug 2012</h2>
+</reftitle>
+
+<reftitle><a href="/computer%20stuff/2022/02/22/installing-a-linux-virtual-machine-on-arm64odroid-n2/">Installing a linux virtual machine on ARM64/Odroid N2 </a>
+	  
+<img src="https://www.pragti.ch/indeximages/libvirt.jpg">
+
+      <h2 class="itemdate">22 Feb 2022</h2>
 </reftitle>
 
 <reftitle><a href="/kippycam/2012/06/04/Starting-project-Chicken-Webcam/">The Kippencam -- starting a new project </a>

@@ -1,0 +1,187 @@
+I"L0<h1 id="introduction">Introduction</h1>
+
+<p>I downloaded the native Cocoa emacs <a href="http://emacsformacosx.com/">from here</a>. Since the new version 24, GNU Emacs is supposed to really work well in OS X. So I am trying what happens if I ditch Aquamacs for GNU Emacs 24. This is how I’m getting on.</p>
+
+<h1 id="starting-up">Starting up</h1>
+
+<p>Emacs.app does not deliver the standard startup scripts where you
+would expect them. And sadly, when you simply <code class="language-plaintext highlighter-rouge">ln -s</code> the Emacs files
+to <code class="language-plaintext highlighter-rouge">/usr/local/bin</code> or <code class="language-plaintext highlighter-rouge">/usr/bin</code>, it breaks with a very unfriendly
+error message that actually refers to folders that do not exist on
+this system, but did on the build system!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!console
+$ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+$ ./emacs
+Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
+Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
+Error: charsets directory not found:
+/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/charsets
+Emacs will not function correctly without the character map files.
+Please check your installation!
+</code></pre></div></div>
+
+<p>This is due to the relocatability of the App, and apparently it does
+not handle being launched from the wrong place
+properly. <a href="https://github.com/mxcl/homebrew/issues/6661">The homebrew people</a>
+have looked at this and concluded that it is a bug in Emacs. And
+<a href="http://trac.macports.org/ticket/36502">the Macports people have also found it</a>.</p>
+
+<p>I came a long way using the strategies that some of the people on the
+web were using, namely with wrapper scripts or functions. Problem is
+that these use the OS X builtin <code class="language-plaintext highlighter-rouge">open</code>, which has several
+limitations. For one, it does not allow to load nonexistent files so
+you need to make the nonexistent files yourself and delete them
+afterwards if not edited. And it breaks the <code class="language-plaintext highlighter-rouge">-nw</code> option (which you
+use to get a text console instead of a graphical frame).</p>
+
+<h1 id="solution">Solution</h1>
+
+<h2 id="editing-my-path">Editing my PATH</h2>
+
+<p>In the end, the solution is quite easy. Just gave up and added the
+Emacs.app folder to early in my <code class="language-plaintext highlighter-rouge">PATH</code>. So, added to <code class="language-plaintext highlighter-rouge">~/.bashrc</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
+export PATH
+</code></pre></div></div>
+
+<p>Strangely, the Emacs.app executable is called <code class="language-plaintext highlighter-rouge">Emacs</code> instead of the
+normal <code class="language-plaintext highlighter-rouge">emacs</code>. Thankfully, the OS X filesystem is case-insensitive by
+default, so it works to type <code class="language-plaintext highlighter-rouge">emacs</code> anyway.</p>
+
+<h2 id="removing-the-old-files-and-referring-to-the-right-emacsclient">Removing the old files and referring to the right emacsclient</h2>
+
+<p>The standard emacs that comes with OS X is very old and you really do
+not want the confusion between the two versions. So, I did:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+sudo mv /usr/bin/emacs /usr/bin/emacs.orig
+sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig
+</code></pre></div></div>
+
+<p>And then it is a good idea to put the new <code class="language-plaintext highlighter-rouge">emacsclient</code> in a standard
+location (but not <code class="language-plaintext highlighter-rouge">/usr/bin</code>, because this is a system place that
+could get overwritten whenever Apple wants to):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient
+</code></pre></div></div>
+
+<h2 id="setting-up-some-aliases">Setting up some aliases</h2>
+
+<p>In my <code class="language-plaintext highlighter-rouge">~/.bash_profile</code>, I setup some environment variables to allow
+easy access to the editor through the alias <code class="language-plaintext highlighter-rouge">e</code>. This should
+automatically launch emacs when it is not yet running, or connect to
+it using <code class="language-plaintext highlighter-rouge">emacsclient</code> if it is. I had some trouble when <code class="language-plaintext highlighter-rouge">ssh</code>‘ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the <code class="language-plaintext highlighter-rouge">-s</code> option. This works most of the time, although when autostarting the <code class="language-plaintext highlighter-rouge">Emacs</code> binary from <code class="language-plaintext highlighter-rouge">emacsclient</code>, all options are dropped by <code class="language-plaintext highlighter-rouge">emacsclient</code>, so things like <code class="language-plaintext highlighter-rouge">-nw</code> will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with <code class="language-plaintext highlighter-rouge">-nw</code> when working in a text only environment.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>emacsclient: can't find socket; have you started the server?
+To start the server in Emacs, type "M-x server-start".
+emacsclient: No socket or alternate editor.  Please use:
+
+	--socket-name
+	--server-file      (or environment variable EMACS_SERVER_FILE)
+	--alternate-editor (or environment variable ALTERNATE_EDITOR)
+</code></pre></div></div>
+
+<p>I also fill some editor variables that tell other programs that they
+should launch emacs when they want to edit a file. This is my
+<code class="language-plaintext highlighter-rouge">~/.bash_profile</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+		. ~/.bashrc
+fi
+
+# Read autocomplete stuff if present (Fink)
+if [ -f /sw/etc/bash_completion ]; then
+		. /sw/etc/bash_completion
+fi
+
+# Initialize Fink (paths mainly)
+test -r /sw/bin/init.sh &amp;&amp; . /sw/bin/init.sh
+
+export EDITOR="emacsclient -s "/tmp/emacs${UID}/server" -a Emacs \"\$@\""
+export VISUAL=$EDITOR
+export GIT_EDITOR="$VISUAL +0"
+
+alias e=$VISUAL
+</code></pre></div></div>
+
+<h2 id="setting-up-server-mode">Setting up server mode</h2>
+
+<p>To start the emacs server when emacs starts, you need to add the following to <code class="language-plaintext highlighter-rouge">~/.emacs</code>. I needed to provide a stable place for the sockets, otherwise they break when <code class="language-plaintext highlighter-rouge">ssh</code>‘in in. Don’t understand why.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(setq server-socket-dir (format "/tmp/emacs%d" (user-uid))) 
+(server-start)
+</code></pre></div></div>
+
+<h1 id="migrating-my-settings">Migrating my settings</h1>
+
+<p>I am converting from Aquamacs to Emacs 24, so I need to convert my setting file. Aquamacs keeps its settings in the Library: <code class="language-plaintext highlighter-rouge">~/Library/Preferences/Aquamacs Emacs/Preferences.el</code> and Emacs keeps the settings in the standard location <code class="language-plaintext highlighter-rouge">~/.emacs</code>.</p>
+
+<p>I just copied everything in my Preferences.el underneath the skeleton <code class="language-plaintext highlighter-rouge">.emacs</code> that Emacs 24 had created for me, which contained next to nothing but some default tab settings and some code to enable the <code class="language-plaintext highlighter-rouge">ELPA</code> package manager.</p>
+
+<p>There are probably some things that I do that are obsolete, but I will sort that out later. For example, Emacs 24 has a built in color theme manager, and I am still referring to an older package. I will try to work with it like this for now, and study the changes as time goes by.</p>
+
+<p>I will also probably need a local lisp file to set platform specific things, for example file locations. Most of the stuff could then stay in the general <code class="language-plaintext highlighter-rouge">.emacs</code>.</p>
+
+<h2 id="some-differences">Some differences</h2>
+
+<p>It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let’s get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let’s also drop the ugly toolbar.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(setq inhibit-startup-echo-area-message t)
+(setq inhibit-startup-message t)
+(tool-bar-mode -1)
+</code></pre></div></div>
+
+<p>Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. <a href="http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient">The fix was quite easy, thankfully</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(select-frame-set-input-focus (nth 0 (frame-list)))
+</code></pre></div></div>
+
+<h1 id="getting-the-most-out-of-it">Getting the most out of it</h1>
+
+<h2 id="reading">Reading</h2>
+
+<p>A very nice Emacs blog is <a href="http://www.masteringemacs.org/">Mastering Emacs</a>. It has a nice 2-part series on Emacs 24 that <a href="http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/">starts here</a>. I am slowly going through it because there’s lots to learn.</p>
+
+<h2 id="enabling-package-management">Enabling package management</h2>
+
+<p>Added the following to <code class="language-plaintext highlighter-rouge">~/.emacs</code> (and deleted some package stuff that was left from before).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+</code></pre></div></div>
+
+<p>Now I can list the packages available with <code class="language-plaintext highlighter-rouge">M-x list-packages</code>. Need to start learning how that works.</p>
+
+<h2 id="using-magit">Using Magit</h2>
+
+<p>i used the package manager to install Magit. A great frontend to <code class="language-plaintext highlighter-rouge">git</code>!</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>M-x list-packages
+
+; find magit
+i    ; for install
+x    ; for execute
+y    ; for yes
+</code></pre></div></div>
+
+<p>In order to avoid typing <code class="language-plaintext highlighter-rouge">magit-status</code> a lot, I bound it to a key in <code class="language-plaintext highlighter-rouge">~/.emacs</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(global-set-key (kbd "C-x g") 'magit-status)
+</code></pre></div></div>
+
+<h2 id="enabling-ido-mode">Enabling Ido mode</h2>
+
+<p>Although it has been around, I had not yet heard of Ido mode. <a href="http://www.masteringemacs.org/articles/2010/10/10/introduction-to-ido-mode/">It sounds very useful</a>. So let’s enable it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+</code></pre></div></div>
+
+:ET

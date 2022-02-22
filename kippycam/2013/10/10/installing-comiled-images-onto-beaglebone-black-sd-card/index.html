@@ -32,35 +32,38 @@
 	So you've managed to compile an Angstrom Linux image. How to get it onto the Beaglebone?
 </summary>
 <bodytext>
-  <h1>What&#39;s the point?</h1>
+  <h1 id="whats-the-point">What’s the point?</h1>
 
-<p>So I managed to compile an image for the Beaglebone Black. The documentation is not bad, but it took some time to wait for some bugs to get updated in the <code>git</code>. This was thanks to VirtualBox and Ubuntu, as compiling on OS X was too painful. Compiling pretty much followed the basis instructions <a href="http://www.angstrom-distribution.org/building-angstrom">at the main website</a>. And I could see the image files available (hint: look in the subfolder <code>work</code> and find the <code>deploy</code> subfolder. </p>
+<p>So I managed to compile an image for the Beaglebone Black. The documentation is not bad, but it took some time to wait for some bugs to get updated in the <code class="language-plaintext highlighter-rouge">git</code>. This was thanks to VirtualBox and Ubuntu, as compiling on OS X was too painful. Compiling pretty much followed the basis instructions <a href="http://www.angstrom-distribution.org/building-angstrom">at the main website</a>. And I could see the image files available (hint: look in the subfolder <code class="language-plaintext highlighter-rouge">work</code> and find the <code class="language-plaintext highlighter-rouge">deploy</code> subfolder.</p>
 
 <p>But how to get this stuff onto the Beaglebone Black, and running?</p>
 
-<h1>Creating a bootable SD card for Beaglebone Black</h1>
+<h1 id="creating-a-bootable-sd-card-for-beaglebone-black">Creating a bootable SD card for Beaglebone Black</h1>
 
 <p>Actually, someone before me <a href="http://cwraig.id.au/?p=507">has been considerate and shared his experience (locally) compiling and installing Angstrom for Beaglebone Black</a>. This is pretty much a copy of what he does.</p>
 
-<p>Because of trouble getting a USB cardreader to show up un VirtualBox, and the incompatibility of the <code>mkcard.txt</code> script with OS X, I decided to use the BBB itself to write the SD card. This is based on the standard firmware from the circuitco website. So that is the set of executables that I had available. I booted the BBB with a nonbooting card (so that it will boot from the eMMC). The SD card then is located at <code>/mnt/sda</code>. The beaglebone is also on the network via the LAN port.</p>
+<p>Because of trouble getting a USB cardreader to show up un VirtualBox, and the incompatibility of the <code class="language-plaintext highlighter-rouge">mkcard.txt</code> script with OS X, I decided to use the BBB itself to write the SD card. This is based on the standard firmware from the circuitco website. So that is the set of executables that I had available. I booted the BBB with a nonbooting card (so that it will boot from the eMMC). The SD card then is located at <code class="language-plaintext highlighter-rouge">/mnt/sda</code>. The beaglebone is also on the network via the LAN port.</p>
 
 <p>Then:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
 root@beaglebone:~# wget http://www.angstrom-distribution.org/demo/beaglebone/mkcard.txt
 mkcard.txt mkcard.sh  
 chmod +x mkcard.sh 
 ./mkcard.sh /dev/sda
 
-<span class="nb">cd</span> /mnt
+cd /mnt
 mkdir Angstrom
 mkdir boot
-mount <span class="nt">-t</span> vfat /dev/disk/by-label/boot boot
+mount -t vfat /dev/disk/by-label/boot boot
 mount /dev/disk/by-label/Angstrom Angstrom/
 
-df <span class="nt">-h</span>
-</code></pre></div>
+df -h
+</code></pre></div></div>
+
 <p>This results in the following confirmation that we have stuff mounted right:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
 Filesystem      Size  Used Avail Use% Mounted on
 rootfs          1.7G  1.1G  515M  69% /
 /dev/root       1.7G  1.1G  515M  69% /
@@ -72,102 +75,107 @@ tmpfs           250M  4.0K  250M   1% /tmp
 /dev/mmcblk0p1   70M   55M   16M  79% /media/BEAGLEBONE
 /dev/sda1        70M   512   70M   1% /mnt/boot
 /dev/sda2       1.8G   35M  1.7G   3% /mnt/Angstrom
-</code></pre></div>
+</code></pre></div></div>
+
 <p>Ready for installing the images!</p>
 
-<h1>Installing the images</h1>
+<h1 id="installing-the-images">Installing the images</h1>
 
 <p>Simply followed the stuff <a href="http://cwraig.id.au/?p=507">from here</a>:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
-<span class="nb">cd
-</span>mkdir installs
-<span class="nb">cd </span>installs
-scp <span class="nt">-r</span> pragtich@10.0.0.102user@host:~/compiled-image-deploy-folder <span class="nb">.</span>
-<span class="nb">cd </span>compiled-image-deploy-folder
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+cd
+mkdir installs
+cd installs
+scp -r pragtich@10.0.0.102user@host:~/compiled-image-deploy-folder .
+cd compiled-image-deploy-folder
 cp u-boot-beaglebone-2013.04-r0.img /mnt/boot/uImage
 cp MLO-beaglebone-2013.04 /mnt/boot/MLO
-<span class="nb">tar</span> <span class="nt">-xmv</span> <span class="nt">-C</span> /mnt/Angstrom/ <span class="nt">-f</span> Angstrom-systemd-image-eglibc-ipk-v2012.12-beaglebone.rootfs.tar.gz 
+tar -xmv -C /mnt/Angstrom/ -f Angstrom-systemd-image-eglibc-ipk-v2012.12-beaglebone.rootfs.tar.gz 
 umount /mnt/boot 
 umount /mnt/Angstrom 
-</code></pre></div>
-<p>Then reboot and...</p>
+</code></pre></div></div>
 
-<h1>Test!</h1>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
-root@beaglebone:~# uname <span class="nt">-a</span>
-Linux beaglebone 3.8.13 <span class="c">#1 SMP Sun Oct 13 15:59:25 CEST 2013 armv7l GNU/Linux</span>
+<p>Then reboot and…</p>
+
+<h1 id="test">Test!</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+root@beaglebone:~# uname -a
+Linux beaglebone 3.8.13 #1 SMP Sun Oct 13 15:59:25 CEST 2013 armv7l GNU/Linux
 root@beaglebone:~# ps aux
-ps: invalid option <span class="nt">--</span> <span class="s1">'a'</span>
-BusyBox v1.20.2 <span class="o">(</span>2013-09-14 09:40:16 CEST<span class="o">)</span> multi-call binary.
+ps: invalid option -- 'a'
+BusyBox v1.20.2 (2013-09-14 09:40:16 CEST) multi-call binary.
 
 Usage: ps 
-</code></pre></div>
-<p>So the smaller <code>ps</code> delivered by <code>BusyBox</code> is now active, not the richer GNU version in the default install. Running <code>ps</code> also shows much less processes:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="c">#!bash</span>
+</code></pre></div></div>
+
+<p>So the smaller <code class="language-plaintext highlighter-rouge">ps</code> delivered by <code class="language-plaintext highlighter-rouge">BusyBox</code> is now active, not the richer GNU version in the default install. Running <code class="language-plaintext highlighter-rouge">ps</code> also shows much less processes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!bash
+root@beaglebone:~# ps    PID USER       VSZ STAT COMMAND
+ 1 root      4680 S    {systemd} /sbin/init
+ 2 root         0 SW   [kthreadd]
+ 3 root         0 SW   [ksoftirqd/0]
+ 4 root         0 SW   [kworker/0:0]
+ 5 root         0 SW&lt;  [kworker/0:0H]
+ 6 root         0 SW   [kworker/u:0]
+ 7 root         0 SW&lt;  [kworker/u:0H]
+ 8 root         0 SW   [migration/0]
+ 9 root         0 SW   [rcu_bh]
+10 root         0 SW   [rcu_sched]
+11 root         0 SW   [watchdog/0]
+12 root         0 SW&lt;  [khelper]
+13 root         0 SW   [kdevtmpfs]
+14 root         0 SW&lt;  [netns]
+15 root         0 SW   [kworker/0:1]
+16 root         0 SW   [bdi-default]
+17 root         0 SW&lt;  [kintegrityd]
+18 root         0 SW&lt;  [kblockd]
+19 root         0 SW   [khubd]
+20 root         0 SW   [irq/86-44e0b000]
+21 root         0 SW   [kworker/u:1]
+24 root         0 SW   [irq/23-tps65217]
+27 root         0 SW   [irq/46-4819c000]
+36 root         0 SW&lt;  [rpciod]
+38 root         0 SW   [khungtaskd]
+39 root         0 SW   [kswapd0]
+40 root         0 SW   [fsnotify_mark]
+41 root         0 SW&lt;  [nfsiod]
+42 root         0 SW&lt;  [crypto]
+45 root         0 SW&lt;  [pencrypt]
+46 root         0 SW&lt;  [pdecrypt]
+53 root         0 SW&lt;  [OMAP UART0]
+57 root         0 SW&lt;  [kpsmoused]
+58 root         0 SW   [irq/150-mmc0]
+70 root         0 SW   [kworker/u:2]
+71 root         0 DW   [mmcqd/0]
+74 root         0 SW   [mmcqd/1]
+75 root         0 SW   [mmcqd/1boot0]
+76 root         0 SW   [mmcqd/1boot1]
+77 root         0 SW&lt;  [deferwq]
+80 root         0 SW&lt;  [kworker/0:1H]
+81 root         0 SW   [jbd2/mmcblk0p2-]
+82 root         0 SW&lt;  [ext4-dio-unwrit]
+89 root     36536 S    /lib/systemd/systemd-journald
+91 root      3428 S    /lib/systemd/systemd-udevd
+94 root         0 SW   [kworker/0:2]
+117 root         0 SW   [ext4lazyinit]
+204 root         0 SW   [flush-179:0]
+304 root      2976 S    /lib/systemd/systemd-logind
+305 root      2152 S    /sbin/klogd -n
+306 root      2216 S    /sbin/syslogd -n -C64
+308 root      5392 S    /usr/sbin/connmand -n
+309 avahi     3168 S    avahi-daemon: running [beaglebone.local]
+311 root      1844 S    /sbin/agetty -s ttyO0 115200
+312 root      1844 S    /sbin/agetty --noclear tty1 38400 linux
+317 avahi     3052 S    avahi-daemon: chroot helper
+323 root      4644 S    /usr/sbin/wpa_supplicant -u
+327 root      2956 S    /usr/sbin/dropbear -i -r /etc/dropbear/dropbear_rsa_host_key -p 22
+328 root      2332 S    -sh
+331 root      2332 R    ps
 root@beaglebone:~# ps
-</code></pre></div>
-<p>PID USER       VSZ STAT COMMAND
-     1 root      4680 S    {systemd} /sbin/init
-     2 root         0 SW   [kthreadd]
-     3 root         0 SW   [ksoftirqd/0]
-     4 root         0 SW   [kworker/0:0]
-     5 root         0 SW&lt;  [kworker/0:0H]
-     6 root         0 SW   [kworker/u:0]
-     7 root         0 SW&lt;  [kworker/u:0H]
-     8 root         0 SW   [migration/0]
-     9 root         0 SW   [rcu<em>bh]
-    10 root         0 SW   [rcu</em>sched]
-    11 root         0 SW   [watchdog/0]
-    12 root         0 SW&lt;  [khelper]
-    13 root         0 SW   [kdevtmpfs]
-    14 root         0 SW&lt;  [netns]
-    15 root         0 SW   [kworker/0:1]
-    16 root         0 SW   [bdi-default]
-    17 root         0 SW&lt;  [kintegrityd]
-    18 root         0 SW&lt;  [kblockd]
-    19 root         0 SW   [khubd]
-    20 root         0 SW   [irq/86-44e0b000]
-    21 root         0 SW   [kworker/u:1]
-    24 root         0 SW   [irq/23-tps65217]
-    27 root         0 SW   [irq/46-4819c000]
-    36 root         0 SW&lt;  [rpciod]
-    38 root         0 SW   [khungtaskd]
-    39 root         0 SW   [kswapd0]
-    40 root         0 SW   [fsnotify<em>mark]
-    41 root         0 SW&lt;  [nfsiod]
-    42 root         0 SW&lt;  [crypto]
-    45 root         0 SW&lt;  [pencrypt]
-    46 root         0 SW&lt;  [pdecrypt]
-    53 root         0 SW&lt;  [OMAP UART0]
-    57 root         0 SW&lt;  [kpsmoused]
-    58 root         0 SW   [irq/150-mmc0]
-    70 root         0 SW   [kworker/u:2]
-    71 root         0 DW   [mmcqd/0]
-    74 root         0 SW   [mmcqd/1]
-    75 root         0 SW   [mmcqd/1boot0]
-    76 root         0 SW   [mmcqd/1boot1]
-    77 root         0 SW&lt;  [deferwq]
-    80 root         0 SW&lt;  [kworker/0:1H]
-    81 root         0 SW   [jbd2/mmcblk0p2-]
-    82 root         0 SW&lt;  [ext4-dio-unwrit]
-    89 root     36536 S    /lib/systemd/systemd-journald
-    91 root      3428 S    /lib/systemd/systemd-udevd
-    94 root         0 SW   [kworker/0:2]
-    117 root         0 SW   [ext4lazyinit]
-    204 root         0 SW   [flush-179:0]
-    304 root      2976 S    /lib/systemd/systemd-logind
-    305 root      2152 S    /sbin/klogd -n
-    306 root      2216 S    /sbin/syslogd -n -C64
-    308 root      5392 S    /usr/sbin/connmand -n
-    309 avahi     3168 S    avahi-daemon: running [beaglebone.local]
-    311 root      1844 S    /sbin/agetty -s ttyO0 115200
-    312 root      1844 S    /sbin/agetty --noclear tty1 38400 linux
-    317 avahi     3052 S    avahi-daemon: chroot helper
-    323 root      4644 S    /usr/sbin/wpa</em>supplicant -u
-    327 root      2956 S    /usr/sbin/dropbear -i -r /etc/dropbear/dropbear<em>rsa</em>host_key -p 22
-    328 root      2332 S    -sh
-    331 root      2332 R    ps
-    root@beaglebone:~# ps</p>
+</code></pre></div></div>
 
 <p>Done!</p>
 

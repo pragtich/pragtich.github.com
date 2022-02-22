@@ -1,0 +1,70 @@
+I"�<h1 id="a-basic-battery-powered-mysensors-node">A basic battery powered Mysensors node</h1>
+
+<p>Based on: <a href="https://www.mysensors.org/build/battery">the documentation by MySensors</a> and a 3.3V 8MHz Arduino (clone) Pro Mini from the usual sources (<a href="https://www.banggood.com/">Banggood</a>, <a href="http://aliexpress.com/">AliExpress</a>).</p>
+
+<p><a href="https://blog.adafruit.com/wp-content/uploads/2016/07/promini_final.png">Handy pinout guide</a></p>
+
+<p>Perform the hardware mods from above link:</p>
+
+<ul>
+  <li>Disable power LED (either remove it or the resistor next to it).</li>
+  <li>Remove voltage regulator (in this case I linked the in &amp; out pins to be able to power through the <code class="language-plaintext highlighter-rouge">RAW</code> pin.</li>
+</ul>
+
+<h1 id="make-an-arduino-isp-programmer">Make an Arduino ISP programmer</h1>
+
+<p>In order to reflash the bootloader, we need an In-System Programmer (ISP). It is possible to use another Arduino as the ISP, and I like to use another Pro Mini.</p>
+
+<h2 id="hardware">Hardware</h2>
+<p>I follow the following schematic: 
+<img src="/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/ProMiniISP_bb.jpg" alt="Fritzing schematic of Pro Mini ISP" /></p>
+
+<p>And in reality on a breadboard, it looks like this (with a LED added to pin 9):</p>
+
+<p><img src="/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/ProMiniISP.jpg" alt="Breadboard Pro Mini ISP" /></p>
+
+<h2 id="flash-the-isp-firmware">Flash the ISP firmware</h2>
+
+<ul>
+  <li>Start the Arduino IDE</li>
+  <li>Open <code class="language-plaintext highlighter-rouge">ArduinoISP</code> sketch from <a href="https://github.com/pragtich/Sensors/tree/master/ArduinoISP">the repository</a></li>
+  <li>Connect the ISP using a USB-serial connection</li>
+  <li>Select board <code class="language-plaintext highlighter-rouge">Arduino Pro or Pro Mini</code></li>
+  <li>Flash the sketch.</li>
+</ul>
+
+<h1 id="install-boot-loader">Install boot loader:</h1>
+
+<p>In order to get a lower Brown Out voltage, we need to flash a new bootloader. Actually that’s not strictly required, but it’s the easiest way. I am using <a href="https://www.openhardware.io/view/33/Various-bootloader-files-based-on-Optiboot-62">Optiboot bootloaders compiled by Gert Sanders</a>, so many thanks to him.</p>
+
+<ul>
+  <li>Unpack rar in <code class="language-plaintext highlighter-rouge">Various-bootloader-files-based-on-Optiboot-62</code></li>
+  <li>Move folder <code class="language-plaintext highlighter-rouge">atmega328p</code> to <code class="language-plaintext highlighter-rouge">Arduino.app/Contents/Java/hardware</code> (this is the OS X location)</li>
+  <li>Start <code class="language-plaintext highlighter-rouge">Arduino.app</code></li>
+  <li>Select Tools-&gt;Board-&gt;<code class="language-plaintext highlighter-rouge">atmega328p based - 32 pin TQFP</code></li>
+  <li>Select <code class="language-plaintext highlighter-rouge">8MHz - crystal - 38K4 - D13</code></li>
+  <li>Select <code class="language-plaintext highlighter-rouge">Brown out detection - 1V8</code></li>
+  <li>Select correct USB port</li>
+  <li>Select <code class="language-plaintext highlighter-rouge">Programmer: "Arduino as ISP"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Tools-&gt;Burn Bootloader</code></li>
+</ul>
+
+<h1 id="test">Test</h1>
+<ul>
+  <li>Connect the board to the USB serial adapter (disconnect the ISP)</li>
+  <li>Upload example Blink</li>
+  <li>Upload Blink with modified timings</li>
+  <li>I also like to try the <code class="language-plaintext highlighter-rouge">ASCIITable</code> example</li>
+  <li>Quit the Arduino IDE</li>
+</ul>
+
+<h1 id="upload-the-real-script">Upload the real script</h1>
+<p>I use platformio to run my projects, so uploading is pretty easy:</p>
+
+<ul>
+  <li>Switch to the project folder</li>
+  <li>Edit baud rates in the <code class="language-plaintext highlighter-rouge">platformio.ini</code>. I use <code class="language-plaintext highlighter-rouge">38400</code> for upload and <code class="language-plaintext highlighter-rouge">9600</code> for monitor.</li>
+  <li><code class="language-plaintext highlighter-rouge">pio run -t upload</code> or if you want a debug monitor: <code class="language-plaintext highlighter-rouge">pio run -t upload -t monitor</code></li>
+</ul>
+
+:ET

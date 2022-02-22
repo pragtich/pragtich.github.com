@@ -32,125 +32,140 @@
 	I started a blog (this blog) using Nanoc last year, as a method to learn Ruby. Although it is great, especially because it allows complete control, my Ruby skills are not up to nanoc. I kept on getting stuck doing programming myself, and fighting all kinds of bugs. This is the log of an attempt to reduce complexity by switching to Jekyll
 </summary>
 <bodytext>
-  <h1>Introduction</h1>
+  <h1 id="introduction">Introduction</h1>
 
-<p>I had started with a website/blog last year <a href="http://pragti.ch/">and even took the effort to host it</a> and enjoy the experience. Especially getting feedback in the comments, and learning that others are enjoying my notes, is great fun. I had started using <code>nanoc</code> <a href="http://nanoc.ws/">(here)</a> as a generator for the site. It&#39;s great, because it allows you to generate a static site from a set of source files. I love this, because it meets many of my criteria for a blogging engine:</p>
+<p>I had started with a website/blog last year <a href="http://pragti.ch/">and even took the effort to host it</a> and enjoy the experience. Especially getting feedback in the comments, and learning that others are enjoying my notes, is great fun. I had started using <code class="language-plaintext highlighter-rouge">nanoc</code> <a href="http://nanoc.ws/">(here)</a> as a generator for the site. It’s great, because it allows you to generate a static site from a set of source files. I love this, because it meets many of my criteria for a blogging engine:</p>
 
 <ul>
-<li>Static generation. Why waste server power generating a page on every view when it actually hardly changes?</li>
-<li>Modularity. Split form and content as much as possible.</li>
-<li>Flexibility. Ability to adapt to my wishes.</li>
-<li>Fun. Learn something new.</li>
+  <li>Static generation. Why waste server power generating a page on every view when it actually hardly changes?</li>
+  <li>Modularity. Split form and content as much as possible.</li>
+  <li>Flexibility. Ability to adapt to my wishes.</li>
+  <li>Fun. Learn something new.</li>
 </ul>
 
-<p>Now, I am moving away from <code>nanoc</code>, and switching to <code>jekyll</code>. Why? Because <code>nanoc</code> is a little too complex for my taste. It can just do too much, and requires serious <code>ruby</code> skills. <code>Jekyll</code> is simpler, really made for much more simple blogging tasks that <code>nanoc</code> is. After plugins and extensions have been added, the flexibility is good and the simplicity is still great.</p>
+<p>Now, I am moving away from <code class="language-plaintext highlighter-rouge">nanoc</code>, and switching to <code class="language-plaintext highlighter-rouge">jekyll</code>. Why? Because <code class="language-plaintext highlighter-rouge">nanoc</code> is a little too complex for my taste. It can just do too much, and requires serious <code class="language-plaintext highlighter-rouge">ruby</code> skills. <code class="language-plaintext highlighter-rouge">Jekyll</code> is simpler, really made for much more simple blogging tasks that <code class="language-plaintext highlighter-rouge">nanoc</code> is. After plugins and extensions have been added, the flexibility is good and the simplicity is still great.</p>
 
-<h1>Setting up Jekyll</h1>
+<h1 id="setting-up-jekyll">Setting up Jekyll</h1>
 
-<p>Setting up <code>jekyll</code> is easy. Just follow <a href="https://github.com/mojombo/jekyll/wiki/install">the instructions on the jekyll site</a>, as easy as:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">gem install jekyll
-</code></pre></div>
+<p>Setting up <code class="language-plaintext highlighter-rouge">jekyll</code> is easy. Just follow <a href="https://github.com/mojombo/jekyll/wiki/install">the instructions on the jekyll site</a>, as easy as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install jekyll
+</code></pre></div></div>
+
 <p>Note that I later switched to extended jekyll, see below.</p>
 
-<p><a href="http://jekyllrb.com/">The documentation for <code>jekyll</code></a> is good, although structure is a bit lacking. If you read through this, it will be much clearer. Especially useful is studying the <a href="http://wiki.github.com/shopify/liquid/liquid-for-designers">Liquid documentation</a> and the <a href="https://github.com/mojombo/jekyll/wiki/Liquid-Extensions">Jekyll Liquid extensions</a>.</p>
+<p><a href="http://jekyllrb.com/">The documentation for <code class="language-plaintext highlighter-rouge">jekyll</code></a> is good, although structure is a bit lacking. If you read through this, it will be much clearer. Especially useful is studying the <a href="http://wiki.github.com/shopify/liquid/liquid-for-designers">Liquid documentation</a> and the <a href="https://github.com/mojombo/jekyll/wiki/Liquid-Extensions">Jekyll Liquid extensions</a>.</p>
 
-<p>Configuring happens through <code>_config.yml</code>, and I have the following in there:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">permalink: pretty      # Required for the postfiles plugin
+<p>Configuring happens through <code class="language-plaintext highlighter-rouge">_config.yml</code>, and I have the following in there:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>permalink: pretty      # Required for the postfiles plugin
 lsi: true              # Will be useful for related pages later on
 markdown: kramdown     # I like kramdown
-</code></pre></div>
-<h1>Switching to Jekyll_ext</h1>
+</code></pre></div></div>
 
-<p>In order to be able to extend <code>jekyll</code> with stuff that will allow me to use Haml and Sass, I installed <code>jekyll_ext</code> <a href="https://github.com/indirect/jekyll-postfiles">from github</a>. Although I do call <code>ejekyll</code> instead of <code>jekyll</code> already, I am not at present using any of its functionality yet.</p>
+<h1 id="switching-to-jekyll_ext">Switching to Jekyll_ext</h1>
 
-<h1>Adding jekyll-postfiles</h1>
+<p>In order to be able to extend <code class="language-plaintext highlighter-rouge">jekyll</code> with stuff that will allow me to use Haml and Sass, I installed <code class="language-plaintext highlighter-rouge">jekyll_ext</code> <a href="https://github.com/indirect/jekyll-postfiles">from github</a>. Although I do call <code class="language-plaintext highlighter-rouge">ejekyll</code> instead of <code class="language-plaintext highlighter-rouge">jekyll</code> already, I am not at present using any of its functionality yet.</p>
 
-<p>One of the big troubles with <code>jekyll</code> is that it does not have any concept of files that belong together with a post as a logical unit. This could mainly be relevant for images, but also stuff like downloads. I had started with one central subfolder in the jekyll folder. That works, but means that each post needs to link to this one folder, and that all the images are going to run together into one folder. </p>
+<h1 id="adding-jekyll-postfiles">Adding jekyll-postfiles</h1>
 
-<p>This is solved by <a href="https://github.com/indirect/jekyll-postfiles">the <code>jekyll-postfiles</code> plugin</a> by Andre Arko. Check it out. What it does, is allow you to put the files belonging to a post in the <code>_postfiles/</code> folder, in a subfolder named like the post itself. So, the post <code>_posts/2012-12-31-Test.md</code> would have a matching folder <code>_postfiles/2012-12-31-Test/</code> where the matching files can be put.</p>
+<p>One of the big troubles with <code class="language-plaintext highlighter-rouge">jekyll</code> is that it does not have any concept of files that belong together with a post as a logical unit. This could mainly be relevant for images, but also stuff like downloads. I had started with one central subfolder in the jekyll folder. That works, but means that each post needs to link to this one folder, and that all the images are going to run together into one folder.</p>
+
+<p>This is solved by <a href="https://github.com/indirect/jekyll-postfiles">the <code class="language-plaintext highlighter-rouge">jekyll-postfiles</code> plugin</a> by Andre Arko. Check it out. What it does, is allow you to put the files belonging to a post in the <code class="language-plaintext highlighter-rouge">_postfiles/</code> folder, in a subfolder named like the post itself. So, the post <code class="language-plaintext highlighter-rouge">_posts/2012-12-31-Test.md</code> would have a matching folder <code class="language-plaintext highlighter-rouge">_postfiles/2012-12-31-Test/</code> where the matching files can be put.</p>
 
 <p>Also, it gives you a Liquid tag that allows you access to the files from your post without needing to know where exactly the files are. It works like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">{% postfile file.zip %}
-</code></pre></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{% postfile file.zip %}
+</code></pre></div></div>
+
 <p><a href="https://github.com/indirect/jekyll-postfiles">Check it out!</a></p>
 
-<h1>Using Haml and Sass</h1>
+<h1 id="using-haml-and-sass">Using Haml and Sass</h1>
 
-<p>Using Haml and Sass needs plugins that can get closely involved in the generation process. This cannot be done with the standard <code>jekyll</code> plugins. There is another extension mechanism that can do it: <a href="https://github.com/rfelix/jekyll_ext"><code>jekyll_ext</code></a>. I am not yet using the tools that are based upon this, but will do in the future. I love Haml and Sass.</p>
+<p>Using Haml and Sass needs plugins that can get closely involved in the generation process. This cannot be done with the standard <code class="language-plaintext highlighter-rouge">jekyll</code> plugins. There is another extension mechanism that can do it: <a href="https://github.com/rfelix/jekyll_ext"><code class="language-plaintext highlighter-rouge">jekyll_ext</code></a>. I am not yet using the tools that are based upon this, but will do in the future. I love Haml and Sass.</p>
 
-<h1>Migrating the layouts</h1>
+<h1 id="migrating-the-layouts">Migrating the layouts</h1>
 
-<p>I have several layouts in the site, and they turned out to need only small changes. Mainly, adjusting for a slightly changed folder structure and adding liquid tags instead of ERB code. All layouts except <code>default</code> have a YAML Front Matter that points to the <code>default</code> layout, which adds the navigation portion of the page and the whole HTML base of the page. </p>
+<p>I have several layouts in the site, and they turned out to need only small changes. Mainly, adjusting for a slightly changed folder structure and adding liquid tags instead of ERB code. All layouts except <code class="language-plaintext highlighter-rouge">default</code> have a YAML Front Matter that points to the <code class="language-plaintext highlighter-rouge">default</code> layout, which adds the navigation portion of the page and the whole HTML base of the page.</p>
 
-<h2>Layout: default</h2>
+<h2 id="layout-default">Layout: default</h2>
 
-<p>Adds the HTML boilerplate, CSS links and navigation to the site. Each page should end up passing through <code>default</code> last. Because it is last, it does not have a YAML Front Matter.</p>
+<p>Adds the HTML boilerplate, CSS links and navigation to the site. Each page should end up passing through <code class="language-plaintext highlighter-rouge">default</code> last. Because it is last, it does not have a YAML Front Matter.</p>
 
 <p>For navigation links, I changed the hardcoded URLS in the original to the following Liquid structure. That should allow switching from the test environment to the production environment URLs easily (not verified yet).</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&lt;a href="{{ site.url }}/blog/index.html"&gt;Index of all articles&lt;/a&gt; &lt;/li&gt;
-</code></pre></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;a href="{{ site.url }}/blog/index.html"&gt;Index of all articles&lt;/a&gt; &lt;/li&gt;
+</code></pre></div></div>
+
 <p>Also, Jekyll gives you the opportunity to access all the categories and tags in the site, so the navigation bar content changed to something like this (makes use of the category pages generated by the plugin mentioned below):</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&lt;H2&gt;Categories&lt;/h2&gt;
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;H2&gt;Categories&lt;/h2&gt;
 &lt;ul&gt;
   {% for cat in site.categories %}
     &lt;li&gt;
-      &lt;a href="{{ site.url }}/categories/{{ cat[0] | downcase | replace: ' ','-' | cgi_escape}}"&gt;{{ cat[0] }}&lt;/a&gt;
-    &lt;/li&gt;
+	  &lt;a href="{{ site.url }}/categories/{{ cat[0] | downcase | replace: ' ','-' | cgi_escape}}"&gt;{{ cat[0] }}&lt;/a&gt;
+	&lt;/li&gt;
    {{  }}
   {% endfor %}
 &lt;/ul&gt;
-</code></pre></div>
-<h2>Layout: Index</h2>
+</code></pre></div></div>
 
-<p>The index layout is really simple. It is meant for the main blog index page only. All it does is wrap the page content in <code>&lt;article&gt;</code> tags and pass it on to <code>default</code>. Easy.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">---
+<h2 id="layout-index">Layout: Index</h2>
+
+<p>The index layout is really simple. It is meant for the main blog index page only. All it does is wrap the page content in <code class="language-plaintext highlighter-rouge">&lt;article&gt;</code> tags and pass it on to <code class="language-plaintext highlighter-rouge">default</code>. Easy.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
 layout: default
 ---
 &lt;article&gt;
 {{content}}  
 &lt;/article&gt;
-</code></pre></div>
-<h2>Layout: category_index</h2>
+</code></pre></div></div>
 
-<p>This layout is meant for the autogenerated category indes pages (see below). It again wraps the content in an <code>&lt;article&gt;</code> tag, and then it loops through all articles in this category to list them one by one. I want to reduce the redundancy between this one and the content of my main index page (which is very similar), but that will be future work.</p>
+<h2 id="layout-category_index">Layout: category_index</h2>
+
+<p>This layout is meant for the autogenerated category indes pages (see below). It again wraps the content in an <code class="language-plaintext highlighter-rouge">&lt;article&gt;</code> tag, and then it loops through all articles in this category to list them one by one. I want to reduce the redundancy between this one and the content of my main index page (which is very similar), but that will be future work.</p>
 
 <p>This is the entire thing:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">---
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
 layout: default
 ---
 &lt;article&gt;
 &lt;h1 &gt;{{ page.title }}&lt;/h1&gt;
 &lt;ul &gt;
 {% for post in site.categories[page.category] %}
-    &lt;indextitle&gt;&lt;a href="{{ post.url }}"&gt;{{ post.title }}&lt;/a&gt;
-      {% if post.indeximage %}
-      &lt;IMG SRC="{{ site.baseurl }}/indeximages/{{ post.indeximage }}"/&gt;
-      {% endif %}
+	&lt;indextitle&gt;&lt;a href="{{ post.url }}"&gt;{{ post.title }}&lt;/a&gt;
+	  {% if post.indeximage %}
+	  &lt;IMG SRC="{{ site.baseurl }}/indeximages/{{ post.indeximage }}"/&gt;
+	  {% endif %}
 
-      &lt;h2 class="itemdate"&gt;{{ post.date | date_to_html_string }}
-      &lt;BR&gt;
-      Filed under {{ post.categories | category_links }}&lt;/h2&gt;
-    &lt;/indextitle&gt;
-    &lt;summary&gt;
-      {{ post.summary }}
-    &lt;/summary&gt;
+	  &lt;h2 class="itemdate"&gt;{{ post.date | date_to_html_string }}
+	  &lt;BR&gt;
+	  Filed under {{ post.categories | category_links }}&lt;/h2&gt;
+	&lt;/indextitle&gt;
+	&lt;summary&gt;
+	  {{ post.summary }}
+	&lt;/summary&gt;
 {% endfor %}
 &lt;/ul&gt;
 &lt;/article&gt;
-</code></pre></div>
-<h2>Layout: post</h2>
+</code></pre></div></div>
+
+<h2 id="layout-post">Layout: post</h2>
 
 <p>This layout is used for all actual blog posts. It lays out each article, and adds some comment stuff below that. This is how it looks:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">---
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
 layout: default
 ---
 &lt;article&gt;
   &lt;header&gt;
-    &lt;hgroup&gt;
-      {% if page.indeximage %}&lt;img src="{{ site.url }}/indeximages/{{ page.indeximage }}"&gt;{% endif %}
-      &lt;h1 class="itemtitle"&gt;{{ page.title }}&lt;/h1&gt;
-      &lt;h2 class="itemdate"&gt;{{ page.date | date_to_string }}&lt;/h2&gt;
-    &lt;/hgroup&gt;
+	&lt;hgroup&gt;
+	  {% if page.indeximage %}&lt;img src="{{ site.url }}/indeximages/{{ page.indeximage }}"&gt;{% endif %}
+	  &lt;h1 class="itemtitle"&gt;{{ page.title }}&lt;/h1&gt;
+	  &lt;h2 class="itemdate"&gt;{{ page.date | date_to_string }}&lt;/h2&gt;
+	&lt;/hgroup&gt;
   &lt;/header&gt;
   &lt;summary&gt;
     {{ page.summary }}
@@ -161,26 +176,27 @@ layout: default
   &lt;p&gt;
   &lt;/p&gt;
   &lt;div id="disqus_thread"&gt;&lt;/div&gt;
-      .... Stuff from DISQUS ...
+	  .... Stuff from DISQUS ...
   &lt;/a&gt;
 &lt;/footer&gt;
 &lt;/article&gt;
-</code></pre></div>
-<h1>Category navigation</h1>
+</code></pre></div></div>
 
-<p>In order to automatically generate category pages, I installed the plugin <a href="http://recursive-design.com/projects/jekyll-plugins/">from this website</a>. It works. That&#39;s what is creating the navigation bar contents, seen above. It does replace spaces in category names by hyphens, so the above code does that, too.</p>
+<h1 id="category-navigation">Category navigation</h1>
+
+<p>In order to automatically generate category pages, I installed the plugin <a href="http://recursive-design.com/projects/jekyll-plugins/">from this website</a>. It works. That’s what is creating the navigation bar contents, seen above. It does replace spaces in category names by hyphens, so the above code does that, too.</p>
 
 <p>I did encounter an issue with special characters in the category names (most notably spaces). I have blogged about the fix <a href="/blogging/2013/02/07/editing-jekyll-postfiles-plugin-to-work-with-spaces-in-category-names/">here</a>.</p>
 
-<p>A second issue, is that this creates lowercase category folder names, but my links in the navigation bar are with uppercase characters, too. So links break on the <code>github</code> server, because it is case sensitive where my OS X is not. That&#39;s why I added a <code>downcase</code> to the <code>Liquid</code> code in the <code>default</code> layout.</p>
+<p>A second issue, is that this creates lowercase category folder names, but my links in the navigation bar are with uppercase characters, too. So links break on the <code class="language-plaintext highlighter-rouge">github</code> server, because it is case sensitive where my OS X is not. That’s why I added a <code class="language-plaintext highlighter-rouge">downcase</code> to the <code class="language-plaintext highlighter-rouge">Liquid</code> code in the <code class="language-plaintext highlighter-rouge">default</code> layout.</p>
 
-<h1>Rakefile to make things more useable</h1>
+<h1 id="rakefile-to-make-things-more-useable">Rakefile to make things more useable</h1>
 
-<p>The <code>postfiles</code> plugin is great, but I do not like the ergonomics of creating the folders. The names are long, and I need to recognize all of it. So, I wrote a rake task to perform the duty of creating the postfiles folder for a specific post.</p>
+<p>The <code class="language-plaintext highlighter-rouge">postfiles</code> plugin is great, but I do not like the ergonomics of creating the folders. The names are long, and I need to recognize all of it. So, I wrote a rake task to perform the duty of creating the postfiles folder for a specific post.</p>
 
-<p>Assuming that the user usually wants to add a postfile to today&#39;s post, the default behaviour is to make a folder for today&#39;s post if <code>rake postfile</code> is typed. In order to select another post, the user can search using <code>rake postfile title=&quot;searchtext&quot;</code>. If several hits are found, a menu is shown.</p>
+<p>Assuming that the user usually wants to add a postfile to today’s post, the default behaviour is to make a folder for today’s post if <code class="language-plaintext highlighter-rouge">rake postfile</code> is typed. In order to select another post, the user can search using <code class="language-plaintext highlighter-rouge">rake postfile title="searchtext"</code>. If several hits are found, a menu is shown.</p>
 
-<p>This is the part of the <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile"><code>Rakefile</code></a> that does this:</p>
+<p>This is the part of the <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/master/Rakefile"><code class="language-plaintext highlighter-rouge">Rakefile</code></a> that does this:</p>
 
 <figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"> <span class="nb">require</span> <span class="s1">'rake'</span>
  <span class="nb">require</span> <span class="s1">'yaml'</span>
@@ -206,13 +222,13 @@ layout: default
    <span class="n">myfiles</span><span class="p">.</span><span class="nf">select!</span> <span class="p">{</span><span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="n">searchstring</span><span class="p">)}</span>
    <span class="nb">abort</span><span class="p">(</span><span class="s2">"No file found. Please rake postfiles title=</span><span class="se">\"</span><span class="s2">searchstring</span><span class="se">\"</span><span class="s2"> to indicate what you want or leave empty for today's files"</span><span class="p">)</span> <span class="k">if</span> <span class="n">myfiles</span><span class="p">.</span><span class="nf">count</span> <span class="o">==</span> <span class="mi">0</span> 
    <span class="k">if</span> <span class="n">myfiles</span><span class="p">.</span><span class="nf">count</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">then</span>
-     <span class="n">mychoice</span> <span class="o">=</span> <span class="n">myfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
+	 <span class="n">mychoice</span> <span class="o">=</span> <span class="n">myfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
    <span class="k">else</span>
-     <span class="n">mychoice</span><span class="o">=</span><span class="n">choose</span> <span class="k">do</span> <span class="o">|</span><span class="n">menu</span><span class="o">|</span>
-       <span class="n">menu</span><span class="p">.</span><span class="nf">prompt</span> <span class="o">=</span> <span class="s2">"Please choose which file to add a postfile folder to: "</span>
-       <span class="n">menu</span><span class="p">.</span><span class="nf">choice</span><span class="p">(</span><span class="ss">:abort</span><span class="p">)</span> <span class="p">{</span><span class="nb">abort</span><span class="p">(</span><span class="s2">"You cancelled. Too bad."</span><span class="p">)}</span>
-       <span class="n">myfiles</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span> <span class="n">menu</span><span class="p">.</span><span class="nf">choice</span><span class="p">(</span><span class="n">file</span><span class="p">)}</span>
-     <span class="k">end</span>
+	 <span class="n">mychoice</span><span class="o">=</span><span class="n">choose</span> <span class="k">do</span> <span class="o">|</span><span class="n">menu</span><span class="o">|</span>
+	   <span class="n">menu</span><span class="p">.</span><span class="nf">prompt</span> <span class="o">=</span> <span class="s2">"Please choose which file to add a postfile folder to: "</span>
+	   <span class="n">menu</span><span class="p">.</span><span class="nf">choice</span><span class="p">(</span><span class="ss">:abort</span><span class="p">)</span> <span class="p">{</span><span class="nb">abort</span><span class="p">(</span><span class="s2">"You cancelled. Too bad."</span><span class="p">)}</span>
+	   <span class="n">myfiles</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span> <span class="n">menu</span><span class="p">.</span><span class="nf">choice</span><span class="p">(</span><span class="n">file</span><span class="p">)}</span>
+	 <span class="k">end</span>
    <span class="k">end</span>
    <span class="nb">puts</span> <span class="s2">"Chosen: </span><span class="si">#{</span><span class="n">mychoice</span><span class="si">}</span><span class="s2">"</span>
    <span class="n">thefolder</span> <span class="o">=</span> <span class="s2">"</span><span class="si">#{</span><span class="no">CONFIG</span><span class="p">[</span><span class="s1">'postfiles'</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">mychoice</span><span class="si">}</span><span class="s2">"</span>
@@ -223,37 +239,40 @@ layout: default
  <span class="k">end</span> <span class="c1"># task :postfile</span>
  </code></pre></figure>
 
-<p>Also, I stole parts of the <code>Rakefile</code> from <a href="https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile">Jekyll-bootstrap</a>. Especially, the <code>post</code> and <code>preview</code> commands I really like. I did edit them to meet my tastes, please see <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile">the file on GitHub</a>. </p>
+<p>Also, I stole parts of the <code class="language-plaintext highlighter-rouge">Rakefile</code> from <a href="https://raw.github.com/plusjade/jekyll-bootstrap/master/Rakefile">Jekyll-bootstrap</a>. Especially, the <code class="language-plaintext highlighter-rouge">post</code> and <code class="language-plaintext highlighter-rouge">preview</code> commands I really like. I did edit them to meet my tastes, please see <a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile">the file on GitHub</a>.</p>
 
-<h1>Migrating the posts</h1>
+<h1 id="migrating-the-posts">Migrating the posts</h1>
 
 <p>As I had only a few posts, I decided to migrate them by hand. This involved:</p>
 
 <ol>
-<li>Moving the post file to the <code>_posts/</code> folder.</li>
-<li>Renaming the file with the <code>yyyy-mm-dd-title.ext</code> pattern (I was previously using a <code>created_at</code> tag in the <code>YAML</code> of the post).</li>
-<li>Adding <code>layout:post</code> to the YAML front matter.</li>
-<li>Copying the images to the <code>_postfiles/</code> folder (using my rake helper) and updating the references to the new Liquid tag.</li>
-<li>Copy any index images to the <code>indeximages/</code> folder.</li>
-<li>Testing.</li>
+  <li>Moving the post file to the <code class="language-plaintext highlighter-rouge">_posts/</code> folder.</li>
+  <li>Renaming the file with the <code class="language-plaintext highlighter-rouge">yyyy-mm-dd-title.ext</code> pattern (I was previously using a <code class="language-plaintext highlighter-rouge">created_at</code> tag in the <code class="language-plaintext highlighter-rouge">YAML</code> of the post).</li>
+  <li>Adding <code class="language-plaintext highlighter-rouge">layout:post</code> to the YAML front matter.</li>
+  <li>Copying the images to the <code class="language-plaintext highlighter-rouge">_postfiles/</code> folder (using my rake helper) and updating the references to the new Liquid tag.</li>
+  <li>Copy any index images to the <code class="language-plaintext highlighter-rouge">indeximages/</code> folder.</li>
+  <li>Testing.</li>
 </ol>
 
 <p>Even though it was only two handfuls of posts, this turned out to be a bit tedious. Especially going through all the files for the internal links and referencing them to the correct place was a drag.</p>
 
-<h1>Old links</h1>
+<h1 id="old-links">Old links</h1>
 
 <p>I have not found a way to keep my old links alive. Good thing I was giving DISQUS some unique IDs for the posts, at least that makes the comments still follow the posts to the new place. I could make dummy pages with redirects, but I am too lazy. This is not a high-traffic site, right?</p>
 
-<h1>Deploying to github-pages</h1>
+<h1 id="deploying-to-github-pages">Deploying to github-pages</h1>
 
-<p>The <a href="https://help.github.com/categories/20/articles">help for Github pages</a> is quite clear. The trick was to migrate from my original repo to the new one, them being completely separate before. I will probably go back to the strategy that I followed for <code>nanoc</code>.That is, to keep the source and output together in one repository with the <code>source</code> branch containing the source and the <code>master</code> branch containing the site itself. This does require some trickery in the <code>Rakefile</code>. A drawback is that this deployment can break if git is not happy switching branches, but has the benefit that all files are kept together in the repo so all history is kept together.</p>
+<p>The <a href="https://help.github.com/categories/20/articles">help for Github pages</a> is quite clear. The trick was to migrate from my original repo to the new one, them being completely separate before. I will probably go back to the strategy that I followed for <code class="language-plaintext highlighter-rouge">nanoc</code>.That is, to keep the source and output together in one repository with the <code class="language-plaintext highlighter-rouge">source</code> branch containing the source and the <code class="language-plaintext highlighter-rouge">master</code> branch containing the site itself. This does require some trickery in the <code class="language-plaintext highlighter-rouge">Rakefile</code>. A drawback is that this deployment can break if git is not happy switching branches, but has the benefit that all files are kept together in the repo so all history is kept together.</p>
 
 <p>First, I created the correct branch structure:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">git checkout -b source
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout -b source
 git checkout master
-</code></pre></div>
-<p>Then, I remodel the master branch to contain only the files from the _site folder. I edit the README file to make clear what&#39;s going on. And I add a <code>.nojekyll</code> file to tell Github not to try and process it itself. Finally, I make sure that the new source folder gets pushed to the origin (Github).</p>
-<div class="highlight"><pre><code class="language-" data-lang="">rm -rf xxxx yyyy zzzz         # all files except _site/ and README
+</code></pre></div></div>
+
+<p>Then, I remodel the master branch to contain only the files from the _site folder. I edit the README file to make clear what’s going on. And I add a <code class="language-plaintext highlighter-rouge">.nojekyll</code> file to tell Github not to try and process it itself. Finally, I make sure that the new source folder gets pushed to the origin (Github).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm -rf xxxx yyyy zzzz         # all files except _site/ and README
 mv _site/* .
 rm -rf _site
 
@@ -263,16 +282,17 @@ vi README
 
 git commit -A 
 git push -u origin source
-</code></pre></div>
+</code></pre></div></div>
+
 <p>Now, I need to come up with a Rakefile that does the correct processing, something like this:</p>
 
 <ol>
-<li>Check that I am on the source branch, or fail.</li>
-<li>Compile using <code>ejekyll</code> with the <code>--url</code> option set for the server url.</li>
-<li>Checkout master</li>
+  <li>Check that I am on the source branch, or fail.</li>
+  <li>Compile using <code class="language-plaintext highlighter-rouge">ejekyll</code> with the <code class="language-plaintext highlighter-rouge">--url</code> option set for the server url.</li>
+  <li>Checkout master</li>
 </ol>
 
-<p><a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile">Check out my latest Rakefile to check how I did it</a>. Specifically, I made a deployment sub-rakefile in the <code>_rake/</code> subfolder. <a href="https://github.com/pragtich/pragtich-blog-jekyll/tree/source/_rake">Check it out if you want</a>.</p>
+<p><a href="https://github.com/pragtich/pragtich-blog-jekyll/blob/source/Rakefile">Check out my latest Rakefile to check how I did it</a>. Specifically, I made a deployment sub-rakefile in the <code class="language-plaintext highlighter-rouge">_rake/</code> subfolder. <a href="https://github.com/pragtich/pragtich-blog-jekyll/tree/source/_rake">Check it out if you want</a>.</p>
 
 <footer>
   <p>

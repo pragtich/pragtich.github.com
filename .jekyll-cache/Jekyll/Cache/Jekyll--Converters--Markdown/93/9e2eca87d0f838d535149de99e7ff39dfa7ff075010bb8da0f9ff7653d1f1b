@@ -1,0 +1,32 @@
+I"�<h1 id="fixing-the-anemometer-on-an-alecto-ws-3000-weather-station">Fixing the anemometer on an Alecto WS-3000 weather station</h1>
+
+<p>The Alecto WS-3000 has been a very popular weather station, due to its good price and good performance. It includes a large LCD base station with temperature, humidity and pressure monitoring, and an outside unit with temperature, humidity, rainfall and wind speed. It seems that it was manufactured by a Chinese company, known under the name Fine Offset.</p>
+
+<p>After a few years on the roof, the wind speed sensor stopped working. Sometimes it would turn freely, but mostly it would just bounce back and forth around one point. Figuring that it must be a very simple construction, I started exploring.</p>
+
+<h1 id="fun-but-not-what-were-looking-for">Fun, but not what we’re looking for</h1>
+
+<p>The three screws at the bottom looked like a good place to start. After removing them (very carefully), a look at the internals:</p>
+
+<p><img src="/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/bottom1.jpg" alt="What's that?" title="The internals" /></p>
+
+<p>Beneath a pile of spider carcasses, we find a small PCB with a reed relay. It’s mounted in the plane of rotation, and it seems to be switching twice per revolution. Besides for the spider’s remains, there seems to be some slight corrosion on the PCB. It is likely that some condensation in the anemometer caused this. Since it’s still working, let’s leave it as is.</p>
+
+<h1 id="so-it-must-be-under-the-dome">So it must be under the dome</h1>
+
+<p>The culprit must be under the dome, then. Tricky: the plastic is starting to degrade somewhat and might not be very strong any more. Two large screwdrivers and some patience were in order. Eventually it came off in one piece, revealing the rotor.</p>
+
+<p><img src="/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/rotor.jpg" alt="The rotor" title="The rotor" /></p>
+
+<p>The rotor is really simple, it is a single injection molded piece with a small magnet pressed into it. The magnet rotates around the reed relay, causing it to switch.</p>
+
+<p>The rotor is pressed onto a bearing, which is heat staked onto the body of the anemometer. The bearing has clearly seized, it’s movement is crunchy and sometimes blocks altogether. I forgot to take a picture of this, but I promise that the bearing was there!</p>
+
+<p>Opening up the heat stake with a soldering iron was not the most fun I’ve ever had, but eventually:</p>
+
+<p><img src="/mechanical/2017/05/01/fixing-an-alecto-fine-offset-wind-speed-meter/body.jpg" alt="The body" title="The body" /></p>
+
+<p>Luckily, our Chinese friends chose a super-common bearing type that gets a lot of use in the RC world, so ordering replacements was a matter of minutes’ work. It’s the MR105-2RS, a 5x10x4 mini bearing. Really easy to find.</p>
+
+<p>Putting things back together was simple enough, just a matter of pressing everything together carefully. It runs as it should again.</p>
+:ET

@@ -1,0 +1,43 @@
+I"h<p>installing Emacs Template mode in Aquamacs. Based on <a href="http://emacs-template.sourceforge.net/details.html">This web site</a>.</p>
+
+<p>Downloaded and put the template.el file into <code class="language-plaintext highlighter-rouge">~/.xemacs/lisp</code>. 
+Visit the file and `  M-x byte-compile-file RET template.el RET`. Loads of errors.</p>
+
+<p>Put into Emacs settings (Library in Aquamacs):
+    (require ‘template)
+    (template-initialize)
+    M-C-x</p>
+
+<p>Copied example templates to ~/.templates.</p>
+
+<p>Restarted Emacs</p>
+
+<p>Read the <a href="http://emacs-template.sourceforge.net/details.html">manual</a>.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">C-x t</code> Creates a file with template</li>
+  <li><code class="language-plaintext highlighter-rouge">template-new-file</code> Should do the same</li>
+  <li>I want to try and disable it from <code class="language-plaintext highlighter-rouge">C-x C-f</code> – that would only be confusing</li>
+</ul>
+
+<p>Created the following empty markdown article with Nanoc header in <code class="language-plaintext highlighter-rouge">~/.templates</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--- 
+title: (&gt;&gt;&gt;TITLE&lt;&lt;&lt;)
+kind: article
+category: Computer stuff
+created_at: (&gt;&gt;&gt;DATE&lt;&lt;&lt;)
+summary: (&gt;&gt;&gt;SUMMARY&lt;&lt;&lt;)
+---
+
+(&gt;&gt;&gt;POINT&lt;&lt;&lt;)
+
+&gt;&gt;&gt;TEMPLATE-DEFINITION-SECTION&lt;&lt;&lt;
+("SUMMARY" "Summary?" "" "" "-- no summary --")
+("TITLE" "Title?" "" "" "")
+</code></pre></div></div>
+
+<p>Now, to submit a now article, I can do: <code class="language-plaintext highlighter-rouge">C-x t</code>, type the new folder and filename with the <code class="language-plaintext highlighter-rouge">.md</code> extension, and type <code class="language-plaintext highlighter-rouge">RET</code>. Further filling in the prompts for template (<code class="language-plaintext highlighter-rouge">RET</code>), summary and title is a breeze, and then I have the cursor placed at exactly the right point for starting to blog.</p>
+
+<p>Great stuff.</p>
+
+:ET

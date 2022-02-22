@@ -32,132 +32,144 @@
 	A fun little problem about primes, which has a nice solution.
 </summary>
 <bodytext>
-  <h1>Project Euler problem 37: Truncatable primes</h1>
+  <h1 id="project-euler-problem-37-truncatable-primes">Project Euler problem 37: Truncatable primes</h1>
 
 <p>I had some fun with <a href="https://projecteuler.net/problem=37">problem 37 in project Euler</a>. The problem description states the following:</p>
 
 <blockquote>
-<p>The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.</p>
+  <p>The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.</p>
 
-<p>Find the sum of the only eleven primes that are both truncatable from left to right and right to left.</p>
+  <p>Find the sum of the only eleven primes that are both truncatable from left to right and right to left.</p>
 
-<p>NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.</p>
+  <p>NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.</p>
+
 </blockquote>
 
 <p>First I solved this problem using the method that many followed, which is to start with a list of primes, and eliminate all primes that are not truncatable. This approach turned out to be quite slow (admittedly, my trying to do it in Excel did not help), and problematic on one critical point. How large should your largest prime be. There is no clear mechanism to prove what the maximum possible bidirectionally truncatable prime could be. Except <a href="http://en.wikipedia.org/wiki/Truncatable_prime">looking it up on Wikipedia</a>. In fact, Excel was not really able to handle the number of lines that turned out to be required, as most people use a million primes.</p>
 
-<h1>A nicer solution</h1>
+<h1 id="a-nicer-solution">A nicer solution</h1>
 
 <p>Actually, playing around out of dissatisfaction, I stumbled upon the way to actually prove the absolute number of bidirectionally truncatable primes, using the following thought process:</p>
 
 <ol>
-<li>A bidirectionally truncatable prime is both right-truncatable and left-truncatable.</li>
-<li>Right-truncatable and left-truncatable primes may be constructed by a stepwise process adding one digit at a time and testing for primality.</li>
-<li>It can be proven when the maximum right- and left-truncatable primes have been found: the addition of the next digit does not deliver any primes.</li>
-<li>Because of point 2, this means that the intersection of left- and right-truncatable primes will probably have a finite size.</li>
+  <li>A bidirectionally truncatable prime is both right-truncatable and left-truncatable.</li>
+  <li>Right-truncatable and left-truncatable primes may be constructed by a stepwise process adding one digit at a time and testing for primality.</li>
+  <li>It can be proven when the maximum right- and left-truncatable primes have been found: the addition of the next digit does not deliver any primes.</li>
+  <li>Because of point 2, this means that the intersection of left- and right-truncatable primes will probably have a finite size.</li>
 </ol>
 
 <p>This approach needs no assumptions on the maximum size of the primes, and turns out to be very fast because of the stepwise algorithm, when a speedy primality test is used.</p>
 
-<h1>The algorithm itself</h1>
+<h1 id="the-algorithm-itself">The algorithm itself</h1>
 
 <p>The algorithm itself is really simple:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">rtrunc_primes</span> <span class="o">=</span> <span class="n">rtrunc_primes</span><span class="p">()</span>
-<span class="n">ltrunc_primes</span> <span class="o">=</span> <span class="n">ltrunc_primes</span><span class="p">()</span>
 
-<span class="n">tprimes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">rtrunc_primes</span> <span class="o">&amp;</span> <span class="n">ltrunc_primes</span><span class="p">))</span> 
-</code></pre></div>
-<p>We simply get all right truncatable primes, all left truncatable primes and use the set intersection operator <code>&amp;</code> to get our answers. I make a sorted list in order to be able to drop the first 4 primes in the summation, as that is how <a href="https://projecteuler.net/problem=37">Project Euler problem 37</a> is stated.</p>
+<p>~~~ python
+rtrunc_primes = rtrunc_primes()
+ltrunc_primes = ltrunc_primes()</p>
 
-<p>I get the answer and the list of primes using these simple statements:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="s">"Truncatable primes: "</span><span class="p">,</span> <span class="n">tprimes</span>
-<span class="k">print</span> <span class="s">"Sum minus 1-digit primes: "</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">tprimes</span><span class="p">[</span><span class="mi">4</span><span class="p">:])</span>
-<span class="k">print</span> <span class="s">"Number of truncatable primes: "</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tprimes</span><span class="p">)</span>
-</code></pre></div>
-<h1>Generating the right truncatable primes</h1>
+<p>tprimes = sorted(list(rtrunc_primes &amp; ltrunc_primes))</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+We simply get all right truncatable primes, all left truncatable primes and use the set intersection operator `&amp;` to get our answers. I make a sorted list in order to be able to drop the first 4 primes in the summation, as that is how [Project Euler problem 37][Euler37] is stated.
+
+
+I get the answer and the list of primes using these simple statements:
+
+```python
+print "Truncatable primes: ", tprimes
+print "Sum minus 1-digit primes: ", sum(tprimes[4:])
+print "Number of truncatable primes: ", len(tprimes)
+</code></pre></div></div>
+
+<h1 id="generating-the-right-truncatable-primes">Generating the right truncatable primes</h1>
 
 <p>Generating the right truncatable primes is the easy part.</p>
 
-<p>We have to consider that the 1-digit right truncatable primes are simply the 1-digit primes, that any additional digit needs to be a valid last digit for a prime and that the whole number must be prime. Since all primes above <code>9</code> end on either a <code>1, 3, 7 or 9</code>, this really reduces the number of tests required. Even without optimization this runs really quickly on modern systems. After some rewriting (still learning to use the list comprehensions in Python), this is my result:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<p>We have to consider that the 1-digit right truncatable primes are simply the 1-digit primes, that any additional digit needs to be a valid last digit for a prime and that the whole number must be prime. Since all primes above <code class="language-plaintext highlighter-rouge">9</code> end on either a <code class="language-plaintext highlighter-rouge">1, 3, 7 or 9</code>, this really reduces the number of tests required. Even without optimization this runs really quickly on modern systems. After some rewriting (still learning to use the list comprehensions in Python), this is my result:</p>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+ 
 <span class="k">def</span> <span class="nf">rtrunc_primes</span><span class="p">():</span>
   <span class="s">"""Generate a set of all right-truncatable primes"""</span>
-  <span class="n">rprimes</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">]]</span> <span class="c"># Seed with 1-digit primes</span>
-  <span class="n">rdigits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="c"># Only possible digits after first digit</span>
-
+  <span class="n">rprimes</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">]]</span> <span class="c1"># Seed with 1-digit primes
+</span>  <span class="n">rdigits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span> <span class="c1"># Only possible digits after first digit
+</span> 
   <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
-  <span class="k">while</span> <span class="n">rprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]:</span> <span class="c"># Continue as long as we have found a prime in the previous n</span>
-    <span class="n">nprimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">rprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">10</span><span class="o">*</span><span class="n">base</span><span class="o">+</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">rdigits</span> <span class="p">]</span> <span class="k">if</span> <span class="n">is_prime</span> <span class="p">(</span><span class="n">p</span><span class="p">)]</span>
-    <span class="n">rprimes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nprimes</span><span class="p">)</span>
+  <span class="k">while</span> <span class="n">rprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]:</span> <span class="c1"># Continue as long as we have found a prime in the previous n
+</span>    <span class="n">nprimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">rprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">10</span><span class="o">*</span><span class="n">base</span><span class="o">+</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">rdigits</span> <span class="p">]</span> <span class="k">if</span> <span class="n">is_prime</span> <span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+    <span class="n">rprimes</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">nprimes</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
-  <span class="k">return</span> <span class="p">{</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">rprimes</span><span class="p">)}</span>
-</code></pre></div>
-<h1>Generating left truncatable primes</h1>
+  <span class="k">return</span> <span class="p">{</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">rprimes</span><span class="p">)}</span>
+</code></pre></div></div>
+
+<h1 id="generating-left-truncatable-primes">Generating left truncatable primes</h1>
 
 <p>The left truncatable primes are slightly more difficult. But following the same logic, we start with the one-digit primes, then continue adding digits to the left until we no longer find a prime for a given digit length. So glad that Python does away with old-fashioned maximum limits on ineger sizes. In this case, there are more primes and the number of possible digits is larger, but still it runs in a blink of an eye on my systems.</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">ltrunc_primes</span><span class="p">():</span>
-  <span class="s">"""Generate a set of all left-truncatable primes"""</span>
-  <span class="n">lprimes</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">]]</span> <span class="c"># Seed with 1-digit primes</span>
-  <span class="n">ldigits</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c"># Only possible digits after first digit</span>
 
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">ltrunc_primes</span><span class="p">():</span>
+  <span class="s">"""Generate a set of all left-truncatable primes"""</span>
+  <span class="n">lprimes</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">]]</span> <span class="c1"># Seed with 1-digit primes
+</span>  <span class="n">ldigits</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># Only possible digits after first digit
+</span> 
   <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
   <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span>
-  <span class="k">while</span> <span class="n">lprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]:</span> <span class="c"># Continue as long as we have found a prime in the previous n</span>
-    <span class="n">factor</span> <span class="o">*=</span> <span class="mi">10</span> <span class="c"># We need to stick the digits to the front, so mult with factor</span>
-    <span class="n">nprimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">lprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">base</span> <span class="o">+</span> <span class="n">l</span> <span class="o">*</span> <span class="n">factor</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ldigits</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
-    <span class="n">lprimes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nprimes</span><span class="p">)</span>
+  <span class="k">while</span> <span class="n">lprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]:</span> <span class="c1"># Continue as long as we have found a prime in the previous n
+</span>    <span class="n">factor</span> <span class="o">*=</span> <span class="mi">10</span> <span class="c1"># We need to stick the digits to the front, so mult with factor
+</span>    <span class="n">nprimes</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">lprimes</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">base</span> <span class="o">+</span> <span class="n">l</span> <span class="o">*</span> <span class="n">factor</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ldigits</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+    <span class="n">lprimes</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">nprimes</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
-  <span class="k">return</span> <span class="p">{</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">lprimes</span><span class="p">)}</span>
-</code></pre></div>
-<h1>Implementation of the primality test</h1>
+  <span class="k">return</span> <span class="p">{</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">lprimes</span><span class="p">)}</span>
+</code></pre></div></div>
+
+<h1 id="implementation-of-the-primality-test">Implementation of the primality test</h1>
 
 <p>Others have done a great job in coming up with all kinds of primality tests. Not being an expert, I <a href="https://www.google.nl/search?q=primality+test+python">used the force</a> and found <a href="http://rosettacode.org/wiki/Miller-Rabin_primality_test#Python:_Proved_correct_up_to_large_N">a perfectly suitable solution</a>. It may not have been proven up to the large numbers that end up being in the left-truncatable set, but it gives the correct result. In the end, the algorithm turns out to be correct, and would still be with a more rigorous primality test. This is the test that I pretty much <a href="http://rosettacode.org/wiki/Miller-Rabin_primality_test#Python:_Proved_correct_up_to_large_N">just copied</a>.</p>
 
-<p><noscript><pre># Primality testing as taken from http://rosettacode.org/wiki/Miller-Rabin<em>primality</em>test#Python</p>
+<noscript><pre># Primality testing as taken from http://rosettacode.org/wiki/Miller-Rabin_primality_test#Python
+# Not proven for very large primes, but probably (?) right?
+# TODO: try better set from http://miller-rabin.appspot.com/
 
-<h1>Not proven for very large primes, but probably (?) right?</h1>
-
-<h1>TODO: try better set from http://miller-rabin.appspot.com/</h1>
-
-<p>def <em>try</em>composite(a, d, n, s):
+def _try_composite(a, d, n, s):
     if pow(a, d, n) == 1:
         return False
     for i in range(s):
         if pow(a, 2**i * d, n) == n-1:
             return False
-    return True # n  is definitely composite</p>
-
-<p>def is<em>prime(n, _precision</em>for<em>huge</em>n=16):
-    if n in <em>known</em>primes or n in (0, 1):
+    return True # n  is definitely composite
+ 
+def is_prime(n, _precision_for_huge_n=16):
+    if n in _known_primes or n in (0, 1):
         return True
-    if any((n % p) == 0 for p in <em>known</em>primes):
+    if any((n % p) == 0 for p in _known_primes):
         return False
     d, s = n - 1, 0
     while not d % 2:
         d, s = d &gt;&gt; 1, s + 1
-    # Returns exact according to http://primes.utm.edu/prove/prove2<em>3.html
+    # Returns exact according to http://primes.utm.edu/prove/prove2_3.html
     if n &lt; 1373653: 
-        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3))
+        return not any(_try_composite(a, d, n, s) for a in (2, 3))
     if n &lt; 25326001: 
-        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5))
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5))
     if n &lt; 118670087467: 
         if n == 3215031751: 
             return False
-        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7))
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7))
     if n &lt; 2152302898747: 
-        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
     if n &lt; 3474749660383: 
-        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
     if n &lt; 341550071728321: 
-        return not any(</em>try<em>composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
     # otherwise
-    return not any(</em>try<em>composite(a, d, n, s) 
-                   for a in _known</em>primes[:<em>precision</em>for<em>huge</em>n])</p>
+    return not any(_try_composite(a, d, n, s) 
+                   for a in _known_primes[:_precision_for_huge_n])
+ 
+_known_primes = [2, 3]
+_known_primes += [x for x in range(5, 1000, 2) if is_prime(x)]
+</pre></noscript>
+<script src="https://gist.github.com/pragtich/8649385210b5b641506f.js"> </script>
 
-<p><em>known</em>primes = [2, 3]
-<em>known</em>primes += [x for x in range(5, 1000, 2) if is_prime(x)]
-</pre></noscript><script src="https://gist.github.com/pragtich/8649385210b5b641506f.js"> </script></p>
 
 <footer>
   <p>
