@@ -12,7 +12,7 @@ As has been the case since my first attempts at linux around 1997, it's always a
 
 In recent years, the available ARM hardware has become very exciting. After having played with an Odroid C2 (fun for LibreELEC, haven't used it for much more), an NanoPi Neo2 (Fantastically small, not very powerful but the aluminium housing is quite irresistible), now is the turn for an Odroid N2+. Wat a beast! Apparently the IO is not very fast, but the processor is great. And the Homeassistant Blue version is quite pretty.
 
-![Home assistant blue]({% blue_dev_mode.png %} )
+![Home assistant blue]({% postfile blue_dev_mode.png %} )
 
 I was trying to install specific stuff on it, and learned some lessons w.r.t. the use of libvirt/KVM/QEMU on this ARM64/aarch64 platform. These were some fun lessons. I am using Armbian, in general.
 
