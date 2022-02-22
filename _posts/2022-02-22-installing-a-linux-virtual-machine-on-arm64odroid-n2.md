@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Installing a linux virtual machine on ARM64/Odroid N2"
-category: Computer Stuff
+category: "Computer stuff"
 tags: [linux, Odroid, Home-assistant]
 indeximage: libvirt.jpg
 comment_id: libvirt
