@@ -5,14 +5,18 @@ category: "Computer stuff"
 tags: [linux, Odroid, Home-assistant]
 indeximage: libvirt.jpg
 comment_id: libvirt
-summary: "Some fun adventures in time-wasting with another great innovation: virtual machined in Linux."
+summary: "Some fun adventures in time-wasting with another great innovation: virtual machines in Linux."
 ---
 
 As has been the case since my first attempts at linux around 1997, it's always a challenge. Everything changes quickly, so lots of things break and the documentation is always out of date. Nevertheless, more and more becomes possible and the excitement never fails to keep up with the frustration.
 
 In recent years, the available ARM hardware has become very exciting. After having played with an Odroid C2 (fun for LibreELEC, haven't used it for much more), an NanoPi Neo2 (Fantastically small, not very powerful but the aluminium housing is quite irresistible), now is the turn for an Odroid N2+. Wat a beast! Apparently the IO is not very fast, but the processor is great. And the Homeassistant Blue version is quite pretty.
 
+![Home assistant blue]({% blue_dev_mode.png %} )
+
 I was trying to install specific stuff on it, and learned some lessons w.r.t. the use of libvirt/KVM/QEMU on this ARM64/aarch64 platform. These were some fun lessons. I am using Armbian, in general.
+
+I always wonder where we would be without the internet. Only with lots of searching, would I have been able to solve my problems. And even then, it's been hours and hours of experimentation...
 
 # Kernel error on some older linux kernels
 
@@ -27,9 +31,12 @@ Quite an obtuse failure message. Thanks to people who are kind enough to documen
 First I was concerned, because one of my guests requires a Debian OS (and Armbian does not have the newer kernels for Debian), but since we are only updating the host OS, we are fine.
 I ended up switching to the Jammy variant of Armbian (Ubuntu, kernel 5.15) and it resolves this issue.
 
-# Installing docker into debian on a libvirt/KVM Debian guest OS
+# Installing Docker into Debian on a libvirt/KVM/QEMU Debian guest OS
 
-Home assistant supervised recommends the simple method of installing Docker by piping a script to the shell. I do not like this, because of security concerns. Perhaps it is overly cautious, but I prefer to know what code I am running (I know, what's in de packages themselves, right...?). I found a nice tip on how to install Docker through `cloud-config`, which fits my desire. However, it requires GPG to be installed, which is not the case on the Debian cloud images that I'm using.
+Home assistant supervised recommends the simple method of installing Docker by piping a script to the shell. I do not like this, because of security concerns. Perhaps it is overly cautious, but I prefer to know what code I am running (I know, what's in de packages themselves, right...?). 
+
+Because I want to run in a QEMU/libvirt virtual machine, it is easiest to configure everyting using the `cloud-config` file.
+I found a nice tip on how to install Docker through `cloud-config`, which fits my desire. However, it requires GPG to be installed, which is not the case on the Debian cloud images that I'm using.
 [The tip is an example for an Ubuntu guest, but does not transfer cleanly to Debian](https://stackoverflow.com/questions/24418815/how-do-i-install-docker-using-cloud-init).
 
 
@@ -61,24 +68,25 @@ apt:
   sources:
     docker.list:
       source: "deb [signed-by=/usr/share/keyrings/docker.asc] https://download.docker.com/linux/debian buster stable"
+
 packages:
   - docker-ce
   - docker-ce-cli
   - ... all my other requirements
 ```
 
-# Setting homeassistant Supervised machine type from command line install
+# Setting Homeassistant Supervised machine type from command line install
 
-The homeassistant-supervisor can be installed [using the instructions on the Homeassistant Github](https://github.com/home-assistant/supervised-installer). These instructions do not, however, explain how to install Homeassistant Supervised programmattically, that is non-interactively. The installer actually wants to know your machine type, so will present you with a ment. Since I was installing using Ansible at first, and later using `cloud-config`, there was no way to provide this information interactively. So how do you set `ha/machine-type` programmattically?
+The homeassistant-supervisor can be installed [using the instructions on the Homeassistant Github](https://github.com/home-assistant/supervised-installer). These instructions do not, however, explain how to install Homeassistant Supervised programmattically, that is non-interactively. The installer actually wants to know your machine type, so will present you with a menu. Since I was installing using Ansible at first, and later using `cloud-config`, there was no way to provide this information interactively. So how do you set `ha/machine-type` programmattically?
 
 ![Screenshot of ha/machine-type menu]({% postfile Home-Assistant-Supervised-select-machine-type.jpg %} )
 
 It turns out that this is a general mechanism called `debconf`. It's the mechanism that Debian uses to configure its package settings. In some ways it is very nice, because it also allows you to change settings on already-installed packages using `dpkg-reconfigure`, etc.
-
 The key to what I want, then, is to preseed the database with the desired setting. If the package is well designed (it seems to be), it should accept this value and not present the menu when the value is already available.
 
 This can be done by importing an entire database, [such as is recommended in some manuals](http://manpages.ubuntu.com/manpages/impish/man7/debconf.7.html). However, in the `debconf-utils` package, there are some tools to help. Based on [a helpful StackExchange post](https://unix.stackexchange.com/questions/106552/apt-get-install-without-debconf-prompt) and confirmed by [another helpful site](http://www.microhowto.info/howto/perform_an_unattended_installation_of_a_debian_package.html), the following turns out to be the solution, assuming that the installer was downloaded into a package called `ha.deb`. I chose the `qemuarm-64` machine, all choices are listed in the [README on Github](https://github.com/home-assistant/supervised-installer/blob/main/README.md) or in the [Template definition](https://github.com/home-assistant/supervised-installer/blob/main/homeassistant-supervised/DEBIAN/templates). 
-The utility `debconf-set-selections` ([manual here](http://manpages.ubuntu.com/manpages/bionic/man1/debconf-set-selections.1.html)to the rescue!
+The utility `debconf-set-selections` ([manual here](http://manpages.ubuntu.com/manpages/bionic/man1/debconf-set-selections.1.html)) to the rescue!
+
 Later, I actually found a reference in the Debian wiki. The trouble sometimes is, to find the correct search terms. Especially for concepts that are getting to be quite ancient. [Preseed is the way to go](https://wiki.debian.org/PackageManagement/Preseed), apparently!
 
 
