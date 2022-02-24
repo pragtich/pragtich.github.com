@@ -3,7 +3,7 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="https://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="https://www.pragti.ch/blog"/>
-  <updated>2022-02-22T19:55:28+01:00</updated>
+  <updated>2022-02-24T14:55:55+01:00</updated>
   <author>
     <name>Joris Pragt</name>
 
@@ -111,6 +111,78 @@ The utility &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;d
 homeassistant-supervised	ha/machine-type	Select	qemuarm-64
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
+&lt;h1 id=&quot;debugging-zeroconf-mdns-in-home-assistant&quot;&gt;Debugging Zeroconf mDNS in Home assistant&lt;/h1&gt;
+
+&lt;p&gt;Home assistant uses Zeroconf to provide mDNS services. This is the part that allows one to access the homeassistant webpage through the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://homeassistant.local:8123/&lt;/code&gt; URL. It is a finnicky mechanism at the best of times, mainly because it uses multicast, which is difficult to debug. Let’s give it a go…&lt;/p&gt;
+
+&lt;p&gt;I installed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;avahi-utils&lt;/code&gt; on the host machine (this also installs &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;avahi-daemon&lt;/code&gt;) and then one can browse with something like:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;avahi-browse &lt;span class=&quot;nt&quot;&gt;-alr&lt;/span&gt;
+-    br0 IPv4 Home                                          _home-assistant._tcp &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
+-    br0 IPv6 Home                                          _home-assistant._tcp &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
++    br0 IPv4 XKCD                                          _home-assistant._tcp &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
++    br0 IPv6 XKCD                                          _home-assistant._tcp &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;    br0 IPv4 XKCD                                          _home-assistant._tcp &lt;span class=&quot;nb&quot;&gt;local
+   hostname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;a38a3e63fbd64ecb89b12a588ce7552d.local]
+   address &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.0.0.xxx]
+   port &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;8123]
+   txt &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;requires_api_password=True&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;base_url=http://10.0.0.xxx:8123&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;internal_url=http://10.0.0.184:xxx&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;external_url=&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;version=2022.2.9&quot;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It is not very easy to understand, but I think I understand that what’s wrong here, is the hostname: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a38a3e63fbd64ecb89b12a588ce7552d.local&lt;/code&gt;. This should be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;homeassistant.local&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Trying to figure out where the mDNS is actually performed, it turns out &lt;a href=&quot;https://www.home-assistant.io/integrations/zeroconf&quot;&gt;that it is actually a component of Homeassistant Core&lt;/a&gt;, and the source can be seen &lt;a href=&quot;https://github.com/home-assistant/core/tree/dev/homeassistant/components/zeroconf&quot;&gt;in GitHub&lt;/a&gt;. This form of modern Python is not very easy to read for an amateur like myself, but I gave it a go.&lt;/p&gt;
+
+&lt;p&gt;And this is where it goes ‘wrong’. &lt;a href=&quot;https://github.com/home-assistant/core/pull/35623&quot;&gt;It seems that this was done on purpose&lt;/a&gt;, but I cannot claim to have enough understanding to follow this discussion. Perhaps there is a good motivation, but at the moment this seems to break the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;homeassistant.local&lt;/code&gt; address.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+ &lt;span class=&quot;n&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AsyncServiceInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ZEROCONF_TYPE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;valid_location_name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ZEROCONF_TYPE&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.local.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;addresses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;address_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;server_port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In an attempt to confirm this hypothesis, I manually edited the source to use a fixed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server = homeassistant.local.&lt;/code&gt;. This was done by logging into the Docker (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker exec -it homeassistant /bin/bash&lt;/code&gt; and editing the source (somewhere around &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/src/homeassistant/components/zeroconf&lt;/code&gt;). After a restart of homeassistant: it’s back to working as it should!&lt;/p&gt;
+
+&lt;p&gt;So, I &lt;a href=&quot;https://github.com/home-assistant/core/issues/67171&quot;&gt;wrote this up in an Issue.&lt;/a&gt; So let’s see what the developers make of this.&lt;/p&gt;
+
+&lt;h1 id=&quot;using-and-debugging-mdns-zeroconf-name-resolution&quot;&gt;Using and debugging mDNS (zeroconf) name resolution&lt;/h1&gt;
+
+&lt;p&gt;To test the mDNS, I installed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;avahi-utils&lt;/code&gt; on my Ubuntu host. This requires installation of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;avahi-daemon&lt;/code&gt;, which was not a problem. I also installed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;libnss-mdns&lt;/code&gt; so that mDNS is used as name resolution (otherwise, mDNS will not be used).&lt;/p&gt;
+
+&lt;p&gt;In order to enable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;libnss-mdns&lt;/code&gt;, &lt;a href=&quot;https://github.com/lathiat/nss-mdns#activation&quot;&gt;the file &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nsswitch.conf&lt;/code&gt; needs to be edited&lt;/a&gt;. In effect, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hosts&lt;/code&gt; line is edited to add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mdns&lt;/code&gt; in a few variants.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hosts:          files libvirt_guest mdns4_minimal [NOTFOUND=return] mymachines dns mdns4 myhostname
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This works instantaneously, which surprised me. Now, we can test by simply &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ping&lt;/code&gt;ing a host, or by using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;getent&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;getent hosts xyz.local
+10.0.0.9       xyz.local
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;getent hosts homeassistant.local
+10.0.0.99      homeassistant.local
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A more detailed analysis can be done using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;avahi-browse&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;avahi-browse &lt;span class=&quot;nt&quot;&gt;-alr&lt;/span&gt;                 &lt;span class=&quot;c&quot;&gt;# for a detailed analysis of the entire landscape&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;avahi-browse _home-assistant._tcp &lt;span class=&quot;c&quot;&gt;# for a specific look at homeassistant&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A similar test can be done on MacOS:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dns-sd &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; v4 homeassistant.local    &lt;span class=&quot;c&quot;&gt;# lookup of a specific hostname&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dns-sd &lt;span class=&quot;nt&quot;&gt;-B&lt;/span&gt;                           &lt;span class=&quot;c&quot;&gt;# browse the entire network&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dns-sd &lt;span class=&quot;nt&quot;&gt;-B&lt;/span&gt; _home-assistant._tcp &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# browse only homeassistant&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;bridge-settings-for-zeroconf&quot;&gt;Bridge settings for zeroconf&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://www.home-assistant.io/integrations/zeroconf/&quot;&gt;instructions for zeroconf&lt;/a&gt; mentions some settings required for the KVM/libvirt bridge in order for mDNS to work. I did not yet look at this, it seems to be working without!&lt;/p&gt;
 </content>
   </entry>
 
