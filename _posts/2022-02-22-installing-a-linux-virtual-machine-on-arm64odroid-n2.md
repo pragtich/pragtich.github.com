@@ -114,51 +114,22 @@ I installed `avahi-utils` on the host machine (this also installs `avahi-daemon`
 
 ```shell
 $ avahi-browse -alr
-
-;; This buffer is for text that is not saved, and for Lisp evaluation.
-;; To create a file, visit it with <open> and enter text in its buffer.
-
-https://github.com/home-assistant/core/blob/ac502489382ab310fe17942b1f07b657d491d2a0/homeassistant/components/zeroconf/__init__.py#L304
-host_ip = await async_get_source_ip(hass, target_ip=MDNS_TARGET_IP)
-
-
-logger:
-  default: warning
-  logs:
-    homeassistant.components.homekit: debug
-    homeassistant.components.zeroconf: debug
-pyhap: debug
-
-
-Renamed installation from Home to XKCD:
-
-2022-02-23 14:18:53 INFO (MainThread) [homeassistant.components.zeroconf] Starting Zeroconf broadcast
-2022-02-23 14:18:57 DEBUG (MainThread) [homeassistant.components.zeroconf] service_update: type=_home-assistant._tcp.local. name=XKCD._home-assistant._tcp.local. state_change=ServiceStateChange.Added
-2022-02-23 14:18:57 DEBUG (MainThread) [homeassistant.components.zeroconf] Discovered new device XKCD._home-assistant._tcp.local. ZeroconfServiceInfo(host='10.0.0.184', port=8123, hostname='a38a3e63fbd64ecb89b12a588ce7552d.local.', type='_home-assistant._tcp.local.', name='XKCD._home-assistant._tcp.local.', properties={'_raw': {'location_name': b'XKCD', 'uuid': b'a38a3e63fbd64ecb89b12a588ce7552d', 'version': b'2022.2.9', 'external_url': b'', 'internal_url': b'http://10.0.0.184:8123', 'base_url': b'http://10.0.0.184:8123', 'requires_api_password': b'True'}, 'location_name': 'XKCD', 'uuid': 'a38a3e63fbd64ecb89b12a588ce7552d', 'version': '2022.2.9', 'external_url': '', 'internal_url': 'http://10.0.0.184:8123', 'base_url': 'http://10.0.0.184:8123', 'requires_api_password': 'True'})
-2022-02-23 14:18:57 DEBUG (MainThread) [homeassistant.components.zeroconf] service_update: type=_home-assistant._tcp.local. name=XKCD._home-assistant._tcp.local. state_change=ServiceStateChange.Updated
-2022-02-23 14:18:57 DEBUG (MainThread) [homeassistant.components.zeroconf] Discovered new device XKCD._home-assistant._tcp.local. ZeroconfServiceInfo(host='10.0.0.184', port=8123, hostname='a38a3e63fbd64ecb89b12a588ce7552d.local.', type='_home-assistant._tcp.local.', name='XKCD._home-assistant._tcp.local.', properties={'_raw': {'location_name': b'XKCD', 'uuid': b'a38a3e63fbd64ecb89b12a588ce7552d', 'version': b'2022.2.9', 'external_url': b'', 'internal_url': b'http://10.0.0.184:8123', 'base_url': b'http://10.0.0.184:8123', 'requires_api_password': b'True'}, 'location_name': 'XKCD', 'uuid': 'a38a3e63fbd64ecb89b12a588ce7552d', 'version': '2022.2.9', 'external_url': '', 'internal_url': 'http://10.0.0.184:8123', 'base_url': 'http://10.0.0.184:8123', 'requires_api_password': 'True'})
-
 -    br0 IPv4 Home                                          _home-assistant._tcp local
 -    br0 IPv6 Home                                          _home-assistant._tcp local
 +    br0 IPv4 XKCD                                          _home-assistant._tcp local
 +    br0 IPv6 XKCD                                          _home-assistant._tcp local
 =    br0 IPv4 XKCD                                          _home-assistant._tcp local
    hostname = [a38a3e63fbd64ecb89b12a588ce7552d.local]
-   address = [10.0.0.184]
+   address = [10.0.0.xxx]
    port = [8123]
-   txt = ["requires_api_password=True" "base_url=http://10.0.0.184:8123" "internal_url=http://10.0.0.184:8123" "external_url=" "version=2022.2.9" "uuid=a38a3e63fbd64ecb89b12a588ce7552d" "location_name=XKCD"]
-=    br0 IPv6 XKCD                                          _home-assistant._tcp local
-   hostname = [a38a3e63fbd64ecb89b12a588ce7552d.local]
-   address = [10.0.0.184]
-   port = [8123]
-   txt = ["requires_api_password=True" "base_url=http://10.0.0.184:8123" "internal_url=http://10.0.0.184:8123" "external_url=" "version=2022.2.9" "uuid=a38a3e63fbd64ecb89b12a588ce7552d" "location_name=XKCD"]
+   txt = ["requires_api_password=True" "base_url=http://10.0.0.xxx:8123" "internal_url=http://10.0.0.184:xxx" "external_url=" "version=2022.2.9" 
 ```
 
 It is not very easy to understand, but I think I understand that what's wrong here, is the hostname: `a38a3e63fbd64ecb89b12a588ce7552d.local`. This should be `homeassistant.local`. 
 
 Trying to figure out where the mDNS is actually performed, it turns out [that it is actually a component of Homeassistant Core](https://www.home-assistant.io/integrations/zeroconf), and the source can be seen [in GitHub](https://github.com/home-assistant/core/tree/dev/homeassistant/components/zeroconf). This form of modern Python is not very easy to read for an amateur like myself, but I gave it a go.
 
-And this is where it goes 'wrong'. [It seems that this was done on purpose>](https://github.com/home-assistant/core/pull/35623), but I cannot claim to have enough understanding to follow this discussion. Perhaps there is a good motivation, but at the moment this seems to break the `homeassistant.local` address.
+And this is where it goes 'wrong'. [It seems that this was done on purpose](https://github.com/home-assistant/core/pull/35623), but I cannot claim to have enough understanding to follow this discussion. Perhaps there is a good motivation, but at the moment this seems to break the `homeassistant.local` address.
 
 ```python
 
@@ -180,7 +151,7 @@ So, I [wrote this up in an Issue.](https://github.com/home-assistant/core/issues
 
 To test the mDNS, I installed `avahi-utils` on my Ubuntu host. This requires installation of `avahi-daemon`, which was not a problem. I also installed `libnss-mdns` so that mDNS is used as name resolution (otherwise, mDNS will not be used). 
 
-In order to enable `libnss-mdns`, [the file `/etc/nsswitch.conf` needs to be edited](https://github.com/lathiat/nss-mdns). In effect, the `hosts` line is edited to add `mdns`.
+In order to enable `libnss-mdns`, [the file `/etc/nsswitch.conf` needs to be edited](https://github.com/lathiat/nss-mdns#activation). In effect, the `hosts` line is edited to add `mdns` in a few variants.
 
 ```
 hosts:          files libvirt_guest mdns4_minimal [NOTFOUND=return] mymachines dns mdns4 myhostname
@@ -192,7 +163,7 @@ This works instantaneously, which surprised me. Now, we can test by simply `ping
 $ getent hosts xyz.local
 10.0.0.9       xyz.local
 $ getent hosts homeassistant.local
-10.0.0.188     homeassistant.local
+10.0.0.99      homeassistant.local
 ```
 
 A more detailed analysis can be done using `avahi-browse`:
