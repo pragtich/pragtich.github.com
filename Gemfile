@@ -5,4 +5,4 @@ gem 'redcarpet', group: :jekyll_plugins
 
 
 gem 'jekyll-gist'
-
+gem 'faraday-retry'
