@@ -3,13 +3,87 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="https://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="https://www.pragti.ch/blog"/>
-  <updated>2022-08-27T14:26:23+02:00</updated>
+  <updated>2022-08-27T15:43:26+02:00</updated>
   <author>
     <name>Joris Pragt</name>
 
   </author>
   <id>tag:pragti.ch,2013-02-09:/blog</id>
   <rights>Copyright (c) 2022, Joris Pragt; all rights reserved.</rights>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Accessing a Wifi VLAN in Debian Live</title>
+    <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2022/08/01/Debian-Wifi-VLAN</id>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2022/08/01/Debian-Wifi-VLAN/"/>
+    
+    <published>2022-08-01T00:00:00+02:00</published>
+    <updated>2022-08-01T00:00:00+02:00</updated>
+    <summary type="text" xml:lang="en">Quite a challenge: how to get Debian Live to join a Wifi network on a VLAN?</summary>
+    <category term="computer stuff" />
+	<content type="html">&lt;h1 id=&quot;the-challenge&quot;&gt;The Challenge&lt;/h1&gt;
+
+&lt;p&gt;My network connection (‘Delta Glasvezel’) enters the house on a fiber and gets converted to Ethernet using a media converter. The internet signal is provided on VLAN 100, while the TV and Telephony signals are presumably on other VLANs. Normally my gateway will connect to the correct VLAN, but during the installation or upgrade of the router’s operating system, this does not work.&lt;/p&gt;
+
+&lt;p&gt;A smart thing to do would probably be to start a local copy of the OS and package builds. That’s a good way to make OpenWRT installs stable, anyway. And it would help to make the installs more reproducible.
+For now, however, I’m too lazy.&lt;/p&gt;
+
+&lt;p&gt;Since the router does have Wifi cards, it’s quite doable to get it online over Wifi. This can be done through a mobile hotspot, but the idealist in me doesn’t enjoy this. How do I avoid using my mobile phone to provide Wifi network access?&lt;/p&gt;
+
+&lt;p&gt;In other words: how do I get Debian Live to access WiFi and connect to VLAN 100?&lt;/p&gt;
+
+&lt;h1 id=&quot;joining-wifi-on-debian-live&quot;&gt;Joining Wifi on Debian Live&lt;/h1&gt;
+
+&lt;p&gt;It’s documented &lt;a href=&quot;https://wiki.debian.org/WiFi/HowToUse&quot;&gt;in their wiki&lt;/a&gt;, but I found it confusing and there were some small errors.&lt;/p&gt;
+
+&lt;p&gt;I ran it all as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;, the prompt in the Wiki shows when super user rights are really needed.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# ip a&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# iw dev&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Shows the wireless device name. Turns out to be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wlp1s0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# ip link set wlp1s0 up&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Enables the device for the scanning later?&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# iwlist scan&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A good chance to test the wifi adapter by scanning, and confirms the SSID.&lt;/p&gt;
+
+&lt;p&gt;Edited &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/network/interfaces&lt;/code&gt; to add:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# my wifi device
+allow-hotplug wlp1s0
+iface wlp1s0 inet dhcp
+        wpa-ssid ESSID
+        wpa-psk PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;What the wiki does not say: you need to restart networking for it to pick up the net interface:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# systemctl restart networking&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then you can bring it up:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# ifup wlp1s0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And test the connection:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# iw wlp1s0 link&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# ip a&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;remaining-challenge---vlan&quot;&gt;Remaining challenge - VLAN&lt;/h1&gt;
+
+&lt;p&gt;I have yet to figure out the details of accessing the VLAN – this is left as a future exercise.&lt;/p&gt;
+</content>
+  </entry>
 
 
   <entry>

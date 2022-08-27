@@ -1,0 +1,62 @@
+I"X<h1 id="the-challenge">The Challenge</h1>
+
+<p>My network connection (‘Delta Glasvezel’) enters the house on a fiber and gets converted to Ethernet using a media converter. The internet signal is provided on VLAN 100, while the TV and Telephony signals are presumably on other VLANs. Normally my gateway will connect to the correct VLAN, but during the installation or upgrade of the router’s operating system, this does not work.</p>
+
+<p>A smart thing to do would probably be to start a local copy of the OS and package builds. That’s a good way to make OpenWRT installs stable, anyway. And it would help to make the installs more reproducible.
+For now, however, I’m too lazy.</p>
+
+<p>Since the router does have Wifi cards, it’s quite doable to get it online over Wifi. This can be done through a mobile hotspot, but the idealist in me doesn’t enjoy this. How do I avoid using my mobile phone to provide Wifi network access?</p>
+
+<p>In other words: how do I get Debian Live to access WiFi and connect to VLAN 100?</p>
+
+<h1 id="joining-wifi-on-debian-live">Joining Wifi on Debian Live</h1>
+
+<p>It’s documented <a href="https://wiki.debian.org/WiFi/HowToUse">in their wiki</a>, but I found it confusing and there were some small errors.</p>
+
+<p>I ran it all as <code class="language-plaintext highlighter-rouge">root</code>, the prompt in the Wiki shows when super user rights are really needed.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ip a</span>
+<span class="c"># iw dev</span>
+</code></pre></div></div>
+
+<p>Shows the wireless device name. Turns out to be <code class="language-plaintext highlighter-rouge">wlp1s0</code>.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ip link set wlp1s0 up</span>
+</code></pre></div></div>
+
+<p>Enables the device for the scanning later?</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># iwlist scan</span>
+</code></pre></div></div>
+
+<p>A good chance to test the wifi adapter by scanning, and confirms the SSID.</p>
+
+<p>Edited <code class="language-plaintext highlighter-rouge">/etc/network/interfaces</code> to add:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># my wifi device
+allow-hotplug wlp1s0
+iface wlp1s0 inet dhcp
+        wpa-ssid ESSID
+        wpa-psk PASSWORD
+</code></pre></div></div>
+
+<p>What the wiki does not say: you need to restart networking for it to pick up the net interface:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># systemctl restart networking</span>
+</code></pre></div></div>
+
+<p>Then you can bring it up:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ifup wlp1s0</span>
+</code></pre></div></div>
+
+<p>And test the connection:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># iw wlp1s0 link</span>
+<span class="c"># ip a</span>
+</code></pre></div></div>
+
+<h1 id="remaining-challenge---vlan">Remaining challenge - VLAN</h1>
+
+<p>I have yet to figure out the details of accessing the VLAN – this is left as a future exercise.</p>
+:ET
