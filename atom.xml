@@ -3,7 +3,7 @@
   <title type="text" xml:lang="en">Pragtich -- a blog</title>
   <link rel="self" type="application/atom+xml" href="https://www.pragti.ch/atom.xml" />
   <link rel="alternate" type="text/html" href="https://www.pragti.ch/blog"/>
-  <updated>2022-02-24T14:55:55+01:00</updated>
+  <updated>2022-08-27T14:26:23+02:00</updated>
   <author>
     <name>Joris Pragt</name>
 
@@ -183,6 +183,144 @@ homeassistant-supervised	ha/machine-type	Select	qemuarm-64
 &lt;h1 id=&quot;bridge-settings-for-zeroconf&quot;&gt;Bridge settings for zeroconf&lt;/h1&gt;
 
 &lt;p&gt;The &lt;a href=&quot;https://www.home-assistant.io/integrations/zeroconf/&quot;&gt;instructions for zeroconf&lt;/a&gt; mentions some settings required for the KVM/libvirt bridge in order for mDNS to work. I did not yet look at this, it seems to be working without!&lt;/p&gt;
+</content>
+  </entry>
+
+
+  <entry>
+    <title type="text" xml:lang="en">Adding Over the Air (OTA) Firmware updates to a battery-powered MySensors Node</title>
+    <id>tag:pragti.ch,2013-02-09:/computer%20stuff/2022/01/01/DualOptiboot-I2C-EEPROM-Mysensors</id>
+    <link rel="alternate" type="text/html" href="https://www.pragti.ch/computer%20stuff/2022/01/01/DualOptiboot-I2C-EEPROM-Mysensors/"/>
+    
+    <published>2022-01-01T00:00:00+01:00</published>
+    <updated>2022-01-01T00:00:00+01:00</updated>
+    <summary type="text" xml:lang="en">The MySensors node can automatically update itself over the air, a process called OTA. Normally this is done with SPI flash chips, but I chose to use some I2C EEPROMs that I had lying around. Thankfully, some work by others has made this doable.</summary>
+    <category term="computer stuff" />
+	<content type="html">&lt;h1 id=&quot;hardware-setup&quot;&gt;Hardware setup&lt;/h1&gt;
+
+&lt;p&gt;I had some &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;24LC256&lt;/code&gt; chips lying around, which I probably purchased in an attempt to meet the Free Shipping limit, or something silly like that. Since I had some experience working with I2C, this seemed like a sensible way to add OTA to my project. Honestly, SPI is the way to go because of the better support.&lt;/p&gt;
+
+&lt;p&gt;The I2C bus always needs pull-up resistors. When one is really pushing the bus, &lt;a href=&quot;http://www.ti.com/lit/an/slva689/slva689.pdf&quot;&gt;the values of these resistors need some optimization&lt;/a&gt;. In this case, however, we can probably live with pretty much any pull-up (including the Atmel’s built-in ones). I chose values between 2 and 6 kΩ. Both &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SCL&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SDA&lt;/code&gt; lines are pulled up to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Vcc&lt;/code&gt; (2x AA battery power or 3.3V from the USB-serial adapter).&lt;/p&gt;
+
+&lt;p&gt;The address pins for the EEPROM are all tied to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GND&lt;/code&gt; in order to choose the chip’s default I2C address. This can be changed later on, but why bother?
+The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Enable&lt;/code&gt; pin is constantly tied to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GND&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Annoyingly, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SCL&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SDA&lt;/code&gt; pins on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Promini 8MHz 3.3V&lt;/code&gt; that I am using, are not in the standard 2x 12 pin headers, but separately on the PCB. We need the pins marked &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A4&lt;/code&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SDA&lt;/code&gt;) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A5&lt;/code&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SCL&lt;/code&gt;). What I did, was solder two Dupont wires to the EEPROM, and use these to jumper to the top of the Arduino. It should also be possible to do something on the bottom of the PCB, but the pins are annoyingly not aligned to the rest. If you are making your own PCBs, that’s okay. But my protoboard approach does not allow this easily.&lt;/p&gt;
+
+&lt;h1 id=&quot;software-setup&quot;&gt;Software setup&lt;/h1&gt;
+
+&lt;p&gt;Following &lt;a href=&quot;https://www.mysensors.org/about/fota&quot;&gt;the OTA instructions by MySensors&lt;/a&gt; shows that we need either &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MYSBootloader&lt;/code&gt;, or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DualOptiboot&lt;/code&gt;. Since &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MYSBootloader&lt;/code&gt; currently only supports the NRF radios, not the RFM69, I went the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DualOptiboot&lt;/code&gt; route.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://forum.mysensors.org/topic/5259/ota-fw-update-using-i2c-eeprom&quot;&gt;Kisse66 has published his results on using OTA with I2C chips&lt;/a&gt;, and also shared &lt;a href=&quot;https://github.com/kisse66/DualOptiboot&quot;&gt;his code for the modified bootloader on Github&lt;/a&gt;. Thanks to Kisse66!!&lt;/p&gt;
+
+&lt;p&gt;I made some local changes, &lt;a href=&quot;https://github.com/pragtich/dualoptiboot&quot;&gt;so I forked the repo into my own&lt;/a&gt;. This allowed me to play around and still have the nice tracking that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git&lt;/code&gt; provides. I also added some ready-made bootloaders in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hex/&lt;/code&gt; subfolder, for future use.&lt;/p&gt;
+
+&lt;p&gt;I documented the flashing process in the README there, including some free-flowing notes on the successful and unsuccessful attempts at flashing the stuff correctly.  I was not able to get the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Makefile&lt;/code&gt; to work properly. And I needed/wanted control over the Fuses. So I ended up doing the flashing and compiling manually.&lt;/p&gt;
+
+&lt;h2 id=&quot;compiling-the-bootloader&quot;&gt;Compiling the bootloader&lt;/h2&gt;
+
+&lt;p&gt;Make sure that the compile and toolchains are in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$PATH&lt;/code&gt;. For me, with the platformio toolchains already installed on my Mac, this means:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:~/.platformio/packages/toolchain-atmelavr/bin:~/.platformio/packages/tool-avrdude
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Compiling the bootloader is as simple as:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;make atmega328_e8
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Compiling is fast, it’s only a small program.&lt;/p&gt;
+
+&lt;h2 id=&quot;flashing-the-bootloader-and-fuses&quot;&gt;Flashing the bootloader and fuses&lt;/h2&gt;
+
+&lt;p&gt;You need some kind of programmer in order to program the fuses and bootloader. You can use an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;USBasp&lt;/code&gt; programmer, but I chose &lt;a href=&quot;https://www.pragti.ch/computer%20stuff/2018/09/10/Uploading_bootloader_Pro_Mini/&quot;&gt;to use an Arduino-as-ISP, which I have documented before&lt;/a&gt;. Simple and effective.&lt;/p&gt;
+
+&lt;p&gt;I use the following command line to flash both the fuses and the bootloader in one go, using the Arduino ISP:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:~/.platformio/packages/toolchain-atmelavr/bin:~/.platformio/packages/tool-avrdude
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;avrdude  &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; ~/.platformio/packages/tool-avrdude/avrdude.conf  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; atmega328p &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; arduino &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; /dev/cu.wchusbserial1410 &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 19200 &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; flash:w:optidebugflash57k6.hex  &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; hfuse:w:0xDA:m &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; lfuse:w:0xFF:m &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; efuse:w:0xFE:m
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The fuse settings might not yet be perfect, I’m aiming for a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1.8V BOD&lt;/code&gt;, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;8MHz&lt;/code&gt; external crystal oscillator and a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1 kword (2k byte)&lt;/code&gt; boot partition. More testing should confirm if I got this right. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:-)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;I noticed that the bootloader does not run reliably when there is no program loaded in memory to run. It simply loops in a watchdog loop and never activates the serial bootloader code. So, I merged a blink script into the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hex&lt;/code&gt; file. This way, the bootloader has something to run, and the problems are finished.
+This merging of two hex files is easy, just &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cat&lt;/code&gt; them together (or merge them in an editor) and delete the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EOF&lt;/code&gt; marker in between (the line that goes something like this: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:00000001FF&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;A working file that I use, &lt;a href=&quot;https://raw.githubusercontent.com/pragtich/DualOptiboot/master/hex/optidebugflash57k6.hex&quot;&gt;is included in my repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;test&quot;&gt;Test&lt;/h2&gt;
+
+&lt;p&gt;Now, when disconnected from the ISP, the node should blink. Also, it should be flashable over serial by the Arduino IDE or Platformio using the arduino protocol. I chose a baud rate of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;57600 baud&lt;/code&gt;, so you should set this speed for things to work properly.&lt;/p&gt;
+
+&lt;p&gt;Next step is to upload a MySensors node program.&lt;/p&gt;
+
+&lt;h2 id=&quot;mysensors-i2c-ota-node&quot;&gt;Mysensors I2C OTA node&lt;/h2&gt;
+
+&lt;p&gt;The code for the I2C EEPROM has been added to MySensors (thanks again to Kisse66!), so if your MySensors is at all up-to-date, it should already be included.&lt;/p&gt;
+
+&lt;p&gt;You need to add the following to your node’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#define&lt;/code&gt;s:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;#define USE_I2C_EEPROM
+#define MY_OTA_FIRMWARE_FEATURE
+#define MY_OTA_USE_I2C_EEPROM 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That’s it!&lt;/p&gt;
+
+&lt;p&gt;Now you should be able to start &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MYSController&lt;/code&gt; &lt;a href=&quot;https://www.mysensors.org/controller/myscontroller&quot;&gt;(get it here)&lt;/a&gt; and test the OTA for real. Since I’m on OS X, I run it under &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Wine&lt;/code&gt;, which works fine:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;wine MYSController.exe
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You need to add the firmware to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Firmware/&lt;/code&gt; folder under the MYSController folder, and might need to add the firmware to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.csv&lt;/code&gt; file in this folder.
+Connect to your gateway, enable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Auto FW&lt;/code&gt;, set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Battery Node&lt;/code&gt; for your node and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Assign Firmware&lt;/code&gt;. The next time the node reports, firmware update should start.&lt;/p&gt;
+
+&lt;h2 id=&quot;increase-retries-during-ota&quot;&gt;Increase retries during OTA&lt;/h2&gt;
+
+&lt;p&gt;I had an issue with OTA uploads usually failing. I traced this to random radio blackouts. Not sure weither this is caused by some disturbance in my area, or the gateway or MYSController flaking out. Nevertheless, the default MySensors OTA code only retries 5 times with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;500ms&lt;/code&gt; pause between attempts. That means that any disturbance longer than &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~2.5 s&lt;/code&gt; might cause the upload to fail.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/pragtich/MySensors/commit/f1f00953850aeb0101ec7fabc189ac3ac68306ea&quot;&gt;I updated my MySensors code to allow manually setting of the number retries and the pause between retries. &lt;/a&gt;. With this change, the following code snippet at the top of a node’s code will increase the number of retries, and lengthen the pause before retry. This way, most of my OTA uploads succeed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;// Only relevant when OTA enabled on the node
+// Requires patched mysensors
+#define MY_OTA_RETRY (50)
+#define MY_OTA_RETRY_DELAY (1000u) // default 500u
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It worked simply by running (I have platformio installed, and it has the avrdude stuff already):&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:~/.platformio/packages/toolchain-atmelavr/bin:~/.platformio/packages/tool-avrdude
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;avrdude &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; ~/.platformio/packages/tool-avrdude/avrdude.conf  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; atmega328p &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; arduino &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; /dev/cu.wchusbserial1410 &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 19200 &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; flash:w:optidebugflash57k6.hex  &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; hfuse:w:0xD8:m &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; lfuse:w:0xFF:m &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; efuse:w:0xFE:m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then connect the Arduino directly to a serial port and it should simply work.&lt;/p&gt;
+
+&lt;h2 id=&quot;working-with-platformio&quot;&gt;Working with platformio&lt;/h2&gt;
+
+&lt;p&gt;Set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in platformio.ini&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;upload_speed = 57600
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and run:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pio run &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; upload &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; monitor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I did have a problem with enabling the I2C EEPROM library:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;I2CEeprom.h:49:23: fatal error: extEEPROM.h: No such file or directory
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Earlier I cheated by manually adding the library dependency in platformio.ini. Why is platformio not finding the driver?&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lib_deps = extEEPROM
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Sometimes I get boot loops, for example when my sketches have lots of debugging enabled. Am a seeing memory overrun issues?
+TODO: Check memory overrun protections in Platformio and update to match larger bootloader.&lt;/p&gt;
+
 </content>
   </entry>
 
