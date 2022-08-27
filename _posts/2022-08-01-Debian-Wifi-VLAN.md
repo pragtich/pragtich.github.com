@@ -2,7 +2,7 @@
 layout: post
 title: "Accessing a Wifi VLAN in Debian Live"
 category: "Computer stuff"
-	tags: [linux, networking, Wifi, Debian]
+tags: [linux, networking, Wifi, Debian]
 indeximage: Debian.jpg
 comment_id: Debian-VLAN-Wifi
 summary: "Quite a challenge: how to get Debian Live to join a Wifi network on a VLAN?"
