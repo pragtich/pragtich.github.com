@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: "Adding Over the Air (OTA) Firmware updates to a battery-powered MySensors Node"
