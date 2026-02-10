@@ -5,4 +5,4 @@
 ; It seems that rubygems is included in ruby
 
 (specifications->manifest
- '("ruby" "bundler" "jekyll" "gcc-toolchain" "make" "git"))
+ '("ruby" "bundler" "gcc-toolchain" "make" "git"))
